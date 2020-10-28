@@ -1,0 +1,58 @@
+<script>
+export default {
+	name: 'QemuOverHttp',
+	methods: {
+		 queryRrdData() {
+        this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/rrddata?timeframe=${this.timeframe.replace(/(.*?)\((.*?)\)/g, '$1')}&cf=${this.timeframe.replace(/(.*?)\((.*?)\)/g, '$2')}`)
+          .then(res => {
+            this.cpu = Object.assign({}, this.cpu, {
+              value: [res.data.map(it => it.cpu ? it.cpu * 100 : 0)],
+              color: this.colors,
+              time: res.data.map(it => it.time)
+            })
+            this.memory = Object.assign({}, this.memory, {
+              value: [res.data.map(it => it.maxmem ? it.maxmem : 0), res.data.map(it => it.mem ? it.mem : 0)],
+              color: this.colors,
+              func: this.byteToSize,
+              time: res.data.map(it => it.time)
+            })
+            this.network = Object.assign({}, this.network, {
+              value: [res.data.map(it => it.netin ? it.netin : 0), res.data.map(it => it.netout ? it.netout : 0)],
+              color: this.colors,
+              func: this.byteToSize,
+              time: res.data.map(it => it.time)
+            })
+            this.disk = Object.assign({}, this.disk, {
+              value: [res.data.map(it => it.diskread ? it.diskread : 0), res.data.map(it => it.diskwrite ? it.diskwrite : 0)],
+              color: this.colors,
+              func: this.byteToSize,
+              time: res.data.map(it => it.time)
+            })
+          })
+			},
+      queryConfig() {
+        this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/config?_dc=${new Date().getTime()}`)
+          .then(res => {
+            this.config = res.data;
+            this.comment = res.data.description;
+          })
+			},
+			setComment() {
+				let event = this.createEvent('action.qemu.comment', this.node.id);
+        this.$http.put(`/json/nodes/${this.node.node}/${this.node.id}/config`, {
+          description: this.comment,
+          digest: this.config.digest
+        },{
+          headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+        }).then((res) => {
+          this.incEventSuccess(event);
+          this.showComment = false;
+          this.queryConfig();
+        }).catch(() => {
+          this.incEventFail(event);
+          this.showComment = false;
+        })
+			}
+	}
+}
+</script>

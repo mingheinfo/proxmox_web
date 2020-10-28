@@ -1,0 +1,28 @@
+{
+  "login": {
+    "title": "Login",
+    "username": {
+      "empty": "User name is not empty",
+      "placeholder": "Please input user name"
+    },
+    "password": {
+      "empty": "Password name is not empty",
+      "placeholder": "Please input user password"
+    }
+  },
+  "No Subscription": "No Subscription",
+  "You have at least one node without subscription.": "You have at least one node without subscription.",
+  "Mixed Subscriptions": "Mixed Subscriptions",
+  "Warning: Your subscription levels are not the same.": "Warning: Your subscription levels are not the same.",
+  "Your subscription status is valid.": "Your subscription status is valid.",
+  "subsStatus": "Subscribed",
+  "search": "Search",
+  "overview": "Overview",
+  "cluster": "Cluster",
+  "type": {
+    "pool": "pool",
+    "node": "node",
+    "qemu": "qemu",
+    "storage": "storage"
+  }
+}

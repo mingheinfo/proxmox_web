@@ -1,0 +1,126 @@
+.dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+
+  &-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55,55,55,.6);
+    height: 100%;
+  }
+
+  &-close{
+    overflow: hidden;
+    width: 16px;
+    height: 30px;
+    background: url(~@images/tool-sprites.png);
+    margin: 0;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+    opacity: .8;
+    vertical-align: middle;
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    background-position-y: 14px;
+    background-repeat: no-repeat;
+    top: 0;
+    line-height: 42px;
+    cursor: pointer;
+  }
+
+  &-wrapper{
+    -webkit-transform: translateY(-6px);
+    -ms-transform: translateY(-6px);
+    -o-transform: translateY(-6px);
+    transform: translateY(-6px);
+    -webkit-transition: -webkit-transform .3s cubic-bezier(.4,0,.2,1);
+    -moz-transition: -moz-transform .3s cubic-bezier(.4,0,.2,1);
+    -o-transition: -o-transform .3s cubic-bezier(.4,0,.2,1);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    transform: translate(0);
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  &-footer{
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid #dde4ed;
+    text-align: center;
+    background: #e2e7ec;
+    position: absolute;
+    bottom: 0;
+  }
+
+  &-content{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-width: 600px;
+    min-height: 300px;
+    background: #ffff;
+    z-index: 10;
+  }
+
+  &-cancel{
+    padding: 0px 20px;
+    text-align: center;
+    display: inline-block;
+    background: #FF6C59;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 2px;
+    line-height: 35px;
+  }
+
+  &-confirm{
+    padding: 0px 20px;
+    text-align: center;
+    display: inline-block;
+    background: #3973ff;
+    color: #fff;
+    border-radius: 2px;
+    cursor: pointer;
+    line-height: 35px;
+  }
+
+  &-header{
+    position: relative;
+    top: 0px;
+    background: #dde4ed;
+    border-bottom: 1px solid #dde4ed;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    cursor: move;
+  }
+
+  &-title{
+    font-size: 16px;
+    padding-left: 20px;
+  }
+
+  &-main{
+    width: calc(100% - 10px);
+    overflow-y: auto;
+    padding: 10px 2px 0px 10px;
+    height: calc(100% - 110px);
+    position: relative;
+    margin-bottom: 66px;
+  }
+}

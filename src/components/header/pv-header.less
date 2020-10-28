@@ -1,0 +1,80 @@
+.header-container{
+  position: fixed;
+  height: 60px;
+  line-height: 60px;
+  display: flex;
+  box-shadow: 0px 1px 2px #cfcfcf;
+  background: #fff;
+  width: 100%;
+  z-index: 333;
+  &-left{
+    flex: 1 1 auto;
+    display: flex;
+  }
+  &-right{
+    flex-shrink: 1;
+    flex-grow: 1;
+    flex-basis: auto;
+  }
+  &-content{
+    position: absolute;
+    right: 20px;
+    &-item {
+      display: inline-block;
+      margin-right: 10px;
+      height: 30px;
+      line-height: 30px;
+      padding: 0px 10px 0px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      &:nth-child(1) {
+        background: #e5e5e5;
+        border: 1px solid #e5e5e5;
+      }
+      &:nth-child(2) {
+        background: #409eff;
+        border: 1px solid #409eff;
+        color: #fff;
+      }
+      &:nth-child(3) {
+        background: #409eff;
+        border: 1px solid #409eff;
+        color: #fff;
+      }
+      &:nth-child(4) {
+        background: #409eff;
+        border: 1px solid #409eff;
+        color: #fff;
+        padding: 0;
+      }
+    }
+  }
+}
+
+.pve{
+  &-logo{
+    background: url("~@images/pve-logo.png") 50% 50% no-repeat;
+    vertical-align: middle;
+    width: 180px;
+    height: 60px;
+    line-height: 60px;
+  }
+  &-search{
+    height: 60px;
+    line-height: 60px;
+    &-resource-table{
+      position: absolute;
+      z-index: 9999;
+      padding: 10px 20px;
+      border: 1px solid #dde4ed;
+      cursor: pointer;
+      line-height: 0px;
+      outline: none;
+      background: #fff;
+    }
+  }
+}
+
+.tab-item{
+  display: inline-block;
+}

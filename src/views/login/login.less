@@ -1,0 +1,95 @@
+.pve-login{
+  position: relative;
+  width: 100%;
+  height:100vh;
+  overflow: hidden;
+  background: #e0eaf3;
+  &_content{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px;
+    height: 400px;
+    box-shadow: 2px 2px 8px #6d9cbe, -2px -2px 57px #6d9cbe;
+    &::after{
+      content:''
+    }
+    &__left{
+      width: 40%;
+      float: left;
+      height: 100%;
+      visibility: visible;
+      opacity: 1;
+      background-image: url("~@images/login-bg.jpg");
+      background-position: -73% 40%;
+      transition: all .5s ease-in;
+    }
+    &__right{
+      width: 60%;
+      float: right;
+      height: 100%;
+      transition: all .5s ease-in;
+    }
+    &__form{
+      padding-top: 50px;
+      text-align: center;
+      input{
+        height: 35px;
+        line-height: 30px;
+        width: 300px;
+        padding-left: 30px;
+        border: 1px solid #dde4ed;
+      }
+      input[type="submit"] {
+        background: #3973ff;
+        color: #fff;
+        border-radius: 2px;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        padding-left: 0px;
+      }
+      &-title{
+        margin-bottom: 20px;
+      }
+      &-item{
+        position: relative;
+        width: 300px;
+        margin: 0 auto 20px;
+        .icon{
+          position: absolute;
+          left: 3px;
+          top: 0px;
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          vertical-align: middle;
+        }
+        .icon-user{
+          background-image: url("~@images/user_login.svg");
+        }
+        .icon-password{
+          background-image: url("~@images/psw.svg");
+        }
+      }
+      &-select{
+        margin-bottom: 20px;
+        width: 100%;
+        text-align: center;
+        .pv-form-select-wrapper{
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}
+.loading{
+  position: absolute;
+  top: 5px;
+  left: 12px;
+}
+.error-msg{
+  left: 0px;
+}
