@@ -80,5 +80,14 @@
     "thu": "星期四",
     "fri": "星期五",
     "sun": "星期天"
+  },
+  "clusterStatus": {
+    "type": "任务类型",
+    "node": "节点",
+    "pid": "进程ID",
+    "status": "状态",
+    "upid": "唯一任务ID",
+    "starttime": "开始时间",
+    "user": "用户名"
   }
 }

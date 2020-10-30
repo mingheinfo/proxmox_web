@@ -23,7 +23,8 @@ export default {
 				'actived': this.state === 'actived',
 				'unactived': this.state ===  'unActived',
 				'online': this.state === 'online',
-				'unLine': this.state === 'unLine'
+				'unLine': this.state === 'unLine',
+				'unknown': this.state === 'unknown'
 			}
 		}
 	}

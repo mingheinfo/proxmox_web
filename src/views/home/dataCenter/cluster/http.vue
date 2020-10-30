@@ -85,14 +85,22 @@ export default {
 		queryStatus(node, pid) {
 			return this.$http.get(`json/nodes/${node}/tasks/${pid}/status`, {
 				_dc: new Date().getTime(),
-				start: 0,
-				limit: 500
 			}).then((res) => {
-				this.updateTable({
-					tableName: 'addClusterStatusList',
-					list: res.data
+				if(res.status !== 'running' && this.interVal) {
+					clearInterval(this.interVal);
+					this.interVal = null;
+				}
+				this.updateDbObject({
+					name: 'addClusterStatusObj',
+					data: res.data
 				})
 			})	
+		},
+		stopTask(node, pid) {
+			return this.$http.del(`json/nodes/${node}/tasks/${pid}`)
+			           .then(() => {
+									 this.queryClusterList();
+								 })
 		}
 	}
 }

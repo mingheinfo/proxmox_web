@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div class="page-template">
      <div class="tool-bar">
       <div class="tool-bar-left">
         <!--工具栏左侧区-->
@@ -24,6 +24,9 @@
 </script>
 
 <style scoped lang="less">
+  .page-template{
+    padding: 20px;
+  }
   .tool-bar{
     display: flex;
     flex-grow: 1;

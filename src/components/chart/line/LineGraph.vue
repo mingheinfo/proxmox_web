@@ -1,12 +1,22 @@
 <template>
    <div class="m-chart">
       <div class="m-tool-img m-tool-restore" @click="toggleMode"></div>
-      <div class="m-chart-content" ref="m-chart"></div>
+      <div class="m-chart-content"  v-show="!nodata">
+        <div :class="`m-chart-instance-${_uid}`" class="m-chart-instance"></div>
+      </div>
+      <div class="m-chart-nodata" v-if="!loading && nodata">
+        <div>
+           <img src="~@images/noata.png"/>
+           <p style="text-align:center">暂无数据</p>
+        </div>
+      </div>
+      <Loading v-if="loading"></Loading>
    </div>
 </template>
 
 <script>
   import { deepCopy, dateFormat, getEvent } from "@libs/utils";
+  import Loading from '@src/components/loading/loading';
   import echart from 'echarts/lib/echarts';
   import echartsConfig from 'echarts/lib/config';
   import 'echarts/lib/component/legend';
@@ -15,6 +25,9 @@
   import 'echarts/lib/chart/line';
   export default {
     name: "LineGraph",
+    components: {
+      Loading
+    },
     props: {
       data: Object
     },
@@ -23,6 +36,8 @@
       return {
         chartsDom: null,
         temp: {},
+        nodata: true,
+        loading: false,
         options: {
           title: {
             textStyle: {
@@ -118,7 +133,10 @@
       }
     },
     mounted() {
-      this.chartsDom = echart.init(this.$refs['m-chart']);
+      let _this = this, el = document.querySelector(`.m-chart-instance-${_this._uid}`);
+      el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+      el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+      this.chartsDom = echart.init(el);
       this.setOption();
       window.addEventListener('resize',() => {
         this.chartsDom.resize();
@@ -129,7 +147,14 @@
       setOption() {
         //省拷贝options
         let _options = deepCopy(this.options);
-        if(!this.data || this.data.value.length < 0 || !this.data.time || !this.data.color) return;
+        this.loading = true;
+        if(!this.data || this.data.value.length < 0 || !this.data.time || !this.data.color) {
+          this.nodata = true;
+          this.loading = false
+          return
+        };
+        this.nodata = false;
+        this.loading = false;
         //格式化x轴时间
         _options.xAxis.data = this.data.time.map(item => {
           return dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm');
@@ -153,7 +178,6 @@
             }
           })
         })
-        this.chartsDom.setOption(_options, true);
         let legend = [];
         var triggerAction = (action, selected) => {
           legend = [];
@@ -217,6 +241,8 @@
           }
 
         });
+          this.chartsDom.setOption(_options, true);
+          this.$forceUpdate();
       },
       toggleMode() {
         this.options.legend.show =  !this.options.legend.show;
@@ -227,10 +253,13 @@
       window.removeEventListener('resize', this.setOption, true)
     },
     watch: {
-      data: function (newVal, oldVal) {
-        if(newVal !== oldVal)
-          this.setOption();
-      }
+      data: {
+        handler: function (newVal, oldVal) {
+          if(newVal !== oldVal)
+           this.setOption();
+         }
+      },
+      deep: true
     }
   }
 </script>
@@ -242,6 +271,15 @@
   position: relative;
   &-content{
     height: 250px;
+   }
+   &-instance{
+     height: 100%; 
+   }
+   &-nodata{
+     display: flex;
+     flex-grow: 1;
+     justify-content: center;
+     align-items:center;
    }
   &-legend{
     width: 100%;

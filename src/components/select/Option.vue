@@ -49,11 +49,11 @@
 		},
     props: {
       icon: String,
-      value: String | Number | Object,
+      value: [String, Number],
       disabled: Boolean,
       divided: Boolean,
 			name: String,
-			label: String
+			label: [String, Number, Object]
     },
     created() {
       this.Select.cachedOptions.push({value: this.value, label: this.label});
@@ -67,12 +67,12 @@
 				}
       },
       setChecked(newVal) {
-       if(newVal.includes(this.value)) {
+       if(Array.isArray(newVal) && newVal.includes(this.value)) {
 							this.isChecked = true;
 					}
       },
       setSelectValuesChecked(newVal){
-        if(newVal.includes(this.value)) {
+        if(Array.isArray(newVal) && newVal.includes(this.value)) {
 							this.isChecked = true;
 					}else {
             	this.isChecked = false;

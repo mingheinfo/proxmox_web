@@ -50,6 +50,7 @@
        height: calc(100% - 60px);
        overflow: hidden;
        width: calc(100% - 180px);
+       background: linear-gradient(-60deg,#f7f8fa,#f5f6f9 70%,#f7f8fa 98%);
      }
    }
 </style>

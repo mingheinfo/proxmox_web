@@ -1,19 +1,43 @@
 <template>
   <page-template>
     <div slot="toolbar-left">
-       <m-button
+			<m-dropdown
+        trigger="click"
+        icon="fa fa-user"
+        @on-change="handleCommand"
+         style="
+          width: 8rem;
+          height: 30px;
+          line-height: 30px;
+          color: #fff !important;
+        "
+      >
+        <span slot="label">
+          <m-button
             type="primary"
+            style="position: absolute; left: -1px; top: -1px; right: -1px"
             icon="el-icon-plus"
-						@on-click="showModal('create')"
-            >创建</m-button>
+            >添加</m-button
+          >
+        </span>
+        <m-dropdown-item icon="fa fa-users" command="ad">活动目录服务器(AD)</m-dropdown-item>
+        <m-dropdown-item icon="fa fa-user" command="ldap"
+          >LDAP服务器</m-dropdown-item
+        >
+      </m-dropdown>
 			<m-button type="info" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
       <m-button
         type="danger"
         @on-click="handleDelete"
         icon="el-icon-delete"
-        :disabled="selectedList.length <= 0"
+        :disabled="selectedList.length <= 0 || inTypes()"
         >删除</m-button
       >
+			  <m-button
+            type="primary"
+            icon="el-icon-plus"
+						@on-click="showModal('create')"
+            >同步</m-button>
     </div>
     <div slot="page-content">
       <el-table
@@ -27,15 +51,16 @@
 				<el-table-column label="TFA" prop="tfa"></el-table-column>
         <el-table-column label="备注" prop="comment"></el-table-column>
       </el-table>
-      <create-access-group-modal
+      <create-access-domain-modal
         :title="title"
         :isCreate="isCreate"
         :param="param"
         :visible="visible"
         v-if="visible"
-        :modal-type="type"
+        :modalType="modalType"
+				:_type="type"
         @close="visible = false"
-      ></create-access-group-modal>
+      ></create-access-domain-modal>
     </div>
   </page-template>
 </template>
@@ -43,14 +68,14 @@
 import DataCenterAccessHttp from "@src/views/home/dataCenter/access/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-//import CreateAccessGroupModal from './CreateAccessGroupModal';
+import CreateAccessDomainModal from './CreateDomainModal';
 export default {
   name: "Access",
   mixins: [DataCenterAccessHttp],
   components: {
     PageTemplate,
     MButton,
-    //CreateAccessGroupModal
+    CreateAccessDomainModal
   },
   data() {
     return {
@@ -61,7 +86,8 @@ export default {
       isCreate: true,
 			param: {},
 			realmList: [],
-			realm: ''
+			realm: '',
+			modalType: 'create'
     };
   },
   mounted() {
@@ -74,10 +100,10 @@ export default {
     },
     //是否展示弹框
     showModal(type) {
-      this.type = type;
-      this.isCreate = type === "create";
-      this.title = type === "create" ? "创建：组" : "编辑：组";
-      this.param = type === "create" ? {} : this.selectedList[0];
+			this.isCreate = type === "create";
+			this.modalType = 'edit'
+      this.title = `编辑：${this.selectedList[0].type === 'ad' ? '活动目录服务器（AD）' : this.selectedList[0].type === 'pam' ? "Linux PAM" : this.selectedList[0].type === 'pve' ? "Proxmox VE authentication server" : "LDAP服务器"}`;
+      this.param = this.selectedList[0];
       this.visible = true;
     },
     //按钮是否可点击
@@ -101,7 +127,12 @@ export default {
 		},
 		handleCommand(command) {
 			 this.type = command;
+			 this.isCreate = true;
+			 this.modalType = 'create'
 			 this.visible = true;
+		},
+		inTypes() {
+			return this.selectedList.some(it => ['pve', 'pam'].includes(it.type));
 		}
   },
 };

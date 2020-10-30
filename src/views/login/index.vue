@@ -133,7 +133,9 @@
         this.$http.get('json/access/domains')
             .then(res => {
               if(res.data) {
-                 this.realmList = res.data;
+                 this.realmList = res.data.sort((a,b) => {
+                   return a.realm > b.realm
+                 });
                  this.realm = res.data[0].realm
               }
             })

@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       renderData: {},
+      expandedArr: []
     };
   },
   mounted() {
@@ -74,7 +75,14 @@ export default {
       } else {
         Object.assign(node, { expanded: true });
       }
-      this.$forceUpdate();
+      if(node.expanded){
+        this.expandedArr.push(node.id)
+        this.$emit('changeExpand', this.expandedArr)
+      } else {
+        this.expandedArr.splice(this.expandedArr.indexOf(node.id),1);
+        this.$emit('changeExpand', this.expandedArr)
+      }
+      //this.$forceUpdate();
     },
     //选择树 
     handleSelect(node) {

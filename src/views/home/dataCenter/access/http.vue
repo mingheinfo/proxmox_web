@@ -476,6 +476,49 @@ export default {
         return Promise.reject(error);
       })
     },
+    createAccessDomain(param) {
+      let event = this.createEvent("action.access.domain.create");
+      return this.$http.post(`json/access/domains`, param, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }).then(() => {
+        this.incEventSuccess(event);
+        this.queryDomain();
+      }).catch((error) => {
+        this.incEventFail(event);
+        return Promise.reject(error);
+      })
+    },
+    queryDomainById(param) {
+      return this.$http.get(`json/access/domains/${param.realm}`, {
+        _dc: new Date().getTime()
+      }).then((res) => {
+        if (res.data) {
+          this.updateDbObject({
+            name: "domainsObj",
+            data: res.data,
+          });
+        }
+      })
+    },
+    updateDomain(param) {
+      let event = this.createEvent("action.access.domain.update");
+      let params = deepCopy(param);
+      delete params.realm
+      delete params.type
+      return this.$http.put(`json/access/domains/${param.realm}`, params, {
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }).then(() => {
+        this.incEventSuccess(event);
+        this.queryDomain();
+      }).catch((error) => {
+        this.incEventFail(event);
+        return Promise.reject(error);
+      })
+    }
   },
 };
 </script>

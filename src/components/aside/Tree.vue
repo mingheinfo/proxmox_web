@@ -6,7 +6,7 @@
       </select>
     </div>
     <div class="aside-tree">
-      <m-tree :treeData="rootnode"></m-tree>
+      <m-tree :treeData="rootnode" @changeExpand="handleChangeExpand"></m-tree>
     </div>
   </aside>
 </template>
@@ -80,12 +80,12 @@ export default {
           iconCls: "fa-server",
           groups: ["node"],
         },
-        type: {
-          value: "type",
-          label: "文件夹视图",
-          iconCls: "fa-building",
-          groups: ["type"],
-        },
+        // type: {
+        //   value: "type",
+        //   label: "文件夹视图",
+        //   iconCls: "fa-building",
+        //   groups: ["type"],
+        // },
         storage: {
           value: "storage",
           label: "存储视图",
@@ -120,8 +120,9 @@ export default {
            await this.updateTable({
              tableName: 'resources',
              list: res.data
+           }).then(() => {
+             this.updateTree();
            })
-          this.updateTree();
          }
       });
     },
@@ -245,7 +246,7 @@ export default {
         if (filterfn && !filterfn(item)) {
           return;
         }
-        let info = Object.assign({}, { leaf: true }, item.data),
+        let info = Object.assign({}, { leaf: true, selected: false, expanded: false}, item.data),
           child = this.groupChild(rootnode, info, groups, 0);
         if (child) {
           index[item.data.id] = child;
@@ -256,29 +257,71 @@ export default {
         Object.keys(this.treeData.dataIndex).forEach((item) => {
           this.rootnode.childNodes.push(this.treeData.dataIndex[item]);
         });
-      } else {
-        let typeData = { dataIndex: {} };
-        for (let item in _this.treeData.dataIndex) {
-          let treeData = _this.treeData.dataIndex[item];
-          if (!typeData.dataIndex.hasOwnProperty(treeData.data.parentId)) {
-            let child = this.groupChild(rootnode, treeData.data, ["type"], 0);
-            typeData.dataIndex[treeData.data.parentId] = {
-              id: treeData.data.parentId,
-              childNodes: [],
-              data: _this.setTypeText(treeData.parentNode.data),
-            };
-            Object.assign(typeData.dataIndex[treeData.data.parentId], {
-              childNodes: [child],
-            });
-          } else {
-            let child = this.groupChild(rootnode, treeData.data, ["type"], 0);
-            typeData.dataIndex[treeData.data.parentId].childNodes.push(child);
-          }
-        }
-        Object.keys(typeData.dataIndex).forEach((item) => {
-          this.rootnode.childNodes.push(typeData.dataIndex[item]);
-        });
-      }
+        console.log(this.rootnode.childNodes);
+      } 
+      // else {
+      //   let typeData = { dataIndex: {} }, nodeList = [], qemuList = [], storageList = [];
+      //    nodeList = restore.filter(it => {
+      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'node'});
+      //       return it.data.type === 'node'
+      //     }),
+      //     qemuList = restore.filter(it => {
+      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'qemu'});
+      //       return it.data.type === 'qemu'
+      //     }),
+      //     storageList = restore.filter(it => {
+      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'storage'});
+      //       return it.data.type === 'storage'
+      //     })
+      //   typeData.dataIndex =  {
+      //     node: {
+      //       id: 'node',
+      //       text: '节点',
+      //       childNodes: nodeList,
+      //        expanded: false,
+      //         selected: false,
+      //       data: {
+      //         id: 'node',
+      //         expanded: false,
+      //         selected: false,
+      //         parentId: 'root',
+      //          text: '节点',
+      //       }
+      //     } ,
+      //     qemu:  {
+      //       id: 'qemu',
+      //       text: '虚拟机',
+      //       childNodes: qemuList,
+      //       expanded: false,
+      //       selected: false,
+      //       data: {
+      //         id: 'qemu',
+      //         expanded: false,
+      //         selected: false,
+      //         parentId: 'root',
+      //          text: '虚拟机',
+      //       }
+      //     },
+      //     storage: {
+      //       id: 'storage',
+      //       text: '存储',
+      //       childNodes: storageList,
+      //       expanded: false,
+      //       selected: false,
+      //       data: {
+      //         id: 'storage',
+      //         expanded: false,
+      //         selected: false,
+      //         parentId: 'root',
+      //         text: '存储',
+      //       }
+      //     }
+      //   }
+      //   Object.keys(typeData.dataIndex).forEach((item) => {
+      //     this.rootnode.childNodes.push(typeData.dataIndex[item]);
+      //   });
+      //   console.log(this.rootnode.childNodes);
+      // }
       if (lastsel && !this.findChild(this.rootnode, "id", lastsel.id)) {
         lastsel = this.rootnode;
         while (!!(p === parents.shift())) {
@@ -323,6 +366,23 @@ export default {
       loop([this.rootnode]);
       return parentId;
     },
+    handleChangeExpand(arr) {
+       let loop = (item) => {
+        item.forEach((it) => {
+          if (arr.includes(it.data.id)) {
+            Object.assign(it.data, { expanded: true });
+          } else if(it.data.id !== 'root'){
+            Object.assign(it.data, { expanded: false });
+          } else if(arr.includes('root') && it.data.id === 'root') {
+            Object.assign(it.data, { expanded: !it.data.expanded });
+          }
+          if (it.childNodes && it.childNodes.length > 0) {
+            loop(it.childNodes);
+          }
+        });
+      };
+      loop([this.rootnode]);
+    },
     selectById(id, lastSelNode) {
       let parentId = this.findParentId(id);
       if(!lastSelNode.parentId) {
@@ -332,11 +392,13 @@ export default {
         item.forEach((it) => {
           if (it.data.id === id) {
             Object.assign(it.data, { selected: true });
-            //Object.assign(it.data, { expanded: true });
+            // if(!it.data.expanded)
+            // Object.assign(it.data, { expanded: true });
           } else {
             Object.assign(it.data, { selected: false });
-            if(!it.data.expanded)
-            Object.assign(it.data, { expanded: false });
+            // if(!it.data.expanded)
+            // Object.assign(it.data, { expanded: false });
+            // else Object.assign(it.data, { expanded: true });
           }
           if (it.childNodes && it.childNodes.length > 0) {
             loop(it.childNodes);
@@ -373,6 +435,8 @@ export default {
           groupinfo.leaf = false;
           groupinfo.groupbyid = v;
           groupinfo.parentId = node.id;
+          groupinfo.selected = false;
+          groupinfo.expanded = false;
           group = _this.addChildSorted(node, groupinfo);
           // fixme: remove when EXTJS has fixed those bugs?!
           //group.expand();

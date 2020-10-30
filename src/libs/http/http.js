@@ -53,7 +53,7 @@ export default class Http {
   }
 
   setDefaultOption(instance) {
-    instance.defaults.timeout = 10000;
+    // instance.defaults.timeout = 10000;
     // instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
     // instance.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
     instance.defaults.headers.post['Content-Type'] = 'application/json';
@@ -168,7 +168,8 @@ export default class Http {
         if(err.response && err.response.status === 401) {
           window.location.href='/login'
         }
-        reject(err.response && err.response.statusText && err.response.statusText);
+        if(err.response.data && err.response.data.errors) reject(err.response.data.errors);
+        else reject(err.response && err.response.statusText && err.response.statusText);
       }).catch(error => {
         reject(error);
       });

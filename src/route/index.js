@@ -101,12 +101,32 @@ const router = new VueRoute({
               path: 'access/domains',
               name: 'access-domains',
               component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/domains/Domains.vue")
+            },
+            {
+              path: 'ha',
+              name: 'ha',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ha/Ha.vue")
+            },
+            {
+              path: 'ha-group',
+              name: 'ha-group',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ha/hagroup/HaGroup.vue")
+            },
+            {
+              path: 'acme',
+              name: 'acme',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/acme/Acme.vue")
+            },
+            {
+              path: 'firewall',
+              name: 'firewall',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/Firewall.vue")
             }
           ]
         },
         {
           path: '/node',
-          name: 'node',
+          name: 'node', 
           component: () => import(/*webpackChunkName: 'node' */"@view/home/node/index.vue"),
           children: [
             {

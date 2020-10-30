@@ -1,7 +1,7 @@
 <template>
 	 <div class="m-input">
 		 <label class="m-input__label" :style="{width: labelWidth}">{{label}}</label>
-		 <div class="m-input__container clearfix" :class="{'m-input__error': showError}">
+		 <div class="m-input__container clearfix" :class="{'m-input__error': showError}" :style="__conStyle">
 			  <div class="prefix" v-if="prefixIcon || $slots['prefix']">
 					<slot name="prefix"></slot>
 				</div>
@@ -95,6 +95,9 @@ export default {
 			default: false
 		},
 		_style: {
+			type: Object
+		},
+		__conStyle: {
 			type: Object
 		},
 		rows: {

@@ -50,7 +50,7 @@
       <Pv-Menu :data="menuData"></Pv-Menu>
       <m-scrollbar>
         <div class="m-content">
-          <router-view />
+          <router-view/>
         </div>
       </m-scrollbar>
     </div>

@@ -121,10 +121,10 @@ export default {
       default: "",
     },
     value: {
-      type: [Array, Object, String],
+      type: [Array, Object, String, Number],
     },
     label: {
-      type: String,
+      type: [String, Number],
       default: "",
     },
     labelWidth: {

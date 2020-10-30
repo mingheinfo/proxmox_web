@@ -94,6 +94,32 @@ const dataCenterMenuList = [
         icon: 'fa fa-key'
       }
     ]
+  },
+  {
+    path: '/datacenter/ha',
+    title: 'Ha',
+    key: 'datacenter-ha',
+    icon: 'fa fa-heartbeat',
+    children: [
+      {
+        path: '/datacenter/ha-group',
+        title: 'ha-group',
+        key: 'datacenter-ha-group',
+        icon: 'fa fa-object-group'
+      }
+    ]
+  },
+  {
+    path: '/datacenter/acme',
+    title: 'acme',
+    key: 'datacenter-acme',
+    icon: 'fa fa-certificate'
+  },
+  {
+    path: '/datacenter/firewall',
+    title: 'firewall',
+    key: 'datacenter-firewall',
+    icon: 'fa fa-shield'
   }
 ];
 /**

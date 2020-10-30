@@ -364,31 +364,35 @@
         </div>
       </div>
       <Dialog :visible="showLog"
+              @close="closeLog"
               :_style="{
-      width: '100%',
-      height: 'calc(100%)',
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      right: '0',
-      bottom: '0',
+      width: '800px',
     }"
     title="Task Viewer: 加入集群">
         <template slot="content">
           <m-tab v-model="tab" @tab-click="handleTabChange">
-            <m-tab-panel lable="输出" name="log"></m-tab-panel>
-             <m-tab-panel lable="状态" name="status"></m-tab-panel>
+            <m-tab-panel label="输出" name="log"></m-tab-panel>
+             <m-tab-panel label="状态" name="status"></m-tab-panel>
           </m-tab>
+          <m-button class="create-btn" type="primary" @on-click="stopTask1" :disabled="db.addClusterStatusObj.status !== 'running'"
+          >停止</m-button>
           <div class="table" v-if="tab === 'log'">
             <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
               {{item.t}}
             </div>
           </div>
           <div class="table" v-if="tab === 'status'">
-            <div class="table-tr" v-for="item in db.addClusterStatusList" :key="item.n">
-              {{item.t}}
-            </div>
+              <template v-for="(item, key) in db.addClusterStatusObj">
+                <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
+                  <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
+                  <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
+                  <div class="table-td" v-else>{{item}}</div>
+                </div>
+              </template>
           </div>
+        </template>
+        <template slot="footer">
+          <span></span>
         </template>
       </Dialog>
     </template>
@@ -417,7 +421,7 @@
 <script>
 import MButton from "@src/components/button/Button";
 import Dialog from "@src/components/dialog/Dialog";
-import { copyText, percentToFixed } from "@libs/utils/index";
+import { dateFormat, percentToFixed } from "@libs/utils/index";
 import Base64 from "@libs/utils/base64.js";
 import ClusterHttp from "./http";
 
@@ -452,6 +456,7 @@ export default {
       isCreate: true,
       networkNum: [],
       showLog: false,
+      tab: 'log',
       rules: {
         clusterName: {
           error: false,
@@ -487,7 +492,8 @@ export default {
       netWorkList: [],
       isAdvice: true,
 			initnum: 1,
-			deleteNum: []
+      deleteNum: [],
+      interVal: null
     };
   },
   mounted() {
@@ -524,6 +530,7 @@ export default {
     }
   },
   methods: {
+    dateFormat,
     //关闭弹框
     close() {
       this.$emit("close");
@@ -609,16 +616,8 @@ export default {
 			}
 			console.log(param);
       this.createCluster(param).then((res) => {
-        if (res.response && res.response.status === 500) {
-          this.$confirm
-            .confirm({
-              msg: res.response.statusText,
-              type: "info",
-            })
-            .then(() => {
-              this.close();
-            });
-        }
+         this.showLog = true;
+         this.interVal = setInterval(() => this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.pid), 3000);
      });
     },
     //整体校验
@@ -650,7 +649,7 @@ export default {
       this.clusterJoin(param)
           .then(() => {
             this.showLog = true;
-            this.close();
+            this.interVal = setInterval(() => this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid), 3000);
           }).catch((res) => {
             this.$confirm.error({
               msg: res,
@@ -658,6 +657,9 @@ export default {
             }).then(() => {})
               .catch(() => {})
           })
+    },
+    handleTabChange(value) {
+      this.tab = value;
     },
     handleLinkChange() {
       if(this.deleteNum.length > 0) {
@@ -676,8 +678,21 @@ export default {
 			this.networkNum.splice(num, 1);
 			delete this.$data.link[item];
 			this.deleteNum.push(item);
-		},
+    },
+    closeLog() {
+      this.showLog = false;
+      this.close();
+    },
+    stopTask1() {
+      this.stopTask(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
+    }
   },
+  beforeDestroy() {
+    if(this.interVal) {
+      clearInterval(this.interVal);
+      this.interVal = null
+    }
+  }
 };
 </script>
 
