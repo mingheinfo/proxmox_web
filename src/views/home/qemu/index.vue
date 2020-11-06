@@ -300,7 +300,7 @@ export default {
       return states.some(status => status === this.db.qemuObj.qmpstatus);
     }
   },
-  destroyed() {
+  beforeDestroy() {
     if(this.interval) {
       clearInterval(this.interval);
       this.interval = null;

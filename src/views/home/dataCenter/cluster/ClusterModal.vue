@@ -617,7 +617,7 @@ export default {
 			console.log(param);
       this.createCluster(param).then((res) => {
          this.showLog = true;
-         this.interVal = setInterval(() => this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.pid), 3000);
+         this.interVal = setInterval(() => this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid), 3000);
      });
     },
     //整体校验

@@ -9,10 +9,10 @@
             <span class="pop-close" @click.prevent="noClick"></span>
           </div>
           <p class="pop-note hasTitle">
-            <base-icon :name="icon" v-if="icon"/>
+            <base-icon :name="icon" v-if="icon" style="width: 100px"/>
             <slot>
-              <p v-if="!dangerouslyUseHTMLString">{{ msg }}</p>
-              <p v-else v-html="msg"></p>
+              <p v-if="!dangerouslyUseHTMLString" style="display: inline-block">{{ msg }}</p>
+              <p v-else v-html="msg" style="display: inline-block"></p>
             </slot>
           </p>
           <div class="btn-wrapper" v-if="type == 'alert'" @click.stop="alertClick">

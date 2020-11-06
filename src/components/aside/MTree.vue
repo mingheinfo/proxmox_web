@@ -78,9 +78,11 @@ export default {
       if(node.expanded){
         this.expandedArr.push(node.id)
         this.$emit('changeExpand', this.expandedArr)
+        this.$parent.$data.defaultExpandKeys = this.expandedArr;
       } else {
         this.expandedArr.splice(this.expandedArr.indexOf(node.id),1);
         this.$emit('changeExpand', this.expandedArr)
+        this.$parent.$data.defaultExpandKeys = this.expandedArr;
       }
       //this.$forceUpdate();
     },

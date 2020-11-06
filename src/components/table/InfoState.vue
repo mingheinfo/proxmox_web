@@ -24,7 +24,11 @@ export default {
 				'unactived': this.state ===  'unActived',
 				'online': this.state === 'online',
 				'unLine': this.state === 'unLine',
-				'unknown': this.state === 'unknown'
+				'unknown': this.state === 'unknown',
+				'running': this.state === 'running',
+				'stopped': this.state === 'stopped',
+				'dead': this.state === 'dead',
+				'stopped': this.state === 'stop'
 			}
 		}
 	}

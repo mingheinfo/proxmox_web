@@ -119,7 +119,33 @@ const dataCenterMenuList = [
     path: '/datacenter/firewall',
     title: 'firewall',
     key: 'datacenter-firewall',
-    icon: 'fa fa-shield'
+    icon: 'fa fa-shield',
+    children: [
+      {
+        path: '/datacenter/firewall/option',
+        name: 'datacenter-firewall-option',
+        title: 'datacenter-firewall-option',
+        icon: 'fa fa-gear'
+      },
+      {
+        path: '/datacenter/firewall/group',
+        name: 'datacenter-firewall-group',
+        title: 'datacenter-firewall-group',
+        icon: 'fa fa-group'
+      },
+      {
+        path: '/datacenter/firewall/alias',
+        name: 'datacenter-firewall-alias',
+        title: 'datacenter-firewall-alias',
+        icon: 'fa fa-external-link'
+      },
+      {
+        path: '/datacenter/firewall/ipset',
+        name: 'datacenter-firewall-ipset',
+        title: 'datacenter-firewall-ipset',
+        icon: 'fa fa-list-ol'
+      }
+    ]
   }
 ];
 /**
@@ -151,27 +177,27 @@ const nodeMenuList = [
     path: '/node/shell',
     title: 'shell',
     key: 'node-shell',
-    icon: 'fa  fa-sticky-note-o',
+    icon: 'fa  fa-terminal',
     children: []
   },
   {
     path: '/node/system',
     title: 'system',
     key: 'node-system',
-    icon: 'fa  fa-sticky-note-o',
+    icon: 'fa  fa-cogs',
     children: [
       {
-        path: '/node/overview',
-        title: 'overview',
-        key: 'node-overview',
-        icon: 'fa fa-book',
+        path: '/node/network',
+        title: 'network',
+        key: 'node-network',
+        icon: 'fa fa-exchange',
         children: []
       },
       {
-        path: '/node/notes',
-        title: 'notes',
-        key: 'node-notes',
-        icon: 'fa  fa-sticky-note-o',
+        path: '/node/certificates',
+        title: 'certificate',
+        key: 'node-certificates',
+        icon: 'fa  fa-certificate',
         children: []
       }
     ]

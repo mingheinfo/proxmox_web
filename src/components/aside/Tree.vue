@@ -58,6 +58,7 @@ export default {
           iconCls: "fa fa-file-o",
         },
       },
+      defaultExpandKeys: [],
       rootnode: {
         id: "root",
         data: {
@@ -214,6 +215,7 @@ export default {
               field = fields[i];
               if (item.data[field] !== olditem.data[field]) {
                 changed = true;
+                olditem.data[field] = item.data[field];
                 break;
               }
             }
@@ -221,12 +223,13 @@ export default {
             // fixme: also test filterfn()?
           }
           if (changed) {
-            setIconCls(item.data, this.typeDefaults);
-            this.$forceUpdate();
+            setIconCls(olditem.data, this.typeDefaults);
           }
           if ((!item || moved) && olditem.data.leaf) {
-
+              
             delete index[key];
+            this.refresh();
+            this.handleChangeExpand(this.defaultExpandKeys)
             var parentNode = olditem.parentNode;
             if (lastsel && lastsel.data && olditem.data.id === lastsel.data.id) {
               reselect = true;
@@ -237,6 +240,12 @@ export default {
             this.$router.push('/datacenter/overview');
           }
         }
+      }
+      let isChange = false;
+      if(Object.keys(index).length !== restore.length) {
+          isChange = true;
+      } else {
+        isChange = false;
       }
       restore.forEach((item) => {
         var olditem = index[item.data.id];
@@ -252,76 +261,18 @@ export default {
           index[item.data.id] = child;
         }
       });
-      
-      if (this.view !== "type") {
-        Object.keys(this.treeData.dataIndex).forEach((item) => {
-          this.rootnode.childNodes.push(this.treeData.dataIndex[item]);
+       if(isChange) {
+          this.refresh();
+       }
+      if (_this.view !== "type") {
+        Object.keys(_this.treeData.dataIndex).forEach((item) => {
+          _this.rootnode.childNodes.push(_this.treeData.dataIndex[item]);
         });
-        console.log(this.rootnode.childNodes);
-      } 
-      // else {
-      //   let typeData = { dataIndex: {} }, nodeList = [], qemuList = [], storageList = [];
-      //    nodeList = restore.filter(it => {
-      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'node'});
-      //       return it.data.type === 'node'
-      //     }),
-      //     qemuList = restore.filter(it => {
-      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'qemu'});
-      //       return it.data.type === 'qemu'
-      //     }),
-      //     storageList = restore.filter(it => {
-      //       Object.assign(it.data, {selected: false, expanded: false, parentId: 'storage'});
-      //       return it.data.type === 'storage'
-      //     })
-      //   typeData.dataIndex =  {
-      //     node: {
-      //       id: 'node',
-      //       text: '节点',
-      //       childNodes: nodeList,
-      //        expanded: false,
-      //         selected: false,
-      //       data: {
-      //         id: 'node',
-      //         expanded: false,
-      //         selected: false,
-      //         parentId: 'root',
-      //          text: '节点',
-      //       }
-      //     } ,
-      //     qemu:  {
-      //       id: 'qemu',
-      //       text: '虚拟机',
-      //       childNodes: qemuList,
-      //       expanded: false,
-      //       selected: false,
-      //       data: {
-      //         id: 'qemu',
-      //         expanded: false,
-      //         selected: false,
-      //         parentId: 'root',
-      //          text: '虚拟机',
-      //       }
-      //     },
-      //     storage: {
-      //       id: 'storage',
-      //       text: '存储',
-      //       childNodes: storageList,
-      //       expanded: false,
-      //       selected: false,
-      //       data: {
-      //         id: 'storage',
-      //         expanded: false,
-      //         selected: false,
-      //         parentId: 'root',
-      //         text: '存储',
-      //       }
-      //     }
-      //   }
-      //   Object.keys(typeData.dataIndex).forEach((item) => {
-      //     this.rootnode.childNodes.push(typeData.dataIndex[item]);
-      //   });
-      //   console.log(this.rootnode.childNodes);
-      // }
+      }
+      if(isChange) {
+        this.handleChangeExpand(this.defaultExpandKeys)
+        isChange = false;
+      }
       if (lastsel && !this.findChild(this.rootnode, "id", lastsel.id)) {
         lastsel = this.rootnode;
         while (!!(p === parents.shift())) {
@@ -345,7 +296,33 @@ export default {
         //rootnode.
       }
       this.treeData.updateCount++;
-      this.commitUpdateChangeTree(false);
+      //this.commitUpdateChangeTree(false);
+    },
+    refresh() {
+      let rootnode = {
+              id: "root",
+              data: {
+                text: "数据中心 (test)",
+                root: true,
+                index: 0,
+                parentId: null,
+                expanded: true,
+                id: "root",
+                iconCls: "fa fa-server",
+                type: "",
+                vmid: 0,
+              },
+              childNodes: [],
+            },
+            index = this.treeData.dataIndex,
+            groups = this.viewTypeList[this.view].groups || [];
+      for(let key in this.treeData.dataIndex) {
+        let info = this.treeData.dataIndex[key].data,
+            child = this.groupChild(rootnode, info, groups, 0);
+            if (child) {
+              index[key] = child;
+           }
+      }
     },
     findParentId(id) {
       let parentId = "";
@@ -372,9 +349,7 @@ export default {
           if (arr.includes(it.data.id)) {
             Object.assign(it.data, { expanded: true });
           } else if(it.data.id !== 'root'){
-            Object.assign(it.data, { expanded: false });
-          } else if(arr.includes('root') && it.data.id === 'root') {
-            Object.assign(it.data, { expanded: !it.data.expanded });
+             Object.assign(it.data, { expanded: false });
           }
           if (it.childNodes && it.childNodes.length > 0) {
             loop(it.childNodes);

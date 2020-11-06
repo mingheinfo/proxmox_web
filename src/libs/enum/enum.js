@@ -483,6 +483,23 @@ const PORTOCOLIST =[
 		{ p: 'wesp', n: 141, d: 'Wrapped Encapsulating Security Payload' },
 		{ p: 'rohc', n: 142, d: 'Robust Header Compression' }
 ]
+
+const network_iface_types = {
+	eth: "Network Device",
+	bridge: 'Linux Bridge',
+	bond: 'Linux Bond',
+	vlan: 'Linux VLAN',
+	OVSBridge: 'OVS Bridge',
+	OVSBond: 'OVS Bond',
+	OVSPort: 'OVS Port',
+	OVSIntPort: 'OVS IntPort'
+}
+
+const bond_mode_gettext_map = {
+	'802.3ad': 'LACP (802.3ad)',
+	'lacp-balance-slb': 'LACP (balance-slb)',
+	'lacp-balance-tcp': 'LACP (balance-tcp)',
+}
 export {
 	VGALIST,
 	BIOSLIST,
@@ -496,5 +513,7 @@ export {
 	CONSOLE_Map,
 	KVM_HA_Map,
 	STORAGESCHEMA,
-	PORTOCOLIST
+	PORTOCOLIST,
+	network_iface_types,
+	bond_mode_gettext_map
 } 

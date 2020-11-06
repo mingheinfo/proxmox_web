@@ -14,13 +14,13 @@
              <dropdown-item command="spice">SPICE</dropdown-item>
              <dropdown-item command="xtermjs">xtermjs</dropdown-item>
            </dropdown>
-           <dropdown style="width: auto; border: 1px solid #e6e6e6;display: inline-block;">
+           <dropdown style="width: auto; border: 1px solid #e6e6e6;display: inline-block;" @on-change="handleMoreOpration">
              <m-button icon="fa fa-fw fa-ellipsis-v" slot="label" style="border: none;">
                批量操作
              </m-button>
-             <dropdown-item command="novnc">NoVNC</dropdown-item>
-             <dropdown-item command="virt-viewer">SPICE</dropdown-item>
-             <dropdown-item command="xtermjs">xtermjs</dropdown-item>
+             <dropdown-item command="startall">批量启动</dropdown-item>
+             <dropdown-item command="stopall">批量停止</dropdown-item>
+             <dropdown-item command="xtermjs">批量迁移</dropdown-item>
            </dropdown>
          </div>
        </div>
@@ -30,11 +30,19 @@
            <router-view/>
          </div>
        </m-scrollbar>
+       <node-select-modal 
+           :visible="visible"
+           v-if="visible"
+           :param="nodeModalParam"
+           :title="title"
+           @close="visible = false"
+           ></node-select-modal>
      </div>
    </transition>
 </template>
 
 <script>
+  import NodeSelectModal from '@view/home/node/NodeSelectModal'
   import { mapState } from 'vuex';
   import PvMenu from '@src/components/menu/Menu';
   import MScrollbar from "@src/components/scroll/Scrollbar";
@@ -44,20 +52,26 @@
   import Dropdown from "@src/components/dropdown/dropdown";
   import DropdownItem from "@src/components/dropdown/dropdownItem";
   import { openConsoleWindow} from "@libs/utils";
+  import NodeHttp from './http';
 
   export default {
     name: "Node",
+    mixins: [NodeHttp],
     components: {
       DropdownItem,
       Dropdown,
       MScrollbar,
       PvMenu,
-      MButton
+      MButton,
+      NodeSelectModal
     },
     data() {
       return {
         node: '',
-        menuData: nodeMenuList
+        menuData: nodeMenuList,
+        nodeModalParam: {},
+        visible: false,//是否展示批量操作框，
+        title: '批量启动'
       }
     },
     computed: {
@@ -104,7 +118,6 @@
           });
       },
       handleConsole(e) {
-        console.log(e);
         let options = {
           cmd: undefined,
           consoleName: undefined,
@@ -122,6 +135,15 @@
             openConsoleWindow('xtermjs', 'shell', options.vmid, this.node, options.consoleName, options.cmd);
             break;
         }
+      },
+      handleMoreOpration(operate) {
+        this.nodeModalParam = {
+          operate,
+          node: this.node
+        }
+        this.title = operate === 'stopall' ? '批量停止' : operate === 'startall' ? '批量启动' : '批量迁移'
+        this.visible = true;
+         //this.beatchOperate(operate);
       }
     },
     mounted() {

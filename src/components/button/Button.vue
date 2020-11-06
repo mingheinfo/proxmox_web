@@ -2,7 +2,7 @@
   <div :class="['m-button', `m-button-${size}`, `m-button-${type}`, disabled ? 'm-button-disabled' : '' ]"
        @click="!disabled && $emit('on-click')">
     <i class="m-button-icon" :class="icon" v-show="icon"></i>
-    <span>
+    <span class="m-button-text">
        <slot></slot>
     </span>
   </div>
@@ -44,7 +44,6 @@
   .m-button{
     padding: 0px 10px;
     border-radius: 3px;
-    border:  1px solid #e6e6e6;
     display: inline-block;
     text-align: center;
     cursor: pointer;
@@ -65,11 +64,11 @@
   }
   .m-button-icon{
     display: inline-block;
-    vertical-align: middle;
     padding-right: 5px;
   }
   .m-button-default{
     background: #fff;
+    border:  1px solid #e6e6e6;
   }
   .m-button-primary{
     background: #409eff;
@@ -89,5 +88,8 @@
   }
   .m-button-disabled{
     background: #e0eaf3;
+  }
+  .m-button-text{
+    display: inline-block;
   }
 </style>

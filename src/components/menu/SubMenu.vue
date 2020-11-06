@@ -3,7 +3,7 @@
     <template v-for="menu of data">
       <el-menu-item v-if="!menu.children || menu.children.length <= 0" :title="menu.title" :index="menu.path">
         <i :class="menu.icon"></i>
-        <span slot="title">{{menu.title}}</span>
+        <span slot="title">{{$t(menu.title)}}</span>
       </el-menu-item>
       <template v-else-if="menu.children && menu.children.length > 0">
         <el-submenu :index="menu.path">

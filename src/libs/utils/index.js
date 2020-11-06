@@ -7,7 +7,7 @@ var IPV4_REGEXP = "(?:(?:" + IPV4_OCTET + "\\.){3}" + IPV4_OCTET + ")";
 var IPV6_H16 = "(?:[0-9a-fA-F]{1,4})";
 var IPV6_LS32 = "(?:(?:" + IPV6_H16 + ":" + IPV6_H16 + ")|" + IPV4_REGEXP + ")";
 var IP4_match = new RegExp("^(?:" + IPV4_REGEXP + ")$");
-var IP4_cidr_match = new RegExp("^(?:" + IPV4_REGEXP + ")\/[1-3][0-9]?$");
+const IP4_cidr_match = new RegExp("^(?:" + IPV4_REGEXP + ")\/[1-3][0-9]?$");
 var IPV6_REGEXP = "(?:" +
   "(?:(?:" + "(?:" + IPV6_H16 + ":){6})" + IPV6_LS32 + ")|" +
   "(?:(?:" + "::" + "(?:" + IPV6_H16 + ":){5})" + IPV6_LS32 + ")|" +
@@ -409,9 +409,11 @@ function openVNCViewer(vmtype, vmid, nodename, vmname, novnc) {
   var options = {
     console: vmtype ? vmtype : '', // kvm, lxc, upgrade or shell
     novnc: novnc ? 1 : 0,
-    vmid: vmid ? vmid : '',
+    vmid: String(vmid) ? vmid : '',
     vmname: vmname ? vmname : '',
-    node: nodename ? nodename : ''
+    node: nodename ? nodename : '',
+    resize: 'off',
+    cmd: ''
   }, url = '';
   for (let it in options) {
     url += encodeURIComponent(it) + '=' + encodeURIComponent(options[it]) + '&';
@@ -702,6 +704,81 @@ function parse_task_upid(upid) {
   //task.desc = format_task_description(task.type, task.id);
   return task;
 }
+
+const isEmpty = function (val) {
+  // null or undefined
+  if (val == null) return true;
+
+  if (typeof val === 'boolean') return false;
+
+  if (typeof val === 'number') return !val;
+
+  if (val instanceof Error) return val.message === '';
+
+  switch (Object.prototype.toString.call(val)) {
+    // String or Array
+    case '[object String]':
+    case '[object Array]':
+      return !val.length;
+
+    // Map or Set or File
+    case '[object File]':
+    case '[object Map]':
+    case '[object Set]': {
+      return !val.size;
+    }
+    // Plain Object
+    case '[object Object]': {
+      return !Object.keys(val).length;
+    }
+  }
+
+  return false;
+}
+
+function parseACME(value) {
+  if (!value) {
+    return {};
+  }
+
+  var res = {};
+  var error;
+
+  value.split(',').forEach(p => {
+    var kv = p.split('=', 2);
+    if (!isEmpty(kv[1])) {
+      res[kv[0]] = kv[1];
+    } else {
+      error = 'Failed to parse key-value pair: ' + p;
+      return false;
+    }
+  });
+
+  if (error !== undefined) {
+    console.error(error);
+    return;
+  }
+
+  if (res.domains !== undefined) {
+    res.domains = res.domains.split(/;/);
+  }
+
+  return res;
+}
+
+function uplodFile(file, callback) {
+  if (file.size > 8192) {
+    Vue.$confim.error({
+      msg: gettext("Invalid file size: ") + file.size
+    });
+    return;
+  }
+  let reader = new FileReader();
+  reader.onload = function (evt) {
+    callback(evt.target.result);
+  };
+  reader.readAsText(file);
+}
 export {
   getEvent,
   stopEvent,
@@ -742,5 +819,12 @@ export {
   macPrefix,
   proxmoxMail,
   percentToFixed,
-  parse_task_upid
+  parse_task_upid,
+  IP4_cidr_match,
+  IP4_match,
+  IP6_match,
+  IP6_cidr_match,
+  isEmpty,
+  parseACME,
+  uplodFile
 }

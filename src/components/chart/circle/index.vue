@@ -1,7 +1,7 @@
 <template>
   <div class="content-item">
     <div class="title">{{title}}</div>
-    <div ref="chart-content" style="height: 200px"></div>
+    <div :class="`m-chart-instance-${_uid}`" style="height: 200px"></div>
   </div>
 </template>
 <script>
@@ -20,7 +20,6 @@
       value: {
         type: Number,
         validate: (value) => {
-          debugger
           if(!/\d/.test(String(value)))
             throw new Error('格式不正确');
         }
@@ -28,10 +27,16 @@
       title: String,
       label: String
     },
+    data() {
+      return {
+        chartsDom: null
+      }
+    },
     mounted() {
-      this.$nextTick(() => {
-        this.renderChart(this.$refs['chart-content'],this.value, 100)
-      })
+       let _this = this, el = document.querySelector(`.m-chart-instance-${_this._uid}`);
+      el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+      el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+      this.chartsDom = echarts.init(el);
     },
     methods: {
       /**
@@ -43,7 +48,7 @@
       //dividend
       //divisor
       renderChart(chartInstance, dividend, divisor) {
-        //echarts.dispose(chartInstance)
+        if(!chartInstance) return;
         const data = [dividend, divisor - dividend]
         const colors = ['#4b7efe', '#beddff']
         const percentage = divisor === 0 ? 0 : dividend / divisor * 100
@@ -52,7 +57,7 @@
         const textFontSize = 20
         const subTextFontSize = 0
         const option = getAnnulusOption(data, colors, text, subText, textFontSize, subTextFontSize)
-        const charts = echarts.init(chartInstance)
+        const charts = chartInstance
         charts.setOption(option)
       },
 
@@ -78,7 +83,7 @@
     watch: {
       'value': function (newVal, oldVal) {
         if(newVal !== oldVal)
-          this.renderChart(this.$refs['chart-content'], newVal, 100)
+          this.renderChart(this.chartsDom, newVal, 100)
       }
     }
   }

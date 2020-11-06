@@ -236,7 +236,6 @@ export default {
         return val;
       } else {
         if (!this.closed) this.$emit("close");
-        document.body.removeChild(this.$el);
         if (this.destroyOnClose) {
           this.$nextTick(() => {
             this.key++;

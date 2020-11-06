@@ -60,7 +60,7 @@
                 <el-table-column label="ID" prop="sid"></el-table-column>
                 <el-table-column label="状态" prop="state"></el-table-column>
                 <el-table-column label="节点" prop="node"></el-table-column>
-                <el-table-column label="名称" prop="name"></el-table-column>
+                <el-table-column label="名称" prop="sid"></el-table-column>
                 <el-table-column
                   label="最大重启"
                   prop="max_restart"
@@ -128,7 +128,7 @@ export default {
     showModal(type) {
       this.type = type;
       this.isCreate = type === "create";
-      this.title = type === "create" ? "创建：复制作业" : "编辑：复制作业";
+      this.title = type === "create" ? "添加：资源：容器/虚拟机" : "编辑：复制作业";
       this.param = type === "create" ? {} : this.selectedList[0];
       this.visible = true;
     },

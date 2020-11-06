@@ -2,14 +2,15 @@
   <page-template>
     <div slot="toolbar-left">
       <m-button type="primary" @on-click="showModal('create')" icon="el-icon-plus">添加</m-button>
-			<m-button type="warning" @on-click="showModal('create')" icon="el-icon-copy-document" :disabled="inStatus()">拷贝</m-button>
-			<m-button type="primary" @on-click="showModal('create')" icon="el-icon-folder-add" :disabled="inStatus()">插入：安全组</m-button>
-			<m-button type="danger" @on-click="showModal('create')" icon="el-icon-delete" :disabled="inStatus()">删除</m-button>
+			<m-button type="warning" @on-click="showModal('copy')" icon="el-icon-copy-document"
+                :disabled="inStatus() || selectedList && selectedList[0] && selectedList[0].type === 'group'">拷贝</m-button>
+			<m-button type="primary" @on-click="showModal('rule')" icon="el-icon-folder-add" :disabled="inStatus()">插入：安全组</m-button>
+			<m-button type="danger" @on-click="handleDelete" icon="el-icon-delete" :disabled="selectedList.length <=0 ">删除</m-button>
       <m-button
         type="info"
-        @on-click="handleDelete"
         icon="el-icon-edit"
-        :disabled="selectedList.length <= 0"
+        :disabled="selectedList.length !== 1"
+        @on-click="showModal('edit')"
         >编辑</m-button
       >
     </div>
@@ -63,6 +64,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
+        :isGroup="isGroup"
         @close="visible = false; queryFireWallList()"
       ></create-firewall-Rule-modal>
     </div>
@@ -89,6 +91,7 @@ export default {
       selectedList: [],
       isCreate: true,
       param: {},
+      isGroup: false
     };
   },
   mounted() {
@@ -106,10 +109,12 @@ export default {
       this.title = type === "create" ? "创建：复制作业" : "编辑：复制作业";
       this.param = type === "create" ? {} : this.selectedList[0];
       this.visible = true;
+      debugger;
+      this.isGroup =  this.selectedList[0] && this.selectedList[0].type === 'group';
     },
     //按钮是否可点击
     inStatus() {
-      return this.selectedList.length <= 0;
+      return this.selectedList.length !== 1;
     },
     //选择
     handleSelect(row) {

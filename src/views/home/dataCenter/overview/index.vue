@@ -8,11 +8,11 @@
             title="状态"
             :isDouble="false"
             type="cluster"
-            icon="good fa-check-circle"
+            :icon="`${status && status.cluster && status.cluster[0] && status.cluster[0].quorate && status.cluster[0].quorate == '0' ? 'fa critical fa-times-circle' : 'good fa-circle'}`"
             :des="`集群${
-              status && status[0] && status[0].name && status[0].name
+              status && status.cluster && status.cluster[0] && status.cluster[0].name ? status.cluster[0].name : ''
             },具有法定数目的:${
-              status && status[0] && status[0].quorate ? status[0].quorate : 0
+              status && status.cluster && status.cluster[0] && status.cluster[0].quorate ? status.cluster[0].quorate : 0
             }`"
           ></line-item>
         </div>
@@ -21,7 +21,7 @@
             title="节点"
             :isDouble="true"
             type="node"
-            :data="status && status[1]"
+            :data="status && status.node"
           ></line-item>
         </div>
       </div>
@@ -177,7 +177,7 @@ export default {
   data() {
     return {
       resources: {},
-      status: [],
+      status: {},
       nodes: [],
       intervalId: null,
       subs: {
@@ -195,11 +195,17 @@ export default {
     },
     getClusterStatus() {
       this.$http.get("/json/cluster/status").then((results) => {
-        this.status = results.data;
+        this.status.node={
+          online: results.data.filter(it => it.type === 'node' && it.online === 1).length,
+          offline: results.data.filter(it => it.type === 'node' && it.online === 0).length
+        }
+        this.status.cluster= results.data.filter(it => it.type === 'cluster'),
+
         this.nodes = results.data.filter((item) => item.type === "node");
-        var i;
-        var level;
-        var mixed = false;
+        let  i;
+        let level;
+        let mixed = false;
+
         for (let node of results.data) {
           if (node.type !== "node") {
             continue;
@@ -283,7 +289,7 @@ export default {
               nodes++;
               var griditem = {};
               if (griditem) {
-                griditem["cpuusage"] = item.cpu;
+                griditem["cpuusage"] = item.cpu || 0;
                 var max = item.maxmem || 1;
                 var val = item.mem || 0;
                 griditem["memoryusage"] = val / max;
@@ -383,4 +389,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.content-item{
+  height: 100%;
+}
+.card-item{
+   height: 100%;
+}
 </style>

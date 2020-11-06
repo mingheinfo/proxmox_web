@@ -32,7 +32,7 @@
        <div class="line-content">
          <div class="line-content-item">
            <i class="fail fa fa-stop-circle"></i>离线</div>
-         <div class="line-content-item">{{data && data.stopped}}</div>
+         <div class="line-content-item">{{data && data.offline}}</div>
        </div>
      </template>
      <template v-if="!isDouble">

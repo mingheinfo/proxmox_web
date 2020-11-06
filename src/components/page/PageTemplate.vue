@@ -9,6 +9,9 @@
           <!--工具栏右侧区-->
          <slot name="toolbar-right"></slot>
        </div>
+       <div v-if="$slots['toolbar']">
+         <slot name="toolbar"></slot>
+       </div>
      </div>
      <div class="page-template__content">
         <!--主页面区-->

@@ -90,7 +90,7 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.groupid }}</span>
+                      <span class="table-td">{{ item.group }}</span>
                       <span class="table-td">{{ item.comment }}</span>
                       <span class="table-td">
                         {{ item.users }}
@@ -241,7 +241,10 @@ export default {
     async __init__() {
       if (this.isCreate) {
         Object.assign(this.$data, this.$options.data());
-        await this.queryResource();
+        await this.queryResource()
+                  .then(() => {
+                    this.vmList = this.db.resources.filter(it => it.type === 'qemu')
+                  });
         await this.queryGroups();
       } else {
         Object.assign(this.$data, this.$options.data());

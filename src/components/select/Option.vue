@@ -112,8 +112,8 @@
 		&__content{
 			display: inline-block;
 			vertical-align: middle;
-			min-height: 30px;
-      line-height: 30px;
+			min-height: 28px;
+      line-height: 28px;
       margin: 5px 10px;
 		}
 		&__checkbox{

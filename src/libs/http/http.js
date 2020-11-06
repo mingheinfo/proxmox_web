@@ -168,7 +168,7 @@ export default class Http {
         if(err.response && err.response.status === 401) {
           window.location.href='/login'
         }
-        if(err.response.data && err.response.data.errors) reject(err.response.data.errors);
+        if(err.response && err.response.data && err.response.data && err.response.data.errors) reject(err.response.data.errors);
         else reject(err.response && err.response.statusText && err.response.statusText);
       }).catch(error => {
         reject(error);

@@ -102,9 +102,9 @@ export default {
         setTimeout(() => {if(this.isOpen && this.type === 'multiple')  this.$refs["select-option"].focus()}, 10);
         return true;
       } else {
-        this.$refs &&
-          this.$refs["select-menu"] &&
-          document.body.removeChild(this.$refs["select-menu"]);
+          if(this.$refs && this.$refs["select-menu"] &&  this.$refs["select-menu"].parentNode === document.body) {
+             document.body.removeChild(this.$refs["select-menu"]);
+          }
         return false;
       }
     },

@@ -120,7 +120,27 @@ const router = new VueRoute({
             {
               path: 'firewall',
               name: 'firewall',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/Firewall.vue")
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/Firewall.vue"),
+            },
+            {
+              path: 'firewall/option',
+              name: 'firewall-option',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/options/FirOptions.vue"),
+            },
+            {
+              path: 'firewall/group',
+              name: 'firewall-group',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/group/FireWallGroup.vue"),
+            },
+            {
+              path: 'firewall/alias',
+              name: 'firewall-alias',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/alias/FireWallAlias.vue"),
+            },
+            {
+              path: 'firewall/ipset',
+              name: 'firewall-ipset',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/ipset/IpSet.vue"),
             }
           ]
         },
@@ -144,6 +164,26 @@ const router = new VueRoute({
               name: 'shell',
               component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/shell/Shell.vue"),
             },
+            {
+              path: 'notes',
+              name: 'notes',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/notes/Notes.vue"),
+            },
+            { 
+              path: 'system',
+              name: 'system',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/System.vue")
+            },
+            {
+              path: 'network',
+              name: 'network',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/network/NetWork.vue")
+            },
+            {
+              path: 'certificates',
+              name: 'certificates',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/certificates/Certificates.vue")
+            }
           ]
         },
         {

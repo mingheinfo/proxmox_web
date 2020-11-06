@@ -173,10 +173,18 @@ export default {
     async __init__() {
       if (this.isCreate) {
 				Object.assign(this.$data, this.$options.data());
-				this.queryResource();
+        this.queryResource()
+            .then((data) => {
+              this.nodeList = data.filter(it => it.type === 'node');
+						  this.nodeList.forEach(it => Object.assign(this.node, it.id, ''));
+            });
       } else {
 				Object.assign(this.$data, this.$options.data());
-			  await this.queryResource();
+        await this.queryResource()
+                   .then((data) => {
+                       this.nodeList = data.filter(it => it.type === 'node');
+						           this.nodeList.forEach(it => Object.assign(this.node, it.id, ''));
+                  });;
 				this.queryGroupsById({id: this.param.group})
 				    .then(() => {
 							Object.keys(this.db.groupsObj).forEach(it => {

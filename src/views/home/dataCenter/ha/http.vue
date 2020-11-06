@@ -61,8 +61,7 @@ export default {
         .get("json/cluster/resources")
         .then((res) => {
           if (res.data) {
-						this.nodeList = res.data.filter(it => it.type === 'node');
-						this.nodeList.forEach(it => Object.assign(this.node, it.id, ''));
+					  return Promise.resolve(res.data);
           }
         });
 		},
