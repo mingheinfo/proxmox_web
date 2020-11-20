@@ -17,7 +17,7 @@
   "Your subscription status is valid.": "您的订阅状态有效。",
   "subsStatus": "已订阅",
   "search": "搜索",
-  "overview": "视图",
+  "overview": "概览",
   "cluster": "集群",
   "console": "控制台",
   "option": "选项",
@@ -121,5 +121,19 @@
   "network": "网络",
   "shell": "Shell",
   "notes": "备注",
-  "system": "系统"
+  "system": "系统",
+  "dns": "DNS",
+  "time": "时间",
+  "times": {
+    "timezone": "时区",
+    "localtime": "本地时间",
+    "time":"服务器时间"
+  },
+  "node-firewall-option": "选项",
+  "node-firewall-log": "日志",
+  "node-disk-lvm": "Lvm",
+  "node-disk-lvmthin": "Lvm Thin",
+  "node-disk-directory": "目录",
+  "node-disk-zfs": "ZFS",
+  "content": "内容"
 }

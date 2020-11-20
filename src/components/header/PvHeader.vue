@@ -66,7 +66,8 @@
         <li class="header-container-content-item"><i class="fa fa-book"></i>文档</li>
         <li class="header-container-content-item" @click="showCreateVm = true"><i class="fa fa-desktop"></i>创建虚拟机</li>
         <li class="header-container-content-item"><i class="fa fa-cube"></i>创建CT</li>
-        <li class="header-container-content-item">
+        <li class="header-container-content-item" style="padding: 0 10px;" @click="() => visible = true"><i class="fa fa-list"></i><span>日志</span></li>
+        <li class="header-container-content-item" style="background:#409eff;color: #fff;">
           <Dropdown trigger="click" icon="fa fa-user" @on-change="handleCommand"
           style="padding: 0px 10px;border: none;">
             <span slot="label">root@pam</span>
@@ -78,6 +79,7 @@
         </li>
       </ul>
     </div>
+    <log-list :visible="visible" @close="visible = false;"></log-list>
   </div>
 </template>
 
@@ -87,6 +89,8 @@
   import Dropdown from '@src/components/dropdown/dropdown';
   import DropdownItem from '@src/components/dropdown/dropdownItem';
   import CreateQemuModal from './CreateQemuModal';
+  import BaseIcon from '../icon/BaseIcon.vue';
+  import LogList from './LogList';
 
   export default {
     name: "PvHeader",
@@ -94,13 +98,16 @@
     components: {
       Dropdown,
       DropdownItem,
-      CreateQemuModal
+      CreateQemuModal,
+      BaseIcon,
+      LogList
     },
     data() {
       return {
         showSearchTable: false,
         searchModel: '',
         showCreateVm: false,
+        visible: false
       }
     },
     computed: {

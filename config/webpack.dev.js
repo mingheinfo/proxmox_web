@@ -25,7 +25,6 @@ const webpackConfigDev = {
       'process.env.NODE_ENV': JSON.stringify('development'),
       IS_DEVELOPMETN: true,
     }),
-    new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
   optimization:{
@@ -59,7 +58,7 @@ const webpackConfigDev = {
     port: PORT,
     proxy: {
       '/api2/*': {//代理请求前缀
-        target: 'https://10.10.10.222:8006/',//代理服务端路径
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
         changeOrigin:true,
         ws: true
@@ -67,20 +66,27 @@ const webpackConfigDev = {
         //pathRewrite: {'^/api' : ''}//请求到服务端后是否重写路径
       },
       '/shell/*': {//代理请求前缀
-        target: 'https://10.10.10.222:8006',//代理服务端路径
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
         changeOrigin: true,
         pathRewrite: {'/shell/' : '/'}//请求到服务端后是否重写路径
       },
       '/xtermjs/*': {
-        target: 'https://10.10.10.222:8006',//代理服务端路径
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
         changeOrigin: true,
         ws: true
       },
       '/novnc/*': {
-        target: 'https://10.10.10.222:8006/',//代理服务端路径
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
+        changeOrigin: true
+      },
+      '/vncwebsocket': {
+        target: 'wss://10.10.10.220:8006/',//代理服务端路径
+        secure: false,
+        ws: true,
+        pathRewrite: {'wss://localhost:3333/' : 'wss://10.10.10.220:8006/'},
         changeOrigin: true
       }
     }

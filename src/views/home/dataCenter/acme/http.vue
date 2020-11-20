@@ -83,7 +83,7 @@ export default {
 			return this.$http.get(`json/nodes/${node}/tasks/${pid}/status`, {
 				_dc: new Date().getTime(),
 			}).then((res) => {
-				if(res.status !== 'running' && this.interVal) {
+				if(res.data.status !== 'running' && this.interVal) {
 					clearInterval(this.interVal);
 					this.interVal = null;
 				}

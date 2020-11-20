@@ -302,7 +302,7 @@
                   </div>
                 </m-option>
               </m-select>
-							<template v-if="isCreate">
+							<template v-if="!isCreate">
 							 <template v-for="(item, num) in networkNum">
                 <m-select
                   type="text"
@@ -310,6 +310,7 @@
                   :label='`link${item}`'
                   labelWidth="100px"
                   validateEvent
+                  :key="num"
                   v-model="link[item]"
 									@on-change="(value) => $data.link[item] = value"
                   placeholder="请选择"

@@ -19,8 +19,19 @@
       <el-table
         :data="db.rolesList"
         ref="dataTable"
+        	:row-key="setRowKeys"
+        :expand-row-keys="expands"
+				@expand-change="expandChange"
         @selection-change="handleSelect"
       >
+			 <el-table-column type="expand">
+          <template slot-scope="props">
+             <div class="form">
+               <label class="form-label">特权</label>
+               <span class="form-item">{{props.row && props.row.privs && props.row.privs}}</span>
+             </div>
+          </template>
+          </el-table-column>
         <el-table-column type="selection" width="55"></el-table-column>
 				 <el-table-column label="内置" prop="special">
 					 <template slot-scope="scope">
@@ -40,6 +51,7 @@
         <el-table-column
           label="特权"
           prop="privs"
+          show-overflow-tooltip
         ></el-table-column>
       </el-table>
       <create-access-role-modal
@@ -75,6 +87,7 @@ export default {
       selectedList: [],
       isCreate: true,
       param: {},
+      expands: []
     };
   },
   mounted() {
@@ -100,6 +113,20 @@ export default {
     //选择
     handleSelect(row) {
       this.selectedList = row;
+    },
+    	expandChange(row, expandedRows) {
+      var that = this;
+      if (expandedRows.length) {
+        that.expands = [];
+        if (row) {
+          that.expands.push(row.roleid);
+        }
+      } else {
+        that.expands = [];
+      }
+    },
+    setRowKeys(row) {
+      return row.roleid;
     },
     handleDelete() {
       this.$confirm
@@ -143,6 +170,24 @@ export default {
   &__desc {
     flex: 1 1 auto;
     display: inline-flex;
+  }
+}
+
+.form{
+  display:inline-flex;
+  flex-grow: 1;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  &-label {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10%;
+  }
+  &-item{
+    display: inline-block;
+    vertical-align: middle;
+    word-break: break-all;
   }
 }
 </style>

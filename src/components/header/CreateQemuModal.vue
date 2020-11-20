@@ -180,14 +180,14 @@
                   <el-table :data="isoList" :class="{'m-input__error': rules['isoRadio'].error}">
                     <el-table-column type="index" width="50">
                       <template slot-scope="scope">
-                        <el-radio :label="scope.row.id" v-model="isoRadio">&nbsp</el-radio>
+                        <el-radio :label="scope.row.volid" v-model="isoRadio">&nbsp</el-radio>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="storage" label="名称"></el-table-column>
-                    <el-table-column prop="type" label="格式" width="180"></el-table-column>
+                    <el-table-column prop="volid" label="名称"></el-table-column>
+                    <el-table-column prop="format" label="格式" width="180"></el-table-column>
                     <el-table-column label="大小">
                       <template slot-scope="scope">
-                        <span>{{byteToSize(scope.row.total)}}</span>
+                        <span>{{byteToSize(scope.row.size)}}</span>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -937,7 +937,7 @@
           <dl>
             <dt>预览</dt>
             <dd>
-              <div>
+              <div class="table">
                 <div class="table-tr">
                   <span class="table-td">key</span>
                   <span class="table-td">value</span>
@@ -1225,8 +1225,8 @@ export default {
       if (this.step === 2) {
         Promise.all([this.queryStorageList(), this.queryIsoList()]).then(() => {
           this.mediaType = "iso";
-          this.storageRadio = this.storageList[0].id;
-          this.isoRadio = this.isoList.length > 0 ? this.isoList[0].id : "";
+          this.storageRadio = this.storageList[0].storage;
+          this.isoRadio = this.isoList.length > 0 ? this.isoList[0].volid : "";
         });
       }
       if (this.step === 3) {
@@ -1246,6 +1246,7 @@ export default {
         if(this.cache) device +=`cache=${this.cache},`;
         if(this.discard) device +=`discard=${this.discard ? 'on' : 'ignore'},`;
         if(this.imageStorageRadio) device +=`${this.imageStorageRadio}:${this.disksize},`;
+        if(this.format) device +=`format=${this.format},`;
         let network = '';
         if(this.networkRadio) network+=`bridge=${this.networkRadio},`;
         if(this.tag) network+=`tag=${this.tag},`;
@@ -1256,7 +1257,7 @@ export default {
           agent: this.agent ? 1 : '',
           cores: this.cores,
           cpulimit: this.cpulimit,
-          ide2: `${this.mediaType},media=cdrom`,
+          ide2: `${this.mediaType === 'iso' ? `${this.isoRadio}` : this.mediaType},media=cdrom`,
           ostype: this.version,
           vga:  this.vga,
           scsihw: this.scsihw,

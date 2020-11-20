@@ -115,7 +115,14 @@
               dbName: 'cap',
               obj: res.data.cap
             });
-            this.$router.push({path: '/datacenter/overview'});
+            let lastLink = window.localStorage.getItem("lastLink") || "";
+            debugger;
+            if(lastLink) {
+               this.$router.push({path: lastLink});
+            } else {
+              this.$router.push({path: '/datacenter/overview'});
+              window.localStorage.setItem("lastLink", 'datacenter/overview')
+            }
           }
           this.loading = false;
         }).catch(() => {

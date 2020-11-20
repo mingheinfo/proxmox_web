@@ -98,7 +98,7 @@ export default {
   },
   mounted() {
     this.queryResource();
-    this.interval = setInterval(() => this.queryResource(), 3000)
+    //this.interval = setInterval(() => this.queryResource(), 3000)
   },
   methods: {
     handleReset() {

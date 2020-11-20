@@ -16,8 +16,8 @@
       <slot name="label"></slot>
     </span>
     <div class="dropdown-menu" v-show="renderDropMenu" ref="dropdown-menu">
+      <div x-arrow="" class="popper__arrow el-icon-caret-top"></div>
       <div style="overflow-y: auto; max-height: 200px"><slot></slot></div>
-      <div x-arrow="" class="popper__arrow"></div>
     </div>
   </ul>
 </template>
@@ -41,16 +41,23 @@ export default {
           top + this.$refs["dropdown"].clientHeight + 10
         }px`;
         this.$refs["dropdown-menu"].style.left = `${left}px`;
-        this.$refs[
-          "dropdown-menu"
-        ].style.minWidth = `${1.2 * this.$refs["dropdown"].clientWidth}px`;
+        this.$refs["dropdown-menu"].style.minWidth = `${
+          1.2 * this.$refs["dropdown"].clientWidth
+        }px`;
         this.$refs["dropdown-menu"].style.transition = `all 0.5s ease-in`;
-        document.body.appendChild(this.$refs["dropdown-menu"]);
+        setTimeout(() => {
+          document.body.appendChild(this.$refs["dropdown-menu"]);
+        }, 10);
         return true;
       } else {
-        this.$refs &&
+        debugger;
+        if (
+          this.$refs &&
           this.$refs["dropdown-menu"] &&
+          this.$refs["dropdown-menu"].parentNode === document.body
+        ) {
           document.body.removeChild(this.$refs["dropdown-menu"]);
+        }
         return false;
       }
     },
@@ -77,6 +84,13 @@ export default {
     handleChange(type, command) {
       this.$emit("on-change", command);
       this.isOpen = false;
+      if (
+        this.$refs &&
+        this.$refs["dropdown-menu"] &&
+        this.$refs["dropdown-menu"].parentNode === document.body
+      ) {
+        document.body.removeChild(this.$refs["dropdown-menu"]);
+      }
     },
     //在下拉框失去焦点时隐藏
     handleBlur() {
@@ -151,26 +165,14 @@ export default {
   }
 }
 .popper__arrow {
-  top: -6px;
+  top: -15px;
   left: 50%;
   margin-right: 3px;
-  border-top-width: 0;
-  border-bottom-color: #ebeef5;
-  border-width: 6px;
-  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.03));
-  &:after {
-    content: "";
-    position: absolute;
-    display: block;
-    width: 10px;
-    height: 10px;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    left: 50%;
-    top: -6px;
-    border-top: 1px solid #ebeef5;
-    border-left: 1px solid #ebeef5;
-    background: #fff;
-  }
+  border-width: 10px;
+  z-index: -1;
+  position: absolute;
+  font-size: 25px;
+  color: #fff;
+  text-shadow:0px -1px 2px #c4d6ec;
 }
 </style>

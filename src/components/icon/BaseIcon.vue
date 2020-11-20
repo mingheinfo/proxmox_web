@@ -5,7 +5,7 @@
 <script>
   import { requireAll2Obj } from "@libs/utils";
 
-  let svgs = requireAll2Obj((require.context('../../assets/', true, /\.(png|svg)$/)));
+  let svgs = requireAll2Obj((require.context('../../assets/', true, /\.(png|svg|gif)$/)));
   export default {
     name: 'BaseIcon',
     props: {

@@ -199,8 +199,107 @@ const nodeMenuList = [
         key: 'node-certificates',
         icon: 'fa  fa-certificate',
         children: []
+      },
+      {
+        path: '/node/dns',
+        title: 'dns',
+        key: 'node-dns',
+        icon: 'fa  fa-certificate',
+        children: []
+      },
+      {
+        path: '/node/hosts',
+        title: 'hosts',
+        key: 'node-hosts',
+        icon: 'fa  fa-certificate',
+        children: []
+      },
+      {
+        path: '/node/time',
+        title: 'time',
+        key: 'node-time',
+        icon: 'fa  fa-times',
+        children: []
+      },
+      {
+        path: '/node/syslog',
+        title: 'syslog',
+        key: 'node-syslog',
+        icon: 'fa  fa-times',
+        children: []
+      }
+    ],
+  },
+  {
+    path: '/node/apt-update',
+    title: 'apt-update',
+    key: 'node-apt-update',
+    icon: 'fa fa-refresh',
+    children: []
+  },
+  {
+    path: '/node/firewall',
+    title: 'firewall',
+    key: 'node-firewall',
+    icon: 'fa fa-shield',
+    children: [
+      {
+        path: '/node/firewall/option',
+        name: 'node-firewall-option',
+        title: 'node-firewall-option',
+        icon: 'fa fa-gear'
+      },
+      {
+        path: '/node/firewall/log',
+        name: 'node-firewall-log',
+        title: 'node-firewall-log',
+        icon: 'fa fa-list'
       }
     ]
+  },
+  {
+    path: '/node/disk',
+    title: 'disk',
+    key: 'node-disk',
+    icon: 'fa fa-hdd-o',
+    children: [
+      {
+        path: '/node/disk/lvm',
+        name: 'node-disk-lvm',
+        title: 'node-disk-lvm',
+        icon: 'fa fa-square'
+      },
+      {
+        path: '/node/disk/lvmthin',
+        name: 'node-disk-lvmthin',
+        title: 'node-disk-lvmthin',
+        icon: 'fa fa-square-o'
+      },
+      {
+        path: '/node/disk/directory',
+        name: 'node-disk-directory',
+        title: 'node-disk-directory',
+        icon: 'fa fa-folder'
+      },
+      {
+        path: '/node/disk/zfs',
+        name: 'node-disk-zfs',
+        title: 'node-disk-zfs',
+        icon: 'fa fa-th-large'
+      }
+    ]
+  },
+  {
+    path: '/node/replication',
+    title: 'replication',
+    key: 'node-replication',
+    icon: 'fa fa-retweet'
+  },
+  {
+    path: '/node/task',
+    title: 'task',
+    key: 'node-task',
+    icon: 'fa fa-list'
   }
 ]
 
@@ -238,7 +337,21 @@ const storageList = [
     path: '/storage/overview',
     title: 'overview',
     key: 'storage-overview',
-    icon: 'fa ',
+    icon: 'fa fa-book',
+    children: []
+  },
+  {
+    path: '/storage/content',
+    title: 'content',
+    key: 'stroage-content',
+    icon: 'fa fa-th',
+    children: []
+  },
+  {
+    path: '/storage/access',
+    title: 'access',
+    key: 'stroage-access',
+    icon: 'fa fa-unlock',
     children: []
   }
 ]

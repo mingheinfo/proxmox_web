@@ -10,9 +10,9 @@
              <m-button icon="fa fa-terminal" slot="label" style="border: none;">
                shell
              </m-button>
-             <dropdown-item command="novnc">NoVNC</dropdown-item>
-             <dropdown-item command="spice">SPICE</dropdown-item>
-             <dropdown-item command="xtermjs">xtermjs</dropdown-item>
+             <dropdown-item command="novnc" name="novnc">NoVNC</dropdown-item>
+             <dropdown-item command="spice" name="virt-viewer">SPICE</dropdown-item>
+             <dropdown-item command="xtermjs" name="xtermjs">xtermjs</dropdown-item>
            </dropdown>
            <dropdown style="width: auto; border: 1px solid #e6e6e6;display: inline-block;" @on-change="handleMoreOpration">
              <m-button icon="fa fa-fw fa-ellipsis-v" slot="label" style="border: none;">

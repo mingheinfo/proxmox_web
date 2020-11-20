@@ -1,6 +1,8 @@
 const path = require('path');
 import { http } from '@libs/http/index';
 import { Message } from 'element-ui';
+import { gettext } from '@src/i18n/local_zhCN.js';
+import { kvm_vga_drivers } from '@libs/enum/enum.js';
 
 var IPV4_OCTET = "(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])";
 var IPV4_REGEXP = "(?:(?:" + IPV4_OCTET + "\\.){3}" + IPV4_OCTET + ")";
@@ -66,7 +68,7 @@ function throttle(func, delay, immediate) {
     const context = this;
     const args = arguments;
     if (immediate) {
-
+      func.apply(context, args);
     } else {
       let now = Date.now();
       if (now - prev >= delay) {
@@ -201,20 +203,31 @@ function bubbleSort(arr) {
 /**
  * 快速排序
  * */
-function quickSort(array) {
+function quickSort(array, prop) {
   if (!Array.isArray(array)) return;
   let sort = (arr, left = 0, right = arr.length - 1) => {
     if (left >= right) return;
     let i = left, j = right, baseVal = arr[j]//以最后一个元素为基准;
     while (i < j) {
-      while (i < j && arr[i] <= baseVal) {
-        i++;
+      if (Object.prototype.toString.call(arr[i]) === '[Object Object]' || Object.prototype.toString.call(arr[j]) === '[Object Object]') {
+        while (i < j && arr[i][prop] < baseVal[prop]) {
+          i++;
+        }
+        arr[j] = arr[i];
+        while (i < j && arr[j][prop] > baseVal[prop]) {
+          j--;
+        }
+        arr[i] = arr[j];
+      } else {
+        while (i < j && arr[i] <= baseVal) {
+          i++;
+        }
+        arr[j] = arr[i];
+        while (i < j && arr[j] >= baseVal) {
+          j--;
+        }
+        arr[i] = arr[j];
       }
-      arr[j] = arr[i];
-      while (i < j && arr[j] >= baseVal) {
-        j--;
-      }
-      arr[i] = arr[j];
     }
     arr[j] = baseVal;//当i=j时基准值放在中央位置完成一次循环
     sort(arr, left, j - 1);//baseVal左边进行排序
@@ -360,7 +373,7 @@ function openConsoleWindow(viewer, vmtype, vmid, nodename, vmname, cmd) {
     openXtermJsViewer(vmtype, vmid, nodename, vmname, cmd);
   } else if (viewer === 'vv') {
     var url;
-    var params = { proxy: '10.10.10.222' || windowHostname() };
+    var params = { proxy: windowHostname() };
     if (vmtype === 'kvm') {
       url = '/json/nodes/' + nodename + '/qemu/' + vmid.toString() + '/spiceproxy';
       openSpiceViewer(url, params);
@@ -708,6 +721,7 @@ function parse_task_upid(upid) {
 const isEmpty = function (val) {
   // null or undefined
   if (val == null) return true;
+  if(val == undefined) return true;
 
   if (typeof val === 'boolean') return false;
 
@@ -779,6 +793,315 @@ function uplodFile(file, callback) {
   };
   reader.readAsText(file);
 }
+//或得xhr对象
+function getHttpXhr() {
+  if (window.XMLHttpRequest) {
+    return new XMLHttpRequest();
+  } else {
+    return new ActiveXObject();
+  }
+}
+//文件上传下载，进度，错误
+function uploadFile(url, data, callback) {
+  //或得xhr对象 
+  let xhr = getHttpXhr();
+  return new Promise((resolve, reject) => {
+    //监听readState对象
+    xhr.onreadystatechange = function (res) {
+      if (xhr.readyState == 4 && xhr.status === 200) {
+        resolve(xhr.responseText);
+      } else if (/^[4|5](\d+){2}$/.test(xhr.status)) {
+        reject(xhr.statusText);
+      }
+    }
+    xhr.addEventListener("load", (ev) => callback(ev, xhr), false);
+    xhr.addEventListener("error", (ev) => callback(ev, xhr), false)
+    xhr.upload.addEventListener('progress', (ev) => callback(ev, xhr), false)
+    xhr.withCredentials = true;
+    xhr.open("POST", url, true);
+    xhr.send(data);
+  })
+}
+//获取文件Url
+function getFileUrl(file) {
+  if (window.webkitURL) {
+    return window.webkitURL.createObjectURL(file);
+  } else if (window.URL) {
+    return window.URL.createObjectURL(file);
+  } else if (window.createObjectURL) {
+    return window.createObjectURL(file);
+  }
+}
+function render_upid(value, metaData, record) {
+  var type = record.type;
+  var id = record.id;
+
+  return format_task_description(type, id);
+}
+
+function format_task_description(type, id) {
+  var farray = task_desc_table[type];
+  var text;
+  if (!farray) {
+    text = type;
+    if (id) {
+      type += ' ' + id;
+    }
+    return text;
+  }
+  var prefix = farray[0];
+  text = farray[1];
+  if (prefix) {
+    return prefix + ' ' + id + ' - ' + text;
+  }
+  return text;
+}
+
+const contentTypes = {
+  'images': gettext('Disk image'),
+  'backup': gettext('VZDump backup file'),
+  'vztmpl': gettext('Container template'),
+  'iso': gettext('ISO image'),
+  'rootdir': gettext('Container'),
+  'snippets': gettext('Snippets')
+}
+function isNumber(value) {
+  return typeof value === 'number'
+}
+function format_content_types(value) {
+  return value.split(',').sort().map(function (ct) {
+    return contentTypes[ct] || ct;
+  }).join(', ');
+}
+function leftPad(string, size, character) {
+  var result = String(string);
+  character = character || " ";
+  while (result.length < size) {
+    result = character + result;
+  }
+  return result;
+}
+
+function render_storage_content(value, metaData, record) {
+  debugger;
+  var data = record;
+  if (isNumber(data.channel) &&
+    isNumber(data.id) &&
+    isNumber(data.lun)) {
+    return "CH " +
+      leftPad(data.channel, 2, '0') +
+      " ID " + data.id + " LUN " + data.lun;
+  }
+  return data.volid.replace(/^.*?:(.*?\/)?/, '');
+}
+const task_desc_table = {
+  acmenewcert: ['SRV', gettext('Order Certificate')],
+  acmeregister: ['ACME Account', gettext('Register')],
+  acmedeactivate: ['ACME Account', gettext('Deactivate')],
+  acmeupdate: ['ACME Account', gettext('Update')],
+  acmerefresh: ['ACME Account', gettext('Refresh')],
+  acmerenew: ['SRV', gettext('Renew Certificate')],
+  acmerevoke: ['SRV', gettext('Revoke Certificate')],
+  'auth-realm-sync': [gettext('Realm'), gettext('Sync')],
+  'auth-realm-sync-test': [gettext('Realm'), gettext('Sync Preview')],
+  'move_volume': ['CT', gettext('Move Volume')],
+  clustercreate: ['', gettext('Create Cluster')],
+  clusterjoin: ['', gettext('Join Cluster')],
+  diskinit: ['Disk', gettext('Initialize Disk with GPT')],
+  vncproxy: ['VM/CT', gettext('Console')],
+  spiceproxy: ['VM/CT', gettext('Console') + ' (Spice)'],
+  vncshell: ['', gettext('Shell')],
+  spiceshell: ['', gettext('Shell') + ' (Spice)'],
+  qmsnapshot: ['VM', gettext('Snapshot')],
+  qmrollback: ['VM', gettext('Rollback')],
+  qmdelsnapshot: ['VM', gettext('Delete Snapshot')],
+  qmcreate: ['VM', gettext('Create')],
+  qmrestore: ['VM', gettext('Restore')],
+  qmdestroy: ['VM', gettext('Destroy')],
+  qmigrate: ['VM', gettext('Migrate')],
+  qmclone: ['VM', gettext('Clone')],
+  qmmove: ['VM', gettext('Move disk')],
+  qmtemplate: ['VM', gettext('Convert to template')],
+  qmstart: ['VM', gettext('Start')],
+  qmstop: ['VM', gettext('Stop')],
+  qmreset: ['VM', gettext('Reset')],
+  qmshutdown: ['VM', gettext('Shutdown')],
+  qmreboot: ['VM', gettext('Reboot')],
+  qmsuspend: ['VM', gettext('Hibernate')],
+  qmpause: ['VM', gettext('Pause')],
+  qmresume: ['VM', gettext('Resume')],
+  qmconfig: ['VM', gettext('Configure')],
+  vzsnapshot: ['CT', gettext('Snapshot')],
+  vzrollback: ['CT', gettext('Rollback')],
+  vzdelsnapshot: ['CT', gettext('Delete Snapshot')],
+  vzcreate: ['CT', gettext('Create')],
+  vzrestore: ['CT', gettext('Restore')],
+  vzdestroy: ['CT', gettext('Destroy')],
+  vzmigrate: ['CT', gettext('Migrate')],
+  vzclone: ['CT', gettext('Clone')],
+  vztemplate: ['CT', gettext('Convert to template')],
+  vzstart: ['CT', gettext('Start')],
+  vzstop: ['CT', gettext('Stop')],
+  vzmount: ['CT', gettext('Mount')],
+  vzumount: ['CT', gettext('Unmount')],
+  vzshutdown: ['CT', gettext('Shutdown')],
+  vzreboot: ['CT', gettext('Reboot')],
+  vzsuspend: ['CT', gettext('Suspend')],
+  vzresume: ['CT', gettext('Resume')],
+  push_file: ['CT', gettext('Push file')],
+  pull_file: ['CT', gettext('Pull file')],
+  hamigrate: ['HA', gettext('Migrate')],
+  hastart: ['HA', gettext('Start')],
+  hastop: ['HA', gettext('Stop')],
+  hashutdown: ['HA', gettext('Shutdown')],
+  srvstart: ['SRV', gettext('Start')],
+  srvstop: ['SRV', gettext('Stop')],
+  srvrestart: ['SRV', gettext('Restart')],
+  srvreload: ['SRV', gettext('Reload')],
+  cephcreatemgr: ['Ceph Manager', gettext('Create')],
+  cephdestroymgr: ['Ceph Manager', gettext('Destroy')],
+  cephcreatemon: ['Ceph Monitor', gettext('Create')],
+  cephdestroymon: ['Ceph Monitor', gettext('Destroy')],
+  cephcreateosd: ['Ceph OSD', gettext('Create')],
+  cephdestroyosd: ['Ceph OSD', gettext('Destroy')],
+  cephcreatepool: ['Ceph Pool', gettext('Create')],
+  cephdestroypool: ['Ceph Pool', gettext('Destroy')],
+  cephfscreate: ['CephFS', gettext('Create')],
+  cephcreatemds: ['Ceph Metadata Server', gettext('Create')],
+  cephdestroymds: ['Ceph Metadata Server', gettext('Destroy')],
+  imgcopy: ['', gettext('Copy data')],
+  imgdel: ['', gettext('Erase data')],
+  unknownimgdel: ['', gettext('Destroy image from unknown guest')],
+  download: ['', gettext('Download')],
+  vzdump: ['VM/CT', gettext('Backup')],
+  aptupdate: ['', gettext('Update package database')],
+  startall: ['', gettext('Start all VMs and Containers')],
+  stopall: ['', gettext('Stop all VMs and Containers')],
+  migrateall: ['', gettext('Migrate all VMs and Containers')],
+  dircreate: [gettext('Directory Storage'), gettext('Create')],
+  lvmcreate: [gettext('LVM Storage'), gettext('Create')],
+  lvmthincreate: [gettext('LVM-Thin Storage'), gettext('Create')],
+  zfscreate: [gettext('ZFS Storage'), gettext('Create')]
+}
+const log_severity_hash = {
+  0: "panic",
+  1: "alert",
+  2: "critical",
+  3: "error",
+  4: "warning",
+  5: "notice",
+  6: "info",
+  7: "debug"
+}
+//渲染日志级别
+function render_serverity(value) {
+  return log_severity_hash[value] || value;
+}
+
+function stringFormat(str) {
+  let arg = arguments;
+  for (let i in arg) {
+    str = str.replace(/(\{\d+\})/, function (o) {
+      return arg[Number(i) + 1];
+    }
+    )
+  }
+  return str;
+}
+
+function render_qemu_bios(value) {
+  if (!value) {
+    return '默认' + ' (SeaBIOS)';
+  } else if (value === 'seabios') {
+    return "SeaBIOS";
+  } else if (value === 'ovmf') {
+    return "OVMF (UEFI)";
+  } else {
+    return value;
+  }
+}
+function render_kvm_vga_driver(value) {
+  if (!value) {
+    return "默认";
+  }
+  let vga = parsePropertyString(value, 'type');
+  let text = kvm_vga_drivers[vga.type];
+  if (!vga.type) {
+    text = "默认";
+  }
+  if (text) {
+    return text + ' (' + value + ')';
+  }
+  return value;
+}
+
+function parsePropertyString(value, defaultKey) {
+  let res = {},
+    error;
+
+  if (typeof value !== 'string' || value === '') {
+    return res;
+  }
+
+  value.split(',').forEach((p) => {
+    let kv = p.split('=', 2);
+    if (!isEmpty(kv[1])) {
+      res[kv[0]] = kv[1];
+    } else if (!isEmpty(defaultKey)) {
+      if (!isEmpty(res[defaultKey])) {
+        error = 'defaultKey may be only defined once in propertyString';
+        return false; // break
+      }
+      res[defaultKey] = kv[0];
+    } else {
+      error = 'invalid propertyString, not a key=value pair and no defaultKey defined';
+      return false; // break
+    }
+  });
+
+  if (error !== undefined) {
+    console.error(error);
+    return;
+  }
+
+  return res;
+}
+
+const diskControllerMaxIDs = {
+	ide: 4,
+	sata: 6,
+	scsi: 31,
+	virtio: 16,
+}
+
+function forEachBus (types, func) {
+  var busses = Object.keys(diskControllerMaxIDs);
+  var i, j, count, cont;
+
+  if (Array.isArray(types)) {
+    busses = types;
+  } else if (!isEmpty(types)) {
+    busses = [types];
+  }
+
+  // check if we only have valid busses
+  for (i = 0; i < busses.length; i++) {
+    if (!diskControllerMaxIDs[busses[i]]) {
+      throw "invalid bus: '" + busses[i] + "'";
+    }
+  }
+
+  for (i = 0; i < busses.length; i++) {
+    count = diskControllerMaxIDs[busses[i]];
+    for (j = 0; j < count; j++) {
+      cont = func(busses[i], j);
+      if (!cont && cont !== undefined) {
+        return;
+      }
+    }
+  }
+}
+
 export {
   getEvent,
   stopEvent,
@@ -824,7 +1147,19 @@ export {
   IP4_match,
   IP6_match,
   IP6_cidr_match,
+  IP64_match,
   isEmpty,
   parseACME,
-  uplodFile
+  uplodFile,
+  render_upid,
+  format_content_types,
+  render_storage_content,
+  uploadFile,
+  getFileUrl,
+  format_task_description,
+  render_serverity,
+  stringFormat,
+  render_qemu_bios,
+  render_kvm_vga_driver,
+  forEachBus
 }

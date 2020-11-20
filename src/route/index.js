@@ -13,19 +13,19 @@ const router = new VueRoute({
       meta: {
         title: '404-页面不存在'
       },
-      component: () => import(/*webpackChunkName： 'Error404'*/"@view/error/Error404")
+      component: () => import(/*webpackChunkName： "Error404"*/"@view/error/Error404")
     },
     {
       path: '/login',
       name: 'login',
-      component:() => import(/*webpackChunkName: 'Login'*/"@view/login/index.vue"),
+      component:() => import(/*webpackChunkName: "Login"*/"@view/login/index.vue"),
       meta: {
         title: '登录'
       }
     },
     {
       path: '/home',
-      component:() => import(/*webpackChunkName: 'home' */"@view/home/index.vue"),
+      component:() => import(/*webpackChunkName: "home" */"@view/home/index.vue"),
       children: [
         {
           path: '/datacenter',
@@ -177,12 +177,85 @@ const router = new VueRoute({
             {
               path: 'network',
               name: 'network',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/network/NetWork.vue")
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/network/NetWork.vue")
             },
             {
               path: 'certificates',
               name: 'certificates',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/certificates/Certificates.vue")
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/certificates/Certificates.vue")
+            },
+            {
+              path: 'dns',
+              name: 'dns',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/dns/Dns.vue")
+            },
+            {
+              path: 'hosts',
+              name: 'hosts',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/hosts/Host.vue")
+            },
+            {
+              path: 'time',
+              name: 'time',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/time/TimeZone.vue")
+            },
+            {
+              path: 'syslog',
+              name: 'syslog',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/syslog/SysLog.vue")
+            },
+            {
+              path: 'apt-update',
+              name: 'apt-update',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/apt-update/AptUpdate.vue")
+            },
+            {
+              path: 'firewall',
+              name: 'node-firewall',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/FireWall.vue")
+            },
+            {
+              path: 'firewall/option',
+              name: 'node-firewall-option',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/option/Option.vue")
+            },
+            {
+              path: 'firewall/log',
+              name: 'node-firewall-log',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/log/FireWallLog.vue")
+            },
+            {
+              path: 'disk',
+              name: 'node-disk',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/Disk.vue")
+            },
+            {
+              path: 'disk/lvm',
+              name: 'node-disk-lvm',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/lvm/Lvm.vue")
+            },
+            {
+              path: 'disk/lvmthin',
+              name: 'node-disk-lvmthin',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/lvmthin/LvmThin.vue")
+            },
+            {
+              path: 'disk/directory',
+              name: 'node-disk-directory',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/directory/Directory.vue")
+            },
+            {
+              path: 'disk/zfs',
+              name: 'node-disk-zfs',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/zfs/ZFS.vue")
+            },
+            {
+              path: 'replication',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/replication/Replication.vue")
+            },
+            {
+              path: 'task',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/task/HistoryTask.vue")
             }
           ]
         },
@@ -218,6 +291,16 @@ const router = new VueRoute({
               name: 'overview',
               component: () => import(/*webpackChunkName: 'overview' */"@view/home/storage/overview/Overview.vue"),
             },
+            {
+              path: 'content',
+              name: 'content',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/storage/content/Content.vue"),
+            },
+            {
+              path: 'access',
+              name: 'access',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/storage/access/Access.vue"),
+            }
           ]
         },
         {
@@ -242,4 +325,14 @@ router.beforeEach((to, from, next) => {
   store.commit('CLEAR_CANCEL_REQUEST') // 取消请求
   next();
 })
+
+router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  const targetPath = router.history.pending.fullPath;
+  if (isChunkLoadFailed) {
+    router.replace(targetPath);
+  }
+});
+
 export default router;

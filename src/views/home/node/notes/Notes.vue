@@ -4,7 +4,9 @@
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit">编辑</m-button>
 		 </div>
 		 <div slot="page-content">
-			 <div class="notes-content">{{db.nodeNotesObj.description && db.nodeNotesObj.description.replace(/^\s*(.*?)\s*$/, '$1')}}</div>
+			 <ace-editor v-model="nodeContent"
+			              :read-only="true"
+				            ref="ace-editor"></ace-editor>
 			 <node-notes-edit-modal :title="title"
 															v-if="visible"
 			                        :visible="visible"
@@ -18,13 +20,15 @@ import NodeNotesHttp from  '@src/views/home/node/notes/http';
 import PageTemplate from '@src/components/page/PageTemplate';
 import MButton from '@src/components/button/Button';
 import NodeNotesEditModal from './NodeNotesEditModal';
+import AceEditor from '@src/components/ace/AceEditor';
 export default {
 	name: 'Notes',
 	mixins: [NodeNotesHttp],
 	components: {
 		PageTemplate,
 		MButton,
-		NodeNotesEditModal
+		NodeNotesEditModal,
+		AceEditor
 	},
 	data() {
 		return {
@@ -34,18 +38,30 @@ export default {
 			selectedList: [],
 			isCreate: true,
 			param: {},
-			node: ''
+			node: '',
+			nodeContent: ''
 		}
 	},
 	mounted() {
-		this.__init__();
+		let _this = this;
+		_this.__init__();
+		_this.$refs[`ace-editor`].$el.style.height = (_this.$el.parentElement.clientHeight - 100) + 'px';
+		window.addEventListener('resize', _this.updateAceEditorHeight, false)
 	},
 	methods: {
 		//初始化查找
 		__init__() {
-			let last = window.localStorage.getItem("lastsel") || '[]';
-      this.node = (JSON.parse(last).node && JSON.parse(last).node) || '';
-			this.queryNotes();
+			let last = window.localStorage.getItem("lastsel") || '[]', _this = this;
+			this.node = (JSON.parse(last).node && JSON.parse(last).node) || '';
+			_this.queryNotes()
+			.then(res => {
+				_this.nodeContent = _this.db.nodeNotesObj && _this.db.nodeNotesObj.description ? _this.db.nodeNotesObj.description.replace(/^\s*(.*?)\s*$/, '$1') : ''
+			});
+		},
+		//更新编辑器高度
+		updateAceEditorHeight() {
+			 let _this = this;
+				_this.$refs[`ace-editor`].$el.style.height = (_this.$el.parentElement.clientHeight - 100) + 'px';
 		},
 		//是否展示弹框
 		showModal() {
@@ -73,6 +89,9 @@ export default {
          this.delete(type);
 			}).catch(() => {})
 		}
+	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.updateAceEditorHeight, false)
 	}
 }
 </script>

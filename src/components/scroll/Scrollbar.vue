@@ -137,7 +137,7 @@
     left: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    width: 101%;
+    width: calc(100% + 20px);
     padding-right: 20px;
   }
 </style>

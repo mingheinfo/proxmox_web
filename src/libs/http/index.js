@@ -3,7 +3,6 @@ import { Message } from 'element-ui';
 import axios from 'axios';
 import store from '@src/store/'
 function handleError(error, errorTip) {
-  debugger;
   // if(error.error && error.error.message && !error.error.message.status) {
   //   Message.error(error.error.message);
   // }

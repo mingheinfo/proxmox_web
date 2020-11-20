@@ -1,6 +1,6 @@
 <template>
   <div class="m-shell" ref="m-shell">
-    <iframe :src='`/shell/?console=shell&node=${node}&resize=scale&xtermjs=2`' width="100%" ref="shell"></iframe>
+    <iframe :src='`https://10.10.10.222:8006?console=shell&node=${node}&resize=scale&xtermjs=2`' width="100%" ref="shell"></iframe>
   </div>
 </template>
 

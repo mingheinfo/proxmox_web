@@ -14,10 +14,10 @@ function resolve(dirname) {
 const isDevMode = process.env.NODE_ENV === 'development' ? true : false;
 module.exports = {
   entry: {
-    'pve': ['babel-polyfill', resolve('../src/main.js')]
+    'pve': ['babel-polyfill', resolve('../src/main.js')],
   },
   output: {
-    publicPath: isDevMode ? "/public/" : '/',
+    publicPath: isDevMode ? '/public/' : '/',
     path: path.resolve(__dirname,'../public/dist'),
     filename: isDevMode ? 'js/[name].[hash:16].js' : 'js/[name].[contenthash].js',
     chunkFilename: isDevMode ? 'js/[name].[hash:16].js' : 'js/[name].[contenthash].js',
@@ -25,7 +25,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.(js)$/,
-      loader: 'happypack/loader?id=happyBabel'
+      loader: 'happypack/loader?id=happyBabel',
     },{
       test: /\.(vue)$/,
         //'happypack/loader?id=happyVue',
@@ -34,7 +34,7 @@ module.exports = {
       test: /\.(c|le)ss$/,
       use: [
         'vue-style-loader',
-        //isDevMode ? 'style-loader': MiniCssExtractPlugin.loader,
+        isDevMode ? 'style-loader': MiniCssExtractPlugin.loader,
         {
           loader: 'css-loader',
           options: {
@@ -81,7 +81,8 @@ module.exports = {
       "@images": resolve("../src/assets/"),
       "@libs": resolve("../src/libs/"),
       "@src": resolve("../src/"),
-      "vue$": 'vue/dist/vue.esm.js'
+      "vue$": 'vue/dist/vue.esm.js',
+      "@static": resolve('../public/')
     }
   },
   plugins: [
@@ -93,6 +94,7 @@ module.exports = {
       id: 'happyBabel',
       loaders: [{
         loader: 'babel-loader',
+        exclude: /node_modules/,
         options: {
           // babelrc: true,
           cacheDirectory: true, // 启用缓存

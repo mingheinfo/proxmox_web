@@ -120,18 +120,23 @@ export default {
       switch (node.type) {
         case "node":
           this.$router.push({ path: "/node/overview" });
+          window.localStorage.setItem("lastLink", "/node/overview" || "");
           break;
         case "qemu":
           this.$router.push({ path: "/qemu/overview" });
+           window.localStorage.setItem("lastLink", "/qemu/overview" || "");
           break;
         case "storage":
           this.$router.push({ path: "/storage/overview" });
+           window.localStorage.setItem("lastLink", "/storage/overview" || "");
           break;
         case "pool":
           this.$router.push({ path: "/pool/overview" });
+           window.localStorage.setItem("lastLink", "/pool/overview" || "");
           break;
         default:
           this.$router.push({ path: "/datacenter/overview" });
+          window.localStorage.setItem("lastLink", "/datacenter/overview" || "");
           break;
       }
       this.commitUpateLastSelect(node);

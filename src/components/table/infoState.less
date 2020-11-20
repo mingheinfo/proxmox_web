@@ -1,11 +1,13 @@
 .state{
-	display: inline-block;
-	vertical-align: middle;
+	display: inline-flex;
+	align-items: center;
 	&-dot{
 		display: inline-block;
 		width: 12px;
 		height: 12px;
 		border-radius: 50%;
+		padding: 5px;
+		margin: 5px;
 		vertical-align: middle;
 		position: relative;
 		&::after{
@@ -27,7 +29,7 @@
 	}
 }
 
-.actived{
+.actived, .online{
 	background: #67c23a;
 }
 

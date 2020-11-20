@@ -2,36 +2,17 @@
   <Dialog
     :visible="visible"
     @close="close()"
+    @cancel="close"
 		@confirm="confirm"
     :_style="{
       width: '800px',
+      height: '500px'
     }"
-    title="集群加入信息"
+    title="编辑备注"
   >
-    <template slot="content">
-			<div class="node-editor">
-				<ace-editor v-model="f_NewsContent"></ace-editor>
-			</div>
-    </template>
-    <template slot="footer">
-      <!-- <m-button @on-click="copy">拷贝信息</m-button> -->
-      <template>
-        <!-- <div class="label_box">
-          <label>
-            <input type="checkbox" v-model="isAdvice" />
-            <div>高级</div>
-          </label>
-        </div>
-        <m-button class="create-btn" type="primary" @on-click="create"
-          >创建</m-button
-        >
-      </template>
-      <template v-if="type === 'join'">
-        <m-button class="create-btn" type="primary" @on-click="joinCluster"
-          >加入</m-button
-        > -->
-      </template>
-    </template>
+    <div slot="content" ref="content">
+				<ace-editor v-model="f_NewsContent"  ref="ace-editor"></ace-editor>
+    </div>
   </Dialog>
 </template>
 
@@ -66,12 +47,19 @@ export default {
 		};
   },
   mounted() {
-		this.f_NewsContent = this.param.content;
+    let _this = this;
+    _this.f_NewsContent = _this.param.content;
+    _this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 10) + 'px';
+		window.addEventListener('resize', _this.updateAceEditorHeight, false)
 	},
   methods: {
     //关闭弹框
     close() {
       this.$emit("close");
+    },
+    updateAceEditorHeight() {
+			 let _this = this;
+				_this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 10) + 'px';
 		},
     confirm() {
 			this.addNotes(this.param.node,{
@@ -88,6 +76,9 @@ export default {
 					});
 		},
   },
+  beforeDestroy() {
+		window.removeEventListener('resize', this.updateAceEditorHeight, false)
+	}
 };
 </script>
 

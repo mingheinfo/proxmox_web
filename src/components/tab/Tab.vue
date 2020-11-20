@@ -16,6 +16,10 @@ export default {
 			default: 'bottom'
 		}
 	},
+	model: {
+		prop: 'value',
+		event: 'change'
+	},
 	provide(){
     return {
 			Tabs: this

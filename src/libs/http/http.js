@@ -24,6 +24,7 @@
 
 import axios from 'axios';
 import {stringify} from 'qs';
+import { Loading } from 'element-ui'
 
 export default class Http {
   /**
@@ -69,8 +70,12 @@ export default class Http {
    * @param method
    * @param options 配置数据，最常用是【successTip】属性，也可以吧url data method覆盖掉；
    * @returns {Promise}
-   */
+   */ 
   ajax(url, d = {}, method = 'get', options = {}) {
+    //  let loadingInstance = null;
+    //  if(url.indexOf('resources') < 0 && url.indexOf('ticket') <0 && url.indexOf('domains')<0) {
+    //    loadingInstance = Loading.service({ fullscreen: true});
+    //  }
     // 有 null的情况
     let data = d || {};
     options = options || {};
@@ -161,6 +166,7 @@ export default class Http {
       }).then(response => {
         this.onShowSuccessTip(response, successTip);
         resolve(originResponse ? response : response.data);
+        //loadingInstance && loadingInstance.close();
       }, err => {
         const isCanceled = err && err.message && err.message.canceled;
         if (isCanceled) return; // 如果是用户主动cancel，不做任何处理，不会触发任何函数
@@ -170,8 +176,10 @@ export default class Http {
         }
         if(err.response && err.response.data && err.response.data && err.response.data.errors) reject(err.response.data.errors);
         else reject(err.response && err.response.statusText && err.response.statusText);
+        //loadingInstance && loadingInstance.close();
       }).catch(error => {
         reject(error);
+        //loadingInstance && loadingInstance.close();
       });
     });
     ajaxPromise.cancel = function () {

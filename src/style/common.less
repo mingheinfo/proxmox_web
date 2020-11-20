@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;/*符合w3c盒子模型width = content + margin + padding; ie标准 width = content + margin + padding + border;*/
-  font-family: HuaweiFont, 微软雅黑 Regular, 微软雅黑, 宋体;
+  font-family: Roboto,Helvetica,Arial,sans-serif;
 }
 
 .clearfix:after {
@@ -198,6 +198,7 @@ select {
 
 .el-scrollbar__wrap{
   overflow: auto!important;
+  overflow-x: hidden !important;
 }
 
 .el-table tr{
@@ -264,7 +265,7 @@ html,body, .app{
   margin-top: 1px;
   width: calc(100% - 180px);
   background: #fff;
-  z-index: 2;
+  z-index: 8;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -787,4 +788,9 @@ html,body, .app{
   background: #E6A23C;
   color: #fff;
   padding: 10px 5px;
+}
+
+.taskmodal-content{
+  max-height: 400px;
+  overflow-y: auto;
 }

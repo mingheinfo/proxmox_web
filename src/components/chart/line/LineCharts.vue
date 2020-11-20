@@ -29,6 +29,13 @@
         }
         return '#21bf4b';
       }
+    },
+    watch: {
+      value(newVal, oldVal){
+        if(newVal !== oldVal) {
+          return newVal;
+        }
+      }
     }
   }
 </script>

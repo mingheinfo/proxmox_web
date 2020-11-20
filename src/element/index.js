@@ -11,7 +11,8 @@ import {
   Form,
   FormItem,
   Radio,
-  DatePicker
+  DatePicker,
+  Loading
 } from 'element-ui';
 import MInput from '@src/components/input/mInput';
 import MDropdown from '@src/components/dropdown/dropdown';
@@ -19,6 +20,8 @@ import MDropdownItem from '@src/components/dropdown/dropdownItem';
 import MButton from '@src/components/button/Button';
 import Tab from '@src/components/tab/Tab';
 import TabPanel from '@src/components/tab/TabPanel';
+import Dialog from "@src/components/dialog/Dialog";
+import Switch from "@src/components/switch/Switch";
 const element = {
   install: (vue) => {
     vue.use(Table);
@@ -39,6 +42,9 @@ const element = {
     vue.component('m-button', MButton);
     vue.component('m-tab', Tab);
     vue.component('m-tab-panel', TabPanel);
+    vue.component('m-dialog', Dialog);
+    vue.component('m-switch', Switch);
+    vue.use(Loading);
   }
 }
 

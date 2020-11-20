@@ -23,6 +23,19 @@
                 @validate="validate"
                 :show-error="rules.name.error"
                 :error-msg="rules.name.message"
+                v-if="modalType === 'account'"
+                placeholder="请输入名称"
+              />
+              <m-input
+                type="text"
+                prop="domains"
+                labelWidth="100px"
+                label="名称"
+                v-model="domains"
+                validateEvent
+                @validate="validate"
+                :show-error="rules.domains.error"
+                :error-msg="rules.domains.message"
                 placeholder="请输入名称"
               />
               <m-select
@@ -219,6 +232,7 @@ export default {
       showLog: false,
       interVal: null,
       tab: "log",
+      domains: "",
       rules: {
         name: {
           error: false,
@@ -308,11 +322,14 @@ export default {
           .then((res) => {
             this.showLog = true;
             this.interVal = setInterval(
-              () =>
+              () => {
+                this.queryLog( this.db.addClusterStatusObj.node,
+                  this.db.addClusterStatusObj.upid)
                 this.queryStatus(
                   this.db.addClusterStatusObj.node,
                   this.db.addClusterStatusObj.upid
-                ),
+                )
+              },
               3000
             );
           })

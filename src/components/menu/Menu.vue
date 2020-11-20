@@ -39,6 +39,7 @@
     methods: {
       handleSelect(e) {
         this.$router.push({path: e});
+        window.localStorage.setItem("lastLink", e || "");
       }
     }
   }
