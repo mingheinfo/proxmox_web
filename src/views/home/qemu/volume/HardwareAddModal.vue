@@ -17,7 +17,9 @@ import EditCpuModal from './EditCpuModal';
 import EditBiosModal from './EditBiosModal';
 import EditVgaModal from './EditVgaModal';
 import EditMachineModal from './EditMachineModal';
-import EditScsiModal from './EditScsiModal.vue';
+import EditScsiModal from './EditScsiModal';
+import UpdateDiskSizeModal from './UpdateDiskSizeModal'
+import MigrateDiskModal from './MigrateDiskModal';
 export default {
 	name: 'HardwareAddModal',
 	components: {
@@ -36,7 +38,9 @@ export default {
 		'addbios': EditBiosModal,
 		'addvga': EditVgaModal,
 		'addmachine': EditMachineModal,
-		'addscsihw': EditScsiModal
+		'addscsihw': EditScsiModal,
+		'resize': UpdateDiskSizeModal,
+		'migratedisk': MigrateDiskModal
 	},
 	props: {
 		type: {

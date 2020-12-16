@@ -28,7 +28,6 @@
     overflow: hidden;
     width: 16px;
     height: 30px;
-    background: url(~@images/tool-sprites.png);
     margin: 0;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
     opacity: .8;
@@ -41,6 +40,10 @@
     top: 0;
     line-height: 42px;
     cursor: pointer;
+    font-size: 28px;
+    &:hover{
+      color: #3973ff;
+    }
   }
 
   &-wrapper{
@@ -62,51 +65,54 @@
     padding: 10px 0;
     border-top: 1px solid #dde4ed;
     text-align: center;
-    background: #e2e7ec;
+    background: #fff;
     position: absolute;
     bottom: 0;
+    left: 0;
   }
 
   &-content{
+    will-change: transform, opacity;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    min-width: 600px;
-    min-height: 300px;
-    background: #ffff;
-    z-index: 10;
+    padding: 0 2.4rem;
+    background: #fff;
+    z-index: 1000;
+    -webkit-transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 800px;
   }
 
   &-cancel{
-    padding: 0px 20px;
+    padding: 0px 23px;
     text-align: center;
     display: inline-block;
-    background: #FF6C59;
     color: #fff;
     cursor: pointer;
     border-radius: 2px;
-    line-height: 35px;
+    height: 40px;
+    line-height: 42px;
+    margin-right: 10px;
   }
 
   &-confirm{
-    padding: 0px 20px;
+    padding: 0px 23px;
     text-align: center;
     display: inline-block;
-    background: #3973ff;
     color: #fff;
-    border-radius: 2px;
     cursor: pointer;
-    line-height: 35px;
+    border-radius: 2px;
+    height: 40px;
+    line-height: 42px;
   }
 
   &-header{
     position: relative;
     top: 0px;
-    background: #dde4ed;
-    border-bottom: 1px solid #dde4ed;
+    background: #fff;
+    border-bottom: 1px solid #d4d8dd;
     width: 100%;
-    height: 40px;
-    line-height: 40px;
+    height: 60px;
+    line-height: 60px;
     cursor: move;
   }
 
@@ -122,5 +128,11 @@
     height: calc(100% - 110px);
     position: relative;
     margin-bottom: 66px;
+  }
+}
+
+.dialog.move{
+  .dialog-content {
+    transition: none;
   }
 }

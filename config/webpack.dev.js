@@ -19,6 +19,7 @@ function resolve(relatedPath) {
 }
 const webpackConfigDev = {
   mode: 'development',
+  devtool: "cheap-module-eval-source-map",
   plugins: [
     // 定义环境变量为开发环境
     new webpack.DefinePlugin({
@@ -69,6 +70,7 @@ const webpackConfigDev = {
         target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
         changeOrigin: true,
+        ws: true,
         pathRewrite: {'/shell/' : '/'}//请求到服务端后是否重写路径
       },
       '/xtermjs/*': {
@@ -80,13 +82,13 @@ const webpackConfigDev = {
       '/novnc/*': {
         target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
-        changeOrigin: true
+        changeOrigin: true,
+        ws: true
       },
       '/vncwebsocket': {
-        target: 'wss://10.10.10.220:8006/',//代理服务端路径
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
         secure: false,
         ws: true,
-        pathRewrite: {'wss://localhost:3333/' : 'wss://10.10.10.220:8006/'},
         changeOrigin: true
       }
     }

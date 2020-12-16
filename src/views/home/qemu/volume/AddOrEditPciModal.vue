@@ -25,7 +25,7 @@
                 @validate="validate"
 								:show-error="rules['host'].error"
 								:error-msg="rules['host'].message"
-                :readonly="false"
+                :readonly="true"
                 placeholder="请选桥接"
               >
 								<div class="table">
@@ -35,21 +35,21 @@
 										:value="item.id"
 										:label="item.id"
 									>
-								   <div v-if="index === 0" class="table-row">
+								   <div v-if="index === 0" class="table-tr">
 										 <div class="table-td">ID</div>
 										 <div class="table-td">IOMMU组</div>
 										 <div class="table-td">供应商</div>
 										 <div class="table-td">设备</div>
 										 <div class="table-td">中介设备</div>
 									 </div>
-									 <div class="table-row">
-										 <div class="table-td">{{item.id}}</div>
-										 <div class="table-td">
+									 <div class="table-tr">
+										 <div class="table-td" :title="item.id">{{item.id}}</div>
+										 <div class="table-td" :title="item.immugroup">
 											 {{item.immugroup}}
 										 </div>
-										 <div class="table-td">{{item.subsystem_vendor_name}}</div>
-										 <div class="table-td">{{item.device_name}}</div>
-										 <div class="table-td">{{item.mdev ? '否' : '是'}}</div>
+										 <div class="table-td" :title="item.subsystem_vendor_name">{{item.subsystem_vendor_name}}</div>
+										 <div class="table-td" :title="item.device_name">{{item.device_name}}</div>
+										 <div class="table-td" :title="item.mdev ? '否' : '是'">{{item.mdev ? '否' : '是'}}</div>
 									 </div>
                 	</m-option>
 								</div>
@@ -60,7 +60,7 @@
                 labelWidth="100px"
                 @on-change="handleModelSelect"
                 v-model="mdev"
-                :readonly="false"
+                :readonly="true"
 								:disabled="mdevDisabled"
                 placeholder="请选缓存"
               >
@@ -71,17 +71,17 @@
 										:value="item.type"
 										:label="item.type"
 									>
-									<div v-if="index === 0" class="table-row">
+									<div v-if="index === 0" class="table-tr">
 										 <div class="table-td">类型</div>
 										 <div class="table-td">可用</div>
 										 <div class="table-td">描述</div>
 									 </div>
-									 <div class="table-row">
-										 <div class="table-td">{{item.type}}</div>
-										 <div class="table-td">
+									 <div class="table-tr">
+										 <div class="table-td" :title="item.type">{{item.type}}</div>
+										 <div class="table-td" :title="item.available">
 											 {{item.available}}
 										 </div>
-										 <div class="table-td">{{item.description}}</div>
+										 <div class="table-td" :title="item.description">{{item.description}}</div>
 									 </div>
                 	</m-option>
 								</div>

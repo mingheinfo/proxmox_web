@@ -30,6 +30,11 @@ export default {
             tableName: "storageContentList",
             list: [],
           });
+          debugger;
+          if(typeof (this.loading) !== 'undefined' && typeof (this.loadingText) !== 'undefined') {
+             this.loading = true;
+             this.loadingText = res;
+          }
         });
     },
     queryStroageStatus() {
@@ -135,7 +140,7 @@ export default {
             )
             .then(() => {
               this.incEventSuccess(event);
-              this.queryStorageContent();
+              this.__init__();
             })
             .catch((res) => {
               this.incEventFail(event);
@@ -145,7 +150,6 @@ export default {
         });
         return Promise.all(tasks);
       }
-      return this.$http.del(``);
     },
     //查询config
     queryConfigByVolid(param) {

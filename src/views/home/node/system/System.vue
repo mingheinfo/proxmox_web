@@ -56,7 +56,7 @@
           width: '900px',
 					maxHeight: '520px'
         }"
-        title="Task Viewer: 加入集群"
+        title="Task Viewer: 任务进度"
       >
         <template slot="content">
           <template v-if="modalType === 'progress'">
@@ -69,8 +69,8 @@
           </template>
           <template v-else>
             <page-template>
-              <div slot="toolbar" style="flex: 3 3 auto;">
-                <m-input prop="expire" labelWidth="100px" label="选择日期">
+              <template slot="toolbar-right">
+                <m-input prop="expire" labelWidth="100px" label="选择日期" :__conStyle="{width: 'auto'}">
                   <template slot="other">
                     <el-date-picker
                       v-model="datetime"
@@ -89,7 +89,7 @@
 									:class="{'refresh': beginRefresh}"
                   >更新</m-button
                 >
-              </div>
+              </template>
               <div slot="page-content">
 								<div class="content">
 									<template v-for="item in db.nodeSystemLogList">
@@ -258,8 +258,8 @@ export default {
 	color: #fff;
 	font-family: 'Courier New', Courier, monospace;
 	max-height: 350px;
-	padding: 5px 20px;
-	overflow: auto;
+  margin: 25px 0px;
+	overflow-y: auto;
 	letter-spacing: 0vw;
 }
 @keyframes progress {
@@ -298,5 +298,15 @@ export default {
   100% {
     rotate: (360deg);
   }
+}
+/deep/.tool-bar-right{
+  flex: 3;
+  text-align: right!important;
+}
+/deep/.page-template__content{
+  height: auto!important;
+}
+/deep/.page-template{
+  padding: 0px!important
 }
 </style>

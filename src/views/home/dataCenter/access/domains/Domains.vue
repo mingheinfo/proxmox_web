@@ -28,7 +28,10 @@
 			<m-button type="info" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
       <m-button
         type="danger"
-        @on-click="handleDelete"
+        v-confirm="{
+            msg: `你确定你要删除已选择项吗?`,
+            ok: () => handleDelete()
+				}"
         icon="el-icon-delete"
         :disabled="selectedList.length <= 0 || inTypes()"
         >删除</m-button
@@ -115,15 +118,7 @@ export default {
       this.selectedList = row;
     },
     handleDelete() {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteGroupById();
-        })
-        .catch(() => {});
+      this.deleteGroupById();
 		},
 		handleCommand(command) {
 			 this.type = command;

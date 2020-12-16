@@ -25,7 +25,7 @@
                 @validate="validate"
 								:show-error="rules['bridge'].error"
 								:error-msg="rules['bridge'].message"
-                :readonly="false"
+                :readonly="true"
                 placeholder="请选桥接"
               >
 								<div class="table">
@@ -35,17 +35,17 @@
 										:value="item.iface"
 										:label="item.iface"
 									>
-								   <div v-if="index === 0" class="table-row">
+								   <div v-if="index === 0" class="table-tr">
 										 <div class="table-td">桥接</div>
 										 <div class="table-td">活动</div>
 										 <div class="table-td">备注</div>
 									 </div>
-									 <div class="table-row">
-										 <div class="table-td">{{item.iface}}</div>
-										 <div class="table-td">
+									 <div class="table-tr">
+										 <div class="table-td" :title="item.iface">{{item.iface}}</div>
+										 <div class="table-td" :title="item.active ? '是' : '不是'">
 											 <table-info-state style="line-height: 15px;height: 35px;" :content="item.active ? '是' : '不是'" :state="item.active ? 'actived' :'unActived'"></table-info-state>
 										 </div>
-										 <div class="table-td">{{item.comment}}</div>
+										 <div class="table-td" :title="item.comment">{{item.comment}}</div>
 									 </div>
                 	</m-option>
 								</div>

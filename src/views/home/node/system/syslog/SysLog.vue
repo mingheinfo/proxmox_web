@@ -1,6 +1,6 @@
 <template>
   <page-template>
-    <div slot="toolbar-left">
+    <div slot="toolbar-left" style="flex: 2 1 auto;">
       <span class="tab" @click="changeTab">
         <span
           class="tab-item"
@@ -12,7 +12,7 @@
           >选择时间范围</span
         >
       </span>
-      <m-input prop="expire" labelWidth="60px" label="选择日期" style="vertical-align: top;">
+      <m-input prop="expire" labelWidth="60px" label="选择日期" style="vertical-align: top;" :__conStyle="{width: '355px'}">
         <template slot="other">
           <el-date-picker
             v-model="datetime"
@@ -25,34 +25,11 @@
           </el-date-picker>
         </template>
       </m-input>
-			<m-button type="primary" @on-click="handleUpdate()" icon="el-icon-refresh" :disabled="livemode">更新</m-button>
-    </div>
-    <div slot="toolbar-right" style="text-align: right">
-      <m-select
-        prop="theme"
-        label="选择主题"
-        labelWidth="65px"
-        v-model="theme"
-        @on-change="
-          (value) => {
-            theme = value;
-          }
-        "
-        placeholder="请选择主题"
-      >
-        <m-option
-          v-for="item in themeOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </m-option>
-      </m-select>
+			<m-button type="primary" style="vertical-align: middle;" @on-click="handleUpdate()" icon="el-icon-refresh" :disabled="livemode">更新</m-button>
     </div>
     <div slot="page-content">
       <ace-editor
         v-model="hostContent"
-        :theme="theme"
         :read-only="true"
         ref="ace-editor"
       ></ace-editor>
@@ -71,7 +48,6 @@ export default {
     return {
       hostContent: "",
       oldContent: "",
-      theme: "tomorrow_night_eighties",
       startcursor: "",
       endcursor: "",
 			livemode: true,
@@ -82,15 +58,7 @@ export default {
           "yyyy-MM-dd hh:mm:ss"
         ),
         dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss"),
-      ],
-      themeOptions: [
-        { label: "tomorrow_night_eighties", value: "tomorrow_night_eighties" },
-        { label: "tomorrow_night_blue", value: "tomorrow_night_blue" },
-        { label: "tomorrow_night_bright", value: "tomorrow_night_bright" },
-        { label: "tomorrow_night", value: "tomorrow_night" },
-        { label: "chrome", value: "chrome" },
-        { label: "monokai", value: "monokai" },
-      ],
+      ]
     };
   },
   components: {
@@ -195,13 +163,18 @@ export default {
   border: 1px solid #409eff;
   border-radius: 2px;
   cursor: pointer;
+  height: 28px;
+  line-height: 28px;
   &-item {
     flex: 1 1 auto;
-    padding: 6px 10px;
+    padding: 0px 10px;
   }
 }
 .is-active {
   color: #fff;
   background: #409eff;
+}
+/deep/.tool-bar-left{
+  width: auto;
 }
 </style>

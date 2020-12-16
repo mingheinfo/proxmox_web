@@ -1,20 +1,15 @@
 <template>
   <div class="overview">
     <div class="overview-select">
-      <select
-        class="pv-form-input"
-        style="width: 180px"
-        @change="handleIntervalChange"
-        v-model="timeframe"
-      >
-        <option
-          v-for="item of intervalList"
-          :key="item.value"
-          :value="item.value"
-        >
-          {{ item.label }}
-        </option>
-      </select>
+       <m-select
+              @on-change="handleIntervalChange"
+              v-model="timeframe">
+        <m-option v-for="item of intervalList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+        </m-option>
+      </m-select>
     </div>
     <overview-card style="width: calc(100%)">
       <div slot="title">状态</div>
@@ -212,7 +207,8 @@ export default {
       this.queryStatus();
       this.queryRrdData();
     },
-    handleIntervalChange() {
+    handleIntervalChange(value) {
+      this.timeframe = value;
       this.queryRrdData();
       if (this.interval) {
         clearInterval(this.interval);
@@ -241,18 +237,6 @@ export default {
     position: relative;
     background-color: #fff;
     text-align: right;
-
-    &:after {
-      position: absolute;
-      top: 36%;
-      right: 11px;
-      background-color: transparent;
-      color: #52545c;
-      font: normal normal normal 12px FontAwesome;
-      content: "\F0D7";
-      pointer-events: none;
-      font-size: 11px;
-    }
   }
 }
 </style>

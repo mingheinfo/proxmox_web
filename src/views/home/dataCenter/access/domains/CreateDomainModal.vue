@@ -537,7 +537,6 @@ export default {
 			this.purge = value;
 		},
     confirm() {
-			console.log(this.validateAll());
       if (this.validateAll()) return;
       let param = {
         realm: this.realm,

@@ -81,9 +81,10 @@
               v-show="isShow()"
 							v-if="device === 'scsi'"
               label="SCSI控制器"
+              labelWidth="100px"
 							:disabled="true"
             >
-						 <div slot="other" style="height: 28px; line-height: 28px;">LSI 53C895A</div>
+						 <div slot="other" class="disabled" style="padding-left: 5px; height: 28px; line-height: 28px;">LSI 53C895A</div>
 						</m-input>
             <m-input
               type="number"
@@ -119,7 +120,7 @@
 								validateEvent
                  v-show="modalType !== 'edit'"
                 @validate="validate"
-                :readonly="false"
+                :readonly="true"
                 placeholder="请选缓存"
               >
 								<div class="table">
@@ -129,17 +130,17 @@
 										:value="item.storage"
 										:label="item.storage"
 									>
-								   <div v-if="index === 0" class="table-row">
+								   <div v-if="index === 0" class="table-tr">
 										 <div class="table-td">名称</div>
 										 <div class="table-td">类别</div>
 										 <div class="table-td">可用</div>
 										 <div class="table-td">容量</div>
 									 </div>
-									 <div class="table-row">
-										 <div class="table-td">{{item.storage}}</div>
-										 <div class="table-td">{{item.type}}</div>
-										 <div class="table-td">{{byteToSize(item.avail)}}</div>
-										 <div class="table-td">{{byteToSize(item.total)}}</div>
+									 <div class="table-tr">
+										 <div class="table-td" :title="item.storage">{{item.storage}}</div>
+										 <div class="table-td" :title="item.type">{{item.type}}</div>
+										 <div class="table-td" :title="byteToSize(item.avail)">{{byteToSize(item.avail)}}</div>
+										 <div class="table-td" :title="byteToSize(item.total)">{{byteToSize(item.total)}}</div>
 									 </div>
                 	</m-option>
 								</div>
@@ -495,9 +496,6 @@ export default {
     close() {
       this.$emit("close");
     },
-    validate() {
-
-		},
 		handleStorageSelect(value) {
 			this.storage = value;
 			this.storageType = this.db.storageList.filter(it => it.storage === value)[0].type;

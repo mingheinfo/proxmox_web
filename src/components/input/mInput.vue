@@ -9,13 +9,15 @@
 		        :value="value"
 						@input.stop="handleInput"
 						@change.stop="handleChange"
+						@focus.stop="handleFocus"
+						@blur.stop="handleBlur"
 						v-if="type !== 'textarea' && !$slots['other']"
 						:style="__style"
 						:placeholder="placeholder"
 						:min="min"
 						:max="max"
 						:disabled="disabled"
-						:readonly="readonly"
+						:readonly="(readonly === 'readonly' || readonly)"
 						class="m-input__inner"/>
 				<slot v-else-if="$slots['other']" name="other"></slot>
 				<textarea v-else 
@@ -24,7 +26,7 @@
 						    @change.stop="handleChange"
 								:placeholder="placeholder"
 								:disabled="disabled"
-								:readonly="readonly"
+								:readonly="(readonly === 'readonly' || readonly)"
 								:style="__style"
 								:rows="rows"
 								class="m-input__textarea"/>
@@ -48,58 +50,75 @@ import { getEvent } from '@libs/utils/'
 export default {
 	name: 'MInput',
 	props: {
+		//input label名称
 		label: String,
+		//input label的宽度
 		labelWidth: {
 			type: String
 		},
+		//input 框类型 text、password、textarea、password等
 		type: {
 			type: String,
 			default: 'text'
 		},
+		//placeholder
 		placeholder: {
 			type: String,
 			default: ''
 		},
+		//输入框值
 		value: {
 			type: [String, Number]
 		},
+		//最大长度
 		minLength: [String, Number],
+		//最小长度
 		maxLenght: [String, Number],
+		//是否展示密码
 		showPassword: {
 			type: Boolean,
 			default: false
 		},
+		//是否可操作
 		disabled: {
 			type: Boolean,
 			default: false
 		},
+		//前缀的icon子图或图片
 		prefixIcon: {
 			type: String,
 		},
 		suffixIcon: {
 			type: String,
 		},
+		//是否需要校验
 		validateEvent: {
 			type: Boolean,
 			default: false
 		},
+		//校验不通过时提示信息
 		errorMsg: {
 			type: String,
 			default: ''
 		},
+		//属性名
 		prop: {
 			type: [String]
 		},
+		// 是否校验通过
 		showError: {
 			type: Boolean,
 			default: false
 		},
+		//如果有改变input框外层的宽度等样式需求配置此参数
 		_style: {
 			type: Object
 		},
+		//如果有改变input框的宽度等样式需求配置此参数
 		__conStyle: {
 			type: Object
 		},
+		//textarea的行数
 		rows: {
 			type: [String, Number],
 			validator: function(value) {
@@ -110,10 +129,12 @@ export default {
 				return true;
 			}
 		},
+		//是否需要清除按钮
 		clearable: {
 			type: Boolean,
 			default: false
 		},
+		//是否只读
 		readonly: {
 			type: Boolean,
 			default: false
@@ -150,6 +171,9 @@ export default {
 		}
 	},
 	methods: {
+		/***
+		 * 处理input事件
+		*/
 		  handleInput(event) {
 				let ev = getEvent(event),
 				value = ev.target.value || ev.srcElement.value;
@@ -157,17 +181,36 @@ export default {
 				if(this.validateEvent) {
 					this.$emit('validate', this.prop);
 				}
-      },
+			},
+		/***
+		 * 处理change事件
+		*/
       handleChange(event) {
 				let ev = getEvent(event),
 				value = ev.target.value || ev.srcElement.value;
         this.$emit('change', value);
-      },
-		clear() {
-      this.$emit('input', '');
-      this.$emit('change', '');
-      this.$emit('clear');
-    },
+			},
+		/***
+		 * 处理focus事件
+		*/
+			handleFocus(event) {
+				let ev = getEvent(event),
+				value = ev.target.value || ev.srcElement.value;
+        this.$emit('focus', value);
+			},
+		/***
+		 * 处理blur事件
+		*/
+			handleBlur(event) {
+				let ev = getEvent(event),
+				value = ev.target.value || ev.srcElement.value;
+        this.$emit('blur', value);
+			},
+			clear() {
+				this.$emit('input', '');
+				this.$emit('change', '');
+				this.$emit('clear');
+			},
 	}
 }
 </script>
@@ -211,7 +254,8 @@ export default {
       transition: border-color .15s;
       border-radius: 2px;
       min-width: 200px;
-      min-height: 28px;
+			min-height: 28px;
+			width: 200px;
       line-height: normal;
       display: inline-block;
       vertical-align: middle;

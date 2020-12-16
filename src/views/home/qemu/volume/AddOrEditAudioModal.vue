@@ -39,7 +39,7 @@
               v-model="driver"
               :disabled="true"
             >
-              <div slot="other" style="padding-left: 5px">spice</div>
+              <div slot="other" class="disabled" style="padding-left: 5px; height: 28px; line-height: 28px;">spice</div>
             </m-input>
           </dd>
         </dl>

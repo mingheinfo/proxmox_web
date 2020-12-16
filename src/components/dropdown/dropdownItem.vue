@@ -49,4 +49,9 @@
       color: #7fdbff;
     }
   }
+.disabled {
+    background: #e0eaf3;
+    background-image: -webkit-gradient(linear,left top, left bottom,from(#e9edf2),to(#d9e0e9));
+    background-image: linear-gradient(180deg,#e9edf2,#d9e0e9);
+}
 </style>

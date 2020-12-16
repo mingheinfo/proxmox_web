@@ -53,5 +53,6 @@ export default {
   .config{
     white-space: pre-line;
 		padding: 0px 10px;
+		max-height: 400px;
 	}
 </style>

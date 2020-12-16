@@ -4,27 +4,24 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin  } = require('clean-webpack-plugin');
-const UglifyJsPlugin=require('uglifyjs-webpack-plugin');
-
+function resolve(dirname) {
+  console.log(path.resolve(__dirname,  dirname));
+  return path.resolve(__dirname,  dirname);
+}
 module.exports = merge(baseWebpack, {
-  devtool: "source-map",
+  devtool: "cheap-module-source-map",
   mode: 'production',
   optimization:{
-    minimize: false,
-    minimizer:[
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          output: {
-            comments: false
-          },
-          compress: {
-            warnings: false,
-            drop_debugger: true,
-            drop_console: true
+    minimize: true,
+    splitChunks: {
+      cacheGroups: {
+            commons: {
+              name: "vendor",
+              chunks: "initial",
+              minChunks: 2
           }
-        }
-      })
-    ]
+      }
+    }
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -34,24 +31,24 @@ module.exports = merge(baseWebpack, {
       }
     }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../public/index.html'),
-      template: path.resolve(__dirname, '../public/index.html'),
-      inject: 'body',
-      chunks: ['manifest', 'vendor', 'app'],
+      template: resolve("../public/index.html"),
+      filename: "index.html",
+      minify: true,
+      inject: true,
+      chunks: ['manifest', 'vendor', 'pve'],
     }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 10,
-      minChunkSize: 1000
+      minChunkSize: 100
   }),
     new webpack.optimize.SplitChunksPlugin({
       chunks: "async", // 必须三选一： “initial” | “all”(默认就是all) | “async”
-      minSize: 0, // 最小尺寸，默认0
+      minSize: 1000, // 最小尺寸，默认0
       minChunks: 1, // 最小 chunk ，默认1
       maxAsyncRequests: 1, // 最大异步请求数， 默认1
       maxInitialRequests: 1, // 最大初始化请求书，默认1
       maxChunks: 10,
       name: function (name) {
-        console.log('==========' + name);
         return name
       }, // 名称，此选项可接收 function
       cacheGroups: { // 这里开始设置缓存的 chunks
@@ -59,7 +56,7 @@ module.exports = merge(baseWebpack, {
         vendor: { // key 为entry中定义的 入口名称
           chunks: "async", // 必须三选一： “initial” | “all” | “async”(默认就是异步)
           name: "vendor", // 要缓存的 分隔出来的 chunk 名称
-          minSize: 0,
+          minSize: 1000,
           minchunks: 1,
           enforce: true,
           maxChunks: 10,

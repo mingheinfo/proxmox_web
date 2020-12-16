@@ -247,15 +247,12 @@ export default {
 }
 .table {
   &-tr {
-    display: table-row;
     height: 35px;
     line-height: 35px;
     width: 100%;
-    border-bottom: 1px solid #ebeef5;
     cursor: pointer;
   }
   &-td {
-    display: table-cell;
     height: 35px;
     line-height: 35px;
     width: 50%;

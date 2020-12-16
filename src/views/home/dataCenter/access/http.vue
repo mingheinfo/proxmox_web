@@ -1,5 +1,5 @@
 <script>
-import { deepCopy } from "@libs/utils/index";
+import { deepCopy, confirm } from "@libs/utils/index";
 export default {
   name: "DataCenterAccessHttp",
   methods: {
@@ -55,8 +55,9 @@ export default {
           this.incEventSuccess(event);
           this.queryAccessList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     delete() {
@@ -96,8 +97,9 @@ export default {
               this.incEventSuccess(event);
               this.queryAccessList();
             })
-            .catch(() => {
+            .catch((res) => {
               this.incEventFail(event);
+              confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item);
         tasks.push(p);
@@ -135,8 +137,9 @@ export default {
           this.incEventSuccess(event);
           this.queryUsersList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
 		},
 		queryUsersObj(param) {
@@ -165,8 +168,9 @@ export default {
           this.incEventSuccess(event);
           this.queryUsersList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
 		},
 		deleteUsers() {
@@ -181,8 +185,9 @@ export default {
               this.incEventSuccess(event);
               this.queryUsersList();
             })
-            .catch(() => {
+            .catch((res) => {
               this.incEventFail(event);
+              confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item.userid);
         tasks.push(p);
@@ -201,8 +206,9 @@ export default {
           this.incEventSuccess(event);
           this.queryUsersList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     queryTfa(param) {
@@ -267,7 +273,6 @@ export default {
       }).then(() => {
         this.incEventSuccess(event);
       }).catch((error) => {
-        debugger;
         this.incEventFail(event);
         return Promise.reject(error);
       })
@@ -282,10 +287,11 @@ export default {
             .del(`json/access/users/${it.userid}/token/${it.tokenid}`)
             .then(() => {
               this.incEventSuccess(event);
-              this.queryUsersList({full:1, _dc: new Date().getTime()});
+              this.__init__();
             })
-            .catch(() => {
+            .catch((res) => {
               this.incEventFail(event);
+              confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item);
         tasks.push(p);
@@ -364,6 +370,16 @@ export default {
          }
       })
     },
+    queryPoolsObj(param) {
+       return this.$http.get(`/json/pools/${param.poolid}`, {_dc: new Date().getTime()}).then((res) => {
+         if(res.data) {
+           this.updateDbObject({
+            name: "poolsObj",
+            data: res.data,
+          });
+         }
+      })
+    },
     deletePoolById() {
       let event = this.createEvent("action.access.pool.delete");
       let tasks = [],
@@ -376,8 +392,9 @@ export default {
               this.incEventSuccess(event);
               this.getPoolsList();
             })
-            .catch(() => {
+            .catch((res) => {
               this.incEventFail(event);
+              confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item);
         tasks.push(p);

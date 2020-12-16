@@ -1,6 +1,7 @@
 <template>
-  <div class="m-tree">
-    <ul class="m-tree-content">
+  <div class="m-tree" ref="m-tree">
+    <el-scrollbar style="height:100%">
+        <ul class="m-tree-content">
       <li v-if="renderData && renderData.data && !renderData.data.parentId">
         <span
           class="m-tree-text"
@@ -43,16 +44,17 @@
         </div>
       </li>
     </ul>
+    </el-scrollbar>
   </div>
 </template>
 
 <script>
 import MSubTree from "./MSubTree";
 import { treeNode } from "@libs/utils";
-
+import MScrollbar from "@src/components/scroll/Scrollbar";
 export default {
   name: "MTree",
-  components: { MSubTree },
+  components: { MSubTree, MScrollbar },
   props: {
     treeData: {
       type: Object | Array,
@@ -66,8 +68,16 @@ export default {
   },
   mounted() {
     this.renderData = this.treeData;
+    let el = document.documentElement || document.body;
+    this.$refs['m-tree'].style.height = el.clientHeight - 100 + 'px';
+    window.addEventListener('resize', this.setTreeHeight, false);
   },
   methods: {
+    //设置左侧菜单的高度
+    setTreeHeight() {
+      let el = document.documentElement || document.body;
+      this.$refs['m-tree'].style.height = el.clientHeight - 100 + 'px';
+    },
     //处理树展开事件
     handleExpanded(node) {
       if (node.hasOwnProperty('expanded')) {
@@ -126,6 +136,10 @@ export default {
           this.$router.push({ path: "/qemu/overview" });
            window.localStorage.setItem("lastLink", "/qemu/overview" || "");
           break;
+        case 'lxc':
+          this.$router.push({ path: "/qemu/overview" });
+           window.localStorage.setItem("lastLink", "/qemu/overview" || "");
+          break;
         case "storage":
           this.$router.push({ path: "/storage/overview" });
            window.localStorage.setItem("lastLink", "/storage/overview" || "");
@@ -141,6 +155,9 @@ export default {
       }
       this.commitUpateLastSelect(node);
     },
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.setTreeHeight, false);
   },
   watch: {
     treeData: {
@@ -181,7 +198,8 @@ export default {
 .m-tree {
   width: 100%;
   padding: 0px 10px;
-  background: #f5f5f5;
+  background: #fff;
+  overflow-y: auto;
   &-content {
     width: 100%;
     overflow: hidden;

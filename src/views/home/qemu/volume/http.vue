@@ -108,7 +108,8 @@ export default {
 											});
 										}
 									})
-		},
+    },
+    //查询MDev
 		queryMDev(pciid) {
 			return this.$http.get(`json/nodes/${this.node.node}/hardware/pci/${pciid}/mdev`)
 			            .then(res => {
@@ -119,7 +120,8 @@ export default {
 											});
 										}
 									})
-		},
+    },
+    //添加硬件
     createHardWare(param) {
       let event = this.createEvent("action.qemu.hardware.create");
       return this.$http
@@ -135,7 +137,25 @@ export default {
 					this.incEventFail(event);
 					return Promise.reject(res);
         });
-		},
+    },
+     //添加硬件
+    createLxcRs(param) {
+      let event = this.createEvent("action.qemu.lxc.resource.create");
+      return this.$http
+        .put(`json/nodes/${this.node.node}/${this.node.id}/config`, param, {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded; charset=utf8",
+          },
+        })
+        .then((res) => {
+          this.incEventSuccess(event);
+        })
+        .catch((res) => {
+					this.incEventFail(event);
+					return Promise.reject(res);
+        });
+    },
+    //编辑时触发的http请求
 		updateHardWare(param) {
 			 let event = this.createEvent("action.qemu.hardware.update");
       return this.$http
@@ -169,6 +189,9 @@ export default {
 									 }
 									 if(res.status == "400") {
 										 return Promise.reject(res.errors);
+                   }
+                   if(res.status == "500") {
+										 return Promise.reject(res.message);
 									 }
 								 }).catch(res => {
 									 this.incEventFail(event);
@@ -180,14 +203,72 @@ export default {
 			return this.$http.get(`json/nodes/${this.node.node}/tasks/${upid}/status`)
 			           .then(res => {
 									 if(res.data) {
-										 this.statusObj = res.data;
+                     this.statusObj = res.data;
+                     	this.updateDbObject({
+                        name: 'addClusterStatusObj',
+                        data: res.data
+                      })
 										 if(res.data.status === 'stopped') {
 											 this.jobText = "Done!";
-											 this.jobVisible = false;
-										 }
+                       this.jobVisible = false;
+                       if(this.inverVal) {
+                         clearInterval(this.inverVal);
+                         this.inverVal = null;
+                       }
+                     }
 									 }
 								 })
-		}
+    },
+    queryLog(node, pid) {
+      return this.$http
+        .get(`json/nodes/${node}/tasks/${pid}/log`, {
+          _dc: new Date().getTime(),
+          start: 0,
+          limit: 500,
+        })
+        .then((res) => {
+          this.updateTable({
+            tableName: "addClusterLogList",
+            list: res.data,
+          });
+        });
+    },
+    //增加磁盘大小
+    updateHardWareSize(param) {
+     let event = this.createEvent("action.qemu.hardware.update.size");
+      return this.$http
+        .put(`json/nodes/${this.node.node}/${this.node.id}/resize`, param, {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded; charset=utf8",
+          },
+        })
+        .then((res) => {
+          this.incEventSuccess(event);
+          this.queryStatus(res.data);
+        })
+        .catch((res) => {
+					this.incEventFail(event);
+					return Promise.reject(res);
+        });
+    },
+    //移动磁盘
+    removeDisk(param, url) {
+      let event = this.createEvent("action.qemu.hardware.remove.disk");
+      return this.$http
+        .post(`json/nodes/${this.node.node}/${this.node.id}/${url}`, param, {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded; charset=utf8",
+          },
+        })
+        .then((res) => {
+          this.incEventSuccess(event);
+          this.queryStatus(res.data);
+        })
+        .catch((res) => {
+					this.incEventFail(event);
+					return Promise.reject(res);
+        });
+    }
   },
 };
 </script>

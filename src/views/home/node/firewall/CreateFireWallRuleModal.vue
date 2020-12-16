@@ -58,8 +58,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.group }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
+                      <span class="table-td" :title="item.group">{{ item.group }}</span>
+                      <span class="table-td" :title="item.comment">{{ item.comment }}</span>
                     </div>
                   </div>
                 </m-option>
@@ -111,8 +111,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.macro }}</span>
-                      <span class="table-td">{{ item.descr }}</span>
+                      <span class="table-td" :title="item.macro">{{ item.macro }}</span>
+                      <span class="table-td" :title="item.descr">{{ item.descr }}</span>
                     </div>
                   </div>
                 </m-option>
@@ -151,9 +151,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.p }}</span>
-                      <span class="table-td">{{ item.n }}</span>
-                      <span class="table-td">{{ item.d }}</span>
+                      <span class="table-td" :title="item.p">{{ item.p }}</span>
+                      <span class="table-td" :title="item.n">{{ item.n }}</span>
+                      <span class="table-td" :title="item.d">{{ item.d }}</span>
                     </div>
                   </div>
                 </m-option>
@@ -183,9 +183,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.type }}</span>
-                      <span class="table-td">{{ item.name }}</span>
-                      <span class="table-td">{{ item.ref }}</span>
+                      <span class="table-td" :title="item.type">{{ item.type }}</span>
+                      <span class="table-td" :title="item.name">{{ item.name }}</span>
+                      <span class="table-td" :title="item.ref">{{ item.ref }}</span>
                     </div>
                   </div>
                 </m-option>
@@ -225,9 +225,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.type }}</span>
-                      <span class="table-td">{{ item.name }}</span>
-                      <span class="table-td">{{ item.ref }}</span>
+                      <span class="table-td" :title="item.type">{{ item.type }}</span>
+                      <span class="table-td" :title="item.name">{{ item.name }}</span>
+                      <span class="table-td" :title="item.ref">{{ item.ref }}</span>
                     </div>
                   </div>
                 </m-option>

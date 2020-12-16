@@ -66,6 +66,31 @@ export default {
 					return Promise.reject(res);
         });
     },
+    handleImmidiateSchedule() {
+	  	let event = this.createEvent("action.node.replication.create", params.guest);
+      return this.$http
+        .post(`json/nodes/${this.node}/replication/${this.selectedList[0].id}/schedule_now"`, null, {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+        })
+        .then(() => {
+          this.incEventSuccess(event);
+          this.queryReplicationList();
+        })
+        .catch((res) => {
+					this.incEventFail(event);
+					return Promise.reject(res);
+        });
+		},
+    queryLog() {
+      return this.$http.get(`json/nodes/${this.node}/replication/${this.selectedList[0].id}/log`)
+                 .then(res => {
+                   if(res.data) {
+                     
+                   }
+                 })
+    }
 	}
 }
 </script>

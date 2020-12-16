@@ -9,7 +9,11 @@
       >
       <m-button
         type="danger"
-        @on-click="handleDelete"
+        v-confirm="{
+          msg: '确定要删除已选择项?',
+          ok: () => handleDelete(),
+          icon:'icon-question'
+        }"
         icon="el-icon-delete"
         :disabled="selectedList.length <= 0"
         >删除</m-button
@@ -43,7 +47,11 @@
                 >
                 <m-button
                   type="danger"
-                  @on-click="handleCidrDelete"
+                  v-confirm="{
+                    msg: '确定要删除已选择项?',
+                    icon:  'icon-question',
+                    ok: () => handleCidrDelete()
+                  }"
                   icon="el-icon-delete"
                   :disabled="selectedCidrList.length <= 0"
                   >删除</m-button
@@ -190,29 +198,15 @@ export default {
       this.selectedList = row;
     },
     handleDelete(type) {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteIpset().catch((res) => {
-            this.$confirm.error({
-              msg: res,
-            });
-          });
+      this.deleteIpset().catch((res) => {
+        this.$confirm.error({
+          msg: res,
+          icon: 'icon-error'
         });
+      });
     },
     handleCidrDelete() {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteIpsetCidr(this.name);
-        })
-        .catch(() => {});
+      this.deleteIpsetCidr(this.name);
 		},
 		//保证每一行只能展开一列
     expandChange(row, expandedRows) {
@@ -237,7 +231,7 @@ export default {
     showCidrModal(type) {
       this.cidrType = type;
       this.isCidrCreate = type === "create";
-      this.cidrTitle = type === "create" ? "创建：复制作业" : "编辑：复制作业";
+      this.cidrTitle = type === "create" ? "创建：ip/cidr" : "编辑：ip/cidr";
       this.cidrParam = type === "create" ? {} : this.selectedCidrList[0];
       this.cidrVisible = true;
     },

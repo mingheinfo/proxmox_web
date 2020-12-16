@@ -1,6 +1,6 @@
 <template>
   <div class="log" v-show="visible">
-    <div class="btn" @click="$emit('close')">
+    <div class="btn" @click="close">
       <span class="btn-txt">隐藏</span
       ><i class="el-icon-d-arrow-right btn-icon"></i>
     </div>
@@ -23,7 +23,7 @@
                 ? item.status === 'OK'
                   ? 'status-ok'
                   : 'status-error'
-                : 'loading'
+                : 'loading-mask'
             "
             style="width: 25px; height: 25px"
           ></base-icon>
@@ -70,7 +70,7 @@
       :_style="{
         width: '800px',
       }"
-      title="Task Viewer: 恢复"
+      title="Task Viewer: 任务详情"
     >
       <template slot="content">
         <m-tab v-model="tab" @tab-click="handleTabChange">
@@ -84,32 +84,34 @@
           :disabled="db.addClusterStatusObj.status !== 'running'"
           >停止</m-button
         >
-        <div class="taskmodal-content">
-          <div class="table" v-if="tab === 'log'">
-            <div
-              class="table-tr"
-              v-for="item in db.addClusterLogList"
-              :key="item.n"
-            >
-              {{ item.t }}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-            <template v-for="(item, key) in db.addClusterStatusObj">
+        <el-scrollbar style="height:100%">
+          <div class="taskmodal-content">
+            <div class="table" v-if="tab === 'log'">
               <div
                 class="table-tr"
-                v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
-                :key="key"
+                v-for="item in db.addClusterLogList"
+                :key="item.n"
               >
-                <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
-                <div class="table-td" v-if="key === 'starttime'">
-                  {{ dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm") }}
-                </div>
-                <div class="table-td" v-else>{{ item }}</div>
+                {{ item.t }}
               </div>
-            </template>
+            </div>
+            <div class="table" v-if="tab === 'status'">
+              <template v-for="(item, key) in db.addClusterStatusObj">
+                <div
+                  class="table-tr"
+                  v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
+                  :key="key"
+                >
+                  <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
+                  <div class="table-td" v-if="key === 'starttime'">
+                    {{ dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm") }}
+                  </div>
+                  <div class="table-td" v-else>{{ item }}</div>
+                </div>
+              </template>
+            </div>
           </div>
-        </div>
+        </el-scrollbar>
       </template>
       <template slot="footer">
         <span></span>
@@ -160,8 +162,15 @@ export default {
     dateFormat,
     render_serverity,
     __init__() {
+       this.taksList = [];
       this.queryClusterTask().then((res) => {
         this.taksList = quickSort(this.db.clusterTaskList, "starttime");
+      });
+    },
+    //关闭弹框
+    close() {
+      setTimeout(() => {
+        this.$emit('close');
       });
     },
     //查看任务详情日志
@@ -186,6 +195,7 @@ export default {
           this.__init__();
           break;
         case "cluster":
+          this.clusterLogList = [];
           this.queryClusterLog().then((res) => {
             this.clusterLogList = quickSort(this.db.clusterLogList, "time");
           });
@@ -204,6 +214,7 @@ export default {
         }
       });
     },
+    //关闭任务进度
     closeLog() {
       if (this.interVal) {
         clearInterval(this.interVal);
@@ -218,8 +229,10 @@ export default {
         if (newVal) {
           this.__init__();
 				}
-				this.logType = 'task';
-        return newVal;
+        this.logType = 'task';
+        setTimeout(() => {
+            return newVal;
+        })
       }
     },
   },
@@ -231,7 +244,7 @@ export default {
   top: 0px;
   right: 0px;
   bottom: 0px;
-  width: 15%;
+  width: 270px;
   z-index: 999;
   background: #fff;
   box-shadow: -2px 0px 3px #ccd4df;
@@ -239,13 +252,13 @@ export default {
   table-layout: fixed;
   overflow: hidden;
   white-space: nowrap;
-	animation: log-animation cubic-bezier(1, 0.5, 0.7, 0) 0.5s ease-in linear;
+	transition: width .5s ease-in, left .5s cubic-bezier(0.075, 0.82, 0.165, 1);
 	&-wrapper{
 		top: 60px;
 		position: relative;
 	}
   &-item {
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid #cecccc;
     height: 64px;
     line-height: 14px;
     padding: 5px 20px 5px 30px;
@@ -257,7 +270,7 @@ export default {
   }
   &-cluster {
     &-item {
-      border-bottom: 1px solid #f5f5f5;
+      border-bottom: 1px solid #b9b7b7;
       height: 120px;
       line-height: 16px;
       padding: 5px 20px 5px 30px;
@@ -317,16 +330,5 @@ export default {
 .error{
 	background: #f3d6d7;
 	color: #fff;
-}
-@keyframes log-animation {
-  0% {
-    width: 0px;
-  }
-  50% {
-    width: 50%;
-  }
-  100% {
-    width: 100%;
-  }
 }
 </style>

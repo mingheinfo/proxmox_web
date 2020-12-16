@@ -204,28 +204,28 @@ const nodeMenuList = [
         path: '/node/dns',
         title: 'dns',
         key: 'node-dns',
-        icon: 'fa  fa-certificate',
+        icon: 'fa fa-globe',
         children: []
       },
       {
         path: '/node/hosts',
         title: 'hosts',
         key: 'node-hosts',
-        icon: 'fa  fa-certificate',
+        icon: 'fa fa-globe',
         children: []
       },
       {
         path: '/node/time',
         title: 'time',
         key: 'node-time',
-        icon: 'fa  fa-times',
+        icon: 'fa fa-clock-o',
         children: []
       },
       {
         path: '/node/syslog',
         title: 'syslog',
         key: 'node-syslog',
-        icon: 'fa  fa-times',
+        icon: 'fa fa-list',
         children: []
       }
     ],
@@ -310,23 +310,116 @@ const qemuMenuList = [
   {
     path: '/qemu/overview',
     title: 'overview',
-    key: 'node-overview',
+    key: 'qemu-overview',
     icon: 'fa fa-book',
     children: []
   },
   {
     path: '/qemu/console',
     title: 'console',
-    key: 'node-console',
+    key: 'qemu-console',
     icon: 'fa fa-terminal',
+    children: []
+  },
+  {
+    path: '/qemu/lxc-resource',
+    title: 'resource',
+    key: 'qemu-lxc-resource',
+    icon: 'fa fa-cube',
+    children: []
+  },
+  {
+    path: '/qemu/lxc-network',
+    title: 'network',
+    key: 'qemu-lxc-network',
+    icon: 'fa fa-exchange',
     children: []
   },
   {
     path: '/qemu/volume',
     title: 'volume',
-    key: 'node-volume',
-    icon: 'fa fa-terminal',
+    key: 'qemu-volume',
+    icon: 'fa fa-desktop',
     children: []
+  },
+  {
+    path: '/qemu/options',
+    title:'option',
+    key: 'qemu-option',
+    icon: 'fa fa-gear',
+    children: []
+  },
+  {
+    path: '/qemu/historytask',
+    title:'task',
+    key: 'qemu-historytask',
+    icon: 'fa fa-list',
+    children: []
+  },
+  {
+    path: '/qemu/monitor',
+    title: 'monitor',
+    key: 'qemu-monitor',
+    icon: 'fa fa-eye',
+    children: []
+  },
+  {
+    path: '/qemu/backup',
+    title: 'backup',
+    key: 'qemu-backup',
+    icon: 'fa fa-floppy-o',
+    children: []
+  },
+  {
+    path: '/qemu/replication',
+    title: 'replication',
+    key: 'qemu-replication',
+    icon: 'fa fa-retweet',
+    children: []
+  },
+  {
+    path: '/qemu/snapshot',
+    title: 'snapshot',
+    key: 'qemu-snapshot',
+    icon: 'fa fa-history',
+    children: []
+  },
+  {
+    path: '/qemu/firewall',
+    title: 'firewall',
+    key: 'qemu-firewall',
+    icon: 'fa fa-shield',
+    children: [{
+      path: '/qemu/firewall/alias',
+      title: 'datacenter-firewall-alias',
+      key: 'qemu-alias',
+      icon: 'fa fa-external-link'
+    },
+    {
+      path: '/qemu/firewall/ipset',
+      title: 'IPSet',
+      key: 'qemu-ipset',
+      icon: 'fa fa-list-ol'
+    },
+    {
+      path: '/qemu/firewall/log',
+      title: 'syslog',
+      key: 'qemu-syslog',
+      icon: 'fa fa-list'
+    },
+    {
+      path: '/qemu/firewall/options',
+      title: 'option',
+      key: 'qemu-firewall-options',
+      icon: 'fa fa-unlock'
+    }
+    ]
+  },
+  {
+    path: '/qemu/access',
+    title: 'access',
+    key: 'qemu-access',
+    icon: 'fa fa-unlock'
   }
 ]
 /**

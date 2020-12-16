@@ -9,7 +9,11 @@
       >
       <m-button
         type="danger"
-        @on-click="handleDelete"
+        v-confirm="{
+          msg: '确定要删除已选择项?',
+          ok: () => handleDelete(),
+          icon:'icon-question'
+        }"
         icon="el-icon-delete"
         :disabled="selectedList.length <= 0"
         >删除</m-button
@@ -50,7 +54,11 @@
                 >
                 <m-button
                   type="danger"
-                  @on-click="handleGroupRuleDelete"
+                  v-confirm="{
+                    msg: '确定要删除已选择项?',
+                    ok: () => handleGroupRuleDelete(),
+                    icon:'icon-question'
+                  }"
                   icon="el-icon-delete"
                   :disabled="selectedRuleList.length <= 0"
                   >删除</m-button
@@ -226,29 +234,14 @@ export default {
       this.selectedList = row;
     },
     handleDelete(type) {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteFireWallGroup().catch((res) => {
-            this.$confirm.error({
-              msg: res,
-            });
-          });
+      this.deleteFireWallGroup().catch((res) => {
+        this.$confirm.error({
+          msg: res,
         });
+      });
     },
     handleGroupRuleDelete() {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteFireWallGroupRule(this.group);
-        })
-        .catch(() => {});
+      this.deleteFireWallGroupRule(this.group);
     },
     expandChange(row, expandedRows) {
       var that = this;
@@ -301,5 +294,8 @@ export default {
     flex: 1 1 auto;
     display: inline-flex;
   }
+}
+/deep/.page-template__content{
+  height: auto!important;;
 }
 </style>

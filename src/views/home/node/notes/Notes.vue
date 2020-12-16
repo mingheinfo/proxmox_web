@@ -3,7 +3,7 @@
 		 <div slot="toolbar-left">
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit">编辑</m-button>
 		 </div>
-		 <div slot="page-content">
+		 <template slot="page-content">
 			 <ace-editor v-model="nodeContent"
 			              :read-only="true"
 				            ref="ace-editor"></ace-editor>
@@ -11,8 +11,8 @@
 															v-if="visible"
 			                        :visible="visible"
 															:param="param"
-															@close="visible = false; queryNotes()"></node-notes-edit-modal>
-		 </div>
+															@close="visible = false; __init__()"></node-notes-edit-modal>
+		 </template>
 	 </page-template>
 </template>
 <script>

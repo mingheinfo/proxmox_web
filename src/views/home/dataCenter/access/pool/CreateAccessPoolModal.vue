@@ -96,10 +96,10 @@ export default {
         Object.assign(this.$data, this.$options.data());
 			else {
 				 Object.assign(this.$data, this.$options.data());
-				 await this.queryGroupsObj({groupid: this.param.poolid})
+				 await this.queryPoolsObj({poolid: this.param.poolid})
 				     .then(() => {
                	 this.poolid = this.param.poolid;
-				         this.comment = this.db.groupsObj.comment &&  this.db.groupsObj.comment;
+				         this.comment = this.db.poolsObj.comment &&  this.db.poolsObj.comment;
 						 })
 			}
     },
@@ -122,7 +122,6 @@ export default {
       return props.some((prop) => this.rules[prop].error === true);
     },
     confirm() {
-			console.log(this.validateAll());
       if (this.validateAll()) return;
       let param = {
         poolid: this.poolid,

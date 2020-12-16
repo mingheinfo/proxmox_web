@@ -7,7 +7,7 @@
     :_style="{ width: '956px' }"
     @close="$emit('close')"
   >
-    <div slot="content" style="max-height: 500px">
+    <div slot="content" style="max-height: 500px; padding: 10px 20px;">
 			<dl>
 				<dd>
 					<m-select
@@ -21,9 +21,10 @@
                 :show-error="rules['node'].error"
                 :error-msg="rules['node'].message"
                 placeholder="请选择节点"
+                v-if="modalType === 'migrateall'"
               >
                 <m-option
-                  v-for="(item, index) in db.nodeList"
+                  v-for="(item, index) in nodeList"
                   :key="item.node"
                   :label="item.node"
                   :value="item.node"
@@ -37,12 +38,12 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.node }}</span>
-                      <span class="table-td">{{
-                      percentToFixed(item.mem / item.maxmem, 3)
+                      <span class="table-td" :title="item.node">{{ item.node }}</span>
+                      <span class="table-td" :title="item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)">{{
+                      item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)
                     }}</span>
-                    <span class="table-td">{{
-                      `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`
+                    <span class="table-td" :title="item.cpu && item.maxcpu && `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`">{{
+                      item.cpu && item.maxcpu &&  `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`
                     }}</span>
                     </div>
                   </div>
@@ -56,18 +57,20 @@
                 v-model="maxworkers"
 								min="1"
 								max="100"
+                v-if="modalType === 'migrateall'"
                 placeholder="请输入并行作业"
               />
               <m-checkbox
                 label="允许本地磁盘迁移"
                 v-model="withLocalDisks"
                 labelWidth="110px"
+                v-if="modalType === 'migrateall'"
               >
 							 Note: Migration with local disks might take long.
 							</m-checkbox>
 				</dd>
 			</dl>
-      <el-table :data="vmList" ref="dataTable">
+      <el-table :data="vmList" ref="dataTable" style="padding-left: 10px;">
 				<el-table-column type="selection" width="55"></el-table-column>
 				<el-table-column label="ID" prop="vmid"></el-table-column>
 				<el-table-column label="节点" prop="node"></el-table-column>
@@ -112,28 +115,32 @@
               :_style="{
       width: '800px',
     }"
-    title="Task Viewer: 加入集群">
+    title="Task Viewer: 任务进度">
         <template slot="content">
           <m-tab v-model="tab" @tab-click="handleTabChange">
             <m-tab-panel label="输出" name="log"></m-tab-panel>
              <m-tab-panel label="状态" name="status"></m-tab-panel>
           </m-tab>
-          <m-button class="create-btn" type="primary" @on-click="stopTask1" :disabled="db.addClusterStatusObj.status !== 'running'"
+          <m-button class="create-btn m-margin-top-10" type="primary" @on-click="stopTask1" :disabled="db.addClusterStatusObj.status !== 'running'"
           >停止</m-button>
-          <div class="table" v-if="tab === 'log'">
-            <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
-              {{item.t}}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-              <template v-for="(item, key) in db.addClusterStatusObj">
-                <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
-                  <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
-                  <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
-                  <div class="table-td" v-else>{{item}}</div>
+          <el-scrollbar style="height: 100%">
+             <div class="taskmodal-content">
+              <div class="table" v-if="tab === 'log'">
+                <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
+                  {{item.t}}
                 </div>
-              </template>
-          </div>
+              </div>
+              <div class="table" v-if="tab === 'status'">
+                  <template v-for="(item, key) in db.addClusterStatusObj">
+                    <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
+                      <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
+                      <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
+                      <div class="table-td" v-else>{{item}}</div>
+                    </div>
+                  </template>
+              </div>
+             </div>
+          </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -146,7 +153,7 @@
 <script>
 import Dialog from "@src/components/dialog/Dialog";
 import NodeHttp from "@src/views/home/node/http";
-import { dateFormat, percentToFixed } from '@libs/utils/index'
+import { dateFormat, percentToFixed, quickSort  } from '@libs/utils/index'
 export default {
   name: "CreateIPSetModal",
   mixins: [NodeHttp],
@@ -184,7 +191,8 @@ export default {
 			tab: 'log',
 			node: "",
 			maxworkers: 1,
-			withLocalDisks: false,
+      withLocalDisks: false,
+      nodeList: [],
 			rules: {
 				node: {
 					error:false,
@@ -197,7 +205,8 @@ export default {
     this.__init__();
   },
   methods: {
-		dateFormat,
+    dateFormat,
+    percentToFixed,
     async __init__() {
 			  let _this = this;
 				_this.queryResource()
@@ -212,8 +221,13 @@ export default {
 							this.$refs.dataTable.toggleAllSelection();
 							this.selectedList = this.vmList;
 						})
-				if(_this.operate === 'migrateall') {
-					_this.queryNodeList();
+				if(_this.param.operate === 'migrateall') {
+          _this.queryNodeList()
+               .then(res => {
+                 let nodeList = _this.db.nodeList.filter(item => item.node !== _this.param.node);
+                 _this.nodeList = quickSort(nodeList, 'node', '+');
+                 _this.node = _this.nodeList[0].node;
+               });
 				}
       },
     close() {
@@ -234,7 +248,7 @@ export default {
 						break;
 				case 'migrateall':
 					if(this.validateAll()) return;
-					Object.assign(param, {node: this.node, maxworkers: this.maxworkers, 'with-local-disks': this.withLocalDisks});
+					Object.assign(param, {target: this.node, maxworkers: this.maxworkers, 'with-local-disks': this.withLocalDisks ? 1 : 0});
 					this.betach(this.param.operate, param);
 					break;
 			}

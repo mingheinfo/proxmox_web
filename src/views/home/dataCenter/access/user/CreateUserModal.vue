@@ -93,9 +93,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.groupid }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.groupid">{{ item.groupid }}</span>
+                      <span class="table-td" :title="item.comment">{{ item.comment }}</span>
+                      <span class="table-td" :title="item.users">
                         {{ item.users }}
                       </span>
                     </div>
@@ -114,7 +114,7 @@
                 :error-msg="rules.email.message"
                 placeholder="请输入Email"
               />
-              <m-input prop="comment" labelWidth="100px" label="选择日期">
+              <m-input prop="comment" labelWidth="100px" :__conStyle="{'width': '202px'}" label="选择日期">
                 <template slot="other">
                   <el-date-picker
                     v-model="expire"
@@ -193,7 +193,7 @@
           </m-tab-panel>
           <m-tab-panel name="uf2" label="UF2"></m-tab-panel>
         </m-tab>
-        <div v-if="tfa_type === 'totp'">
+        <div v-show="tfa_type === 'totp'">
             <div class="m-form__section" >
               <dl>
                 <dt>基本信息</dt>
@@ -245,7 +245,7 @@
               </dl>
             </div>
         </div>
-        <div v-if="tfa_type == 'uf2'">
+        <div v-show="tfa_type == 'uf2'">
           要注册U2F设备，请连接设备，然后单击按钮并按照说明进行操作。
         </div>
       </div>
@@ -483,9 +483,6 @@ export default {
 	     '&algorithm=' + algorithm +
        '&issuer=' + encodeURIComponent(_this.issuer)
        )
-       //console.log(code);
-      // let ctx = document.querySelector('#canvas').getContext('2d');
-      // ctx.drawImage(image,0,0)
     },
     handlePathSelect(value) {
       this.path = value;
@@ -521,7 +518,6 @@ export default {
       let value = String(this[prop]).trim();
       this.rules[prop].error = false;
       this.rules[prop].message = "";
-      debugger;
       if (/^\s*$/.test(value) && prop !== "email") {
         this.rules[prop].error = true;
         this.rules[prop].message = "不能为空";
@@ -603,7 +599,6 @@ export default {
           `Custom 2nd factor configuration is not supported on realms with '{realm_tfa_type}' TFA.`
         );
       }
-      console.log(_this.tfa_type);
     },
     //注册uf2设备
     registerUf2() {
@@ -654,6 +649,9 @@ export default {
     },
     handleTabChange(name) {
      this.tfa_type = name;
+     if(this.tfa_type ===  'totp') {
+       this.updateQrCode();
+     }
     },
     confirm() {
       if (this.validateAll()) return;

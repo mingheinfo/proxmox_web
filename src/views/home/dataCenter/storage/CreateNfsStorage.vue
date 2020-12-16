@@ -61,7 +61,7 @@
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in contentItems" 
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
@@ -83,6 +83,20 @@
 
         </dd>
       </dl>
+			<dl v-if="isAdvice">
+        <dt>高级</dt>
+        <dd>
+					<m-select v-model="options"
+					          :read-only="true"
+					          @on-change="(value) => options = value"
+					          label="版本">
+						<m-option v-for="item in optionsItems"
+						          :value="item.value"
+											:label="item.label" 
+						          :key="item.value"></m-option>
+					</m-select>
+        </dd>
+			</dl>
 			<dl>
         <dt>节点</dt>
         <dd>
@@ -123,6 +137,10 @@ export default {
 		},
 		param: {
 			type:  Object
+		},
+		isAdvice: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -135,7 +153,27 @@ export default {
       type: 'dir',
 			disable: false,
 			maxfiles: 1,
-			options: [
+			options: '__default__',
+			optionsItems: [{
+				label: '默认',
+				value: '__default__'
+			}, {
+				label: '3',
+				value: 3
+			},
+			{
+				label: '4',
+				value: 4
+			},
+			{
+				label: '4.1',
+				value: 4.1
+			},
+			{
+				label: '4.2',
+				value: 4.2
+			}],
+			contentItems: [
 			  {
 					label: '磁盘映像',
 					value: 'images'
@@ -213,7 +251,6 @@ export default {
         this.disable = false;
         this.maxfiles = 1;
       }else {
-				debugger;
 				Object.keys(this.param).forEach((key) => {
 					if(['disable'].includes(key)) {
 						this[key] = this.param[key] ===  1 ? true : false;
@@ -221,6 +258,8 @@ export default {
 						this[key] = this.param[key].split(',');
 					} else if(key === 'export'){
 						this['export1'] =  this.param.export;
+					} else if(key === 'options'){
+            this.options = this.param.options.replace(/(vers=)/, '');
 					} else {			
 				    this[key] = this.param[key]	
 					}
@@ -272,6 +311,13 @@ export default {
 			this.validate('server');
 			if(this.rules['server'].error) return;
       this.queryNfs('', this.server)
+		}
+	},
+	watch: {
+		isAdvice: function(newVal, oldVal) {
+			if(newVal !== oldVal) {
+				return newVal;
+			}
 		}
 	}
 }

@@ -1,18 +1,19 @@
 <script>
+import { quickSort } from '@src/libs/utils';
 export default {
   name: "CreateQemuHttp",
   methods: {
     queryNodeList() {
       return this.$http.get("/json/nodes").then((res) => {
         if (res.data) {
-          this.nodeList = res.data;
+          this.nodeList = quickSort(res.data, 'node', '-');
         }
       });
     },
     queryPoolList() {
       return this.$http.get("/json/pools").then((res) => {
         if (res.data) {
-          this.poolList = res.data;
+          this.poolList = quickSort(res.data, 'poolid', '-');
         }
       });
     },
@@ -28,15 +29,13 @@ export default {
           }
         });
     },
-    queryStorageList() {
+    queryStorageList(param) {
       return this.$http
-        .get(`/json/nodes/${this.nodename}/storage`, {
-          format: 1,
-          content: "iso",
-        })
+        .get(`/json/nodes/${this.nodename}/storage`,param)
         .then((res) => {
           if (res.data) {
-            this.storageList = res.data;
+            this.storageList = quickSort(res.data, 'storage', '-');
+            return Promise.resolve(quickSort(res.data, 'storage', '-'));
           }
         });
     },
@@ -48,18 +47,18 @@ export default {
         })
         .then((res) => {
           if (res.data) {
-            this.imageStorageList = res.data;
+            this.imageStorageList = quickSort(res.data, 'storage', '-');
           }
         });
     },
-    queryIsoList() {
+    queryIsoList(param) {
       return this.$http
-        .get(`/json/nodes/${this.nodename}/storage/local/content`, {
-          content: "iso",
+        .get(`/json/nodes/${this.nodename}/storage/${param.storage}/content`, {
+          content: param.content,
         })
         .then((res) => {
           if (res.data) {
-            this.isoList = res.data;
+            this.isoList = quickSort(res.data, 'volid', '-');
           }
         });
     },
@@ -70,7 +69,7 @@ export default {
         })
         .then((res) => {
           if (res.data) {
-            this.networkList = res.data;
+            this.networkList = quickSort(res.data, 'iface', '-');
           }
         });
     },
@@ -86,6 +85,25 @@ export default {
           if (res.data) {
             this.incEventSuccess(event);
           }
+        }).catch(res => {
+          return Promise.reject(res);
+        });
+    },
+    createLxc(params) {
+      let event = this.createEvent("action.lxc.create", params.name);
+      return this.$http
+        .post(`/json/nodes/${this.nodename}/lxc`, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+        })
+        .then((res) => {
+          if (res.data) {
+            this.incEventSuccess(event);
+            this.queryStatus(this.nodename, res.data);
+          }
+        }).catch(res => {
+          return Promise.reject(res);
         });
     },
     //查询任务
@@ -145,7 +163,23 @@ export default {
 										 })
 									 }
 								 })
-		}
+    },
+    /**
+     * 修改密码 @param {password:}
+    */
+    updatePsw(param) {
+     let event = this.createEvent(`action.password.update`);
+     return this.$http.put(`json/access/password`, param, {
+       headers: {
+         'Content-Type': 'application/x-www-form-urlencoded; charset=utf8;'
+       }
+     }).then(res => {
+       this.incEventSuccess(event);
+     }).catch(res => {
+       this.incEventFail(event);
+       return Promise.reject(res);
+     })
+    }
   },
 };
 </script>

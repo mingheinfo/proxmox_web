@@ -25,11 +25,14 @@ export default {
   mounted() {
     let _this = this;
      _this.queryResource();
-    setInterval(() => {
+    this.interval = setInterval(() => {
        _this.queryResource();
-    }, 5000)
+    }, 10000)
   },
   data() {
+    //获取数据中心名称
+    let ticket = window.localStorage.getItem('ticket') || '{}',
+    tic = JSON.parse(ticket);
     return {
       view: window.sessionStorage.getItem("lastselview") || "server",
       treeData: { dataIndex: {}, updateCount: 0 },
@@ -58,11 +61,12 @@ export default {
           iconCls: "fa fa-file-o",
         },
       },
+      interval: null,
       defaultExpandKeys: [],
       rootnode: {
         id: "root",
         data: {
-          text: "数据中心 (test)",
+          text: `数据中心 ${tic.clustername ? '('+tic.clustername+')' : ''}`,
           root: true,
           index: 0,
           parentId: null,
@@ -132,6 +136,7 @@ export default {
       this.updateTree();
     },
     updateTree() {
+      //构造根节点
       let rootnode = {
           id: "root",
           data: {
@@ -147,11 +152,11 @@ export default {
           },
           childNodes: [],
         },
-        lastsel = JSON.parse(window.localStorage.getItem("lastsel")) || {},
-        parents = [],
+        lastsel = JSON.parse(window.localStorage.getItem("lastsel")) || {},//最后选择的节点
+        parents = [],//父节点
         p = lastsel,
-        index = this.treeData.dataIndex,
-        groups = this.viewTypeList[this.view].groups || [],
+        index = this.treeData.dataIndex,//下标
+        groups = this.viewTypeList[this.view].groups || [],//组
         restore = Object.assign(
           [],
           this.$store.state.db.resources.map((item) => {
@@ -163,6 +168,8 @@ export default {
               ? (item.text = item.pool)
               : item.type === "storage"
               ? (item.text = item.storage + `${item.node ? '('+item.node+')' : ''}`)
+              : item.type === "lxc"
+              ? (item.text = item.vmid + `${item.name ? '('+item.name+')' : ''}`)
               : "";
             return {
               id: item.id,
@@ -171,6 +178,7 @@ export default {
           })
         ),
         filterfn = this.viewTypeList[this.view].filterfn,
+        //去重
         rstore = restore.reduce((target, origin) => {
           if (!target.hasOwnProperty(origin.id)) {
             target[origin.id.replace(/^\//g, "")] = origin;
@@ -233,11 +241,8 @@ export default {
             var parentNode = olditem.parentNode;
             if (lastsel && lastsel.data && olditem.data.id === lastsel.data.id) {
               reselect = true;
-              //_this.deselect(olditem);
             }
             parentNode.childNodes && parentNode.childNodes.splice(olditem, 1);
-            if(Object.keys(lastsel).length <= 0)
-            this.$router.push('/datacenter/overview');
           }
         }
       }
@@ -264,6 +269,8 @@ export default {
        if(isChange) {
           this.refresh();
        }
+      let sel = JSON.parse(window.localStorage.getItem("lastsel"));
+      if(sel && sel.id && sel.id === 'root')  Object.assign(this.rootnode, { selected: true })
       if (_this.view !== "type") {
         Object.keys(_this.treeData.dataIndex).forEach((item) => {
           _this.rootnode.childNodes.push(_this.treeData.dataIndex[item]);
@@ -288,8 +295,12 @@ export default {
             break;
           }
         }
-        this.selectById(lastsel.id, lastsel);
-      } else if (lastsel) {
+        if(window.localStorage.getItem('lastsel') === '{}' && this.$route.path.indexOf('datacenter') < 0) {
+          this.$router.push('/datacenter/overview');
+        } else if(this.$route.path.indexOf('datacenter') >= 0){
+            this.selectById(lastsel.id, lastsel);
+        }
+      } else {
         this.selectById(lastsel.id, lastsel);
       }
       if (!this.treeData.updateCount) {
@@ -547,6 +558,12 @@ export default {
       }
     },
   },
+  beforeDestroy() {
+    if(this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  },
    watch: {
     // "$store.state.db.changeTree":  function(newVal,oldVal) {
     //     if(newVal) {
@@ -564,7 +581,8 @@ export default {
   padding-top: 60px;
   min-height: 100%;
   cursor: pointer;
-  background: #ebeef5;
+  background: #fff;
+  border-right: 1px solid #f5f5f5;
   &-select {
     margin: 5px 10px;
     position: relative;

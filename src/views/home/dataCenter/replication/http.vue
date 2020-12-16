@@ -1,5 +1,5 @@
 <script>
-import { deepCopy } from "@libs/utils/index";
+import { deepCopy, confirm } from "@libs/utils/index";
 export default {
   name: "DataCenterReplicationHttp",
   methods: {
@@ -42,8 +42,9 @@ export default {
           this.incEventSuccess(event);
           this.queryReplicationList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     updateReplication(params) {
@@ -62,8 +63,9 @@ export default {
           this.incEventSuccess(event);
           this.queryReplicationList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+           confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     queryReplicationById(id) {
@@ -87,8 +89,9 @@ export default {
               this.queryReplicationList();
               this.incEventSuccess(event);
             })
-            .catch((e) => {
+            .catch((res) => {
               this.incEventFail(event);
+               confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item.id);
         tasks.push(p);

@@ -43,18 +43,23 @@
                 placeholder="请选择目标"
               >
                 <m-option
-                  v-for="item in nodeList"
+                  v-for="(item, index) in nodeList"
                   :key="item.node"
                   :label="item.node"
                   :value="item.node"
                 >
+                  <div class="table-tr" v-if="index === 0">
+                    <div class="table-td">节点</div>
+                    <div class="table-td">内存</div>
+                    <div class="table-td">CPU</div>
+                  </div>
                   <div class="table-tr">
-                    <span class="table-td">{{ item.node }}</span>
-                    <span class="table-td">{{
-                      percentToFixed(item.mem / item.maxmem, 3)
+                    <span class="table-td" :title="item.node">{{ item.node }}</span>
+                    <span class="table-td" :title="item.mum && item.maxmem ? percentToFixed((item.mem / item.maxmem), 3) : 0">{{
+                      item.mum && item.maxmem ? percentToFixed((item.mem / item.maxmem), 3) : 0
                     }}</span>
-                    <span class="table-td">{{
-                      `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`
+                    <span class="table-td" :title="item.cpu && item.maxcpu ? `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}` : ''">{{
+                      item.cpu && item.maxcpu ? `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}` : ''
                     }}</span>
                   </div>
                 </m-option>
@@ -278,7 +283,7 @@ export default {
         this.createReplication(params).then(() => {
           this.close();
         }).catch(res => {
-					this.$confirm.confirm({msg: res})
+					this.$confirm.error({msg: res, icon: 'icon-error'})
 				});
       if (this.modalType !== "create") {
 				params["id"] =  this.param.id;

@@ -38,22 +38,21 @@
         </template>
         <template v-else>
           <span class="m-select__item__input" 
-                contenteditable
                 v-for="(item, index) in selected"
                :key="index">
             <input class="m-select__input__inner" 
                    :value="item.label" 
                    :class="{'disabled': disabled}"
+                   @blur.stop="handleOptionBlur"
                    @input="(e) =>  $emit('on-change', e.target.value)"
-                   @blur="handleBlur"
                    :placeholder="placeholder"
                    :readonly="readonly" :disabled="disabled"/>
           </span>
           <input v-show="selected.length <= 0"
                  :class="{'disabled': disabled}"
                  class="m-select__input__inner"
-                 @blur="handleBlur"
                  :placeholder="placeholder"
+                 @blur.stop="handleOptionBlur"
                  :value="value" @input="(e) => !disabled && $emit('on-change', e.target.value)" 
                  :readonly="readonly" :disabled="disabled"/>
         </template>
@@ -61,15 +60,16 @@
       <div class="error-message" v-show="showError">{{ errorMsg }}</div>
     </span>
     <div class="m-select-menu" v-show="renderDropMenu" ref="select-menu">
+      <div x-arrow="" class="popper__arrow"></div>
       <div
         style="overflow-y: auto; max-height: 200px"
         ref="select-option"
         tabindex="-1"
-        @blur.stop="handleOptionBlur"
+        @mouseleave.stop="isOpen = false"
+        @blur.stop="() => {if(type === 'multiple')handleOptionBlur()}"
       >
         <slot></slot>
       </div>
-      <div x-arrow="" class="popper__arrow"></div>
     </div>
   </ul>
 </template>
@@ -204,12 +204,13 @@ export default {
           this.$emit("on-change", this.selectValues);
       }else {
           if(value === this.selectValues) return;
-        	this.$emit("on-change", value);
+          this.$emit("on-change", value);
+          if(this.type !== 'multiple') {
+              this.isOpen = false;
+          }
       }
       this.$emit("validate", this.prop);
       this.selected = this.setSelected();
-      if(this.type !== 'multiple')
-        this.isOpen = false;
     },
     //处理多选隐藏
     handleOptionBlur() {
@@ -219,6 +220,7 @@ export default {
       this.isOpen = !this.isOpen;
       this.$emit('visible-change');
     },
+    //点击下拉选择框之外的区域隐藏选择框
     showOption(event) {
       event.stopPropagation
         ? event.stopPropagation()
@@ -226,8 +228,8 @@ export default {
       this.isOpen = false;
       this.$emit("validate", this.prop);
     },
-    handleBlur() {
-      this.isOpen = false;
+    handleOptionBlur() {
+      this.isOpen  = false;
     }
   },
   destroyed() {
@@ -352,7 +354,7 @@ export default {
   border-top-width: 0;
   border-bottom-color: #ebeef5;
   border-width: 6px;
-  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.03));
+  // /filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.03));
   &:after {
     content: "";
     position: absolute;

@@ -9,15 +9,15 @@
           @mousedown.stop="handleMoveStart"
         >
           <span class="dialog-title">{{ title }}</span>
-          <span class="dialog-close" @click="close"></span>
+          <span class="dialog-close" @click="close">&times;</span>
         </div>
         <div class="dialog-main">
             <slot name="content"></slot>
         </div>
         <div class="dialog-footer">
           <template v-if="!$slots['footer']">
-            <div class="dialog-cancel" @click="cancel">{{ cancelText }}</div>
-            <div class="dialog-confirm" @click="ok">{{ confirmText }}</div>
+            <m-button type="danger" class="dialog-cancel" @on-click="cancel">{{ cancelText }}</m-button>
+            <m-button type="primary" class="dialog-confirm" @on-click="ok">{{ confirmText }}</m-button>
           </template>
           <template v-else>
             <slot name="footer"></slot>
@@ -110,6 +110,8 @@ export default {
     },
     handleMoveStart(event) {
       var dragDom = this.$refs["pop-header"];
+       if(this.$refs['dialog'])
+      this.$refs['dialog'].classList.toggle('move')
       //阻止所选dom内容被选中
       dragDom.onselectstart = dragDom.ondrag = function () {
         return false;
@@ -183,6 +185,8 @@ export default {
       document.removeEventListener("mousemove", this.handleMoveMove);
       //移除鼠标按下事件
       document.removeEventListener("mousedown", this.handleMoveStart);
+      if(this.$refs['dialog'])
+      this.$refs['dialog'].classList.toggle('move')
       //阻止事件默认行为
       event.preventDefault();
       //阻止事件冒泡
@@ -201,8 +205,8 @@ export default {
     _this.mouseEndPoint = {
       left:
         (getDocument().clientWidth - _this.$refs["pop-wrapper"].clientWidth) / 2,
-      top:
-        (getDocument().clientHeight - 1.5 * _this.$refs["pop-wrapper"].clientHeight) /
+      top: (getDocument().clientHeight - 1.5 * _this.$refs["pop-wrapper"].clientHeight) /
+        2 <=0 ? 0 : (getDocument().clientHeight - 1.5 * _this.$refs["pop-wrapper"].clientHeight) /
         2,
     };
   },

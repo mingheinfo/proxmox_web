@@ -60,6 +60,7 @@ button, input, textarea{
   outline: none;
 }
 
+
 select {
   /*定义外观*/
   font-size: 12px;
@@ -162,6 +163,25 @@ select {
   }
 }
 
+@media screen and (max-width: 1280px){
+  .main{
+    width: 1280px!important;
+  }
+  .m-content{
+    overflow-x: auto;
+  }
+  .main-content {
+    width: 1280px!important;
+  }
+  html,body, .app{
+    overflow-x: auto;
+    width: 1280px!important;
+  }
+  .header-container{
+    width: 1460px!important;
+    position: absolute!important;
+  }
+}
 .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
@@ -196,6 +216,13 @@ select {
   color: #fc0;
 }
 
+.create-btn{
+  width: 100px;
+  height: 40px!important;
+  display: inline-block;
+  line-height: 40px!important;
+  vertical-align: top;
+}
 .el-scrollbar__wrap{
   overflow: auto!important;
   overflow-x: hidden !important;
@@ -236,6 +263,7 @@ html,body, .app{
   font-size: 13px;
   min-width: 1280px;
   height: 100%;
+  overflow-y: hidden;
 }
 
 .m-tool-img {
@@ -259,11 +287,11 @@ html,body, .app{
 }
 
 .m-operate{
-  position: fixed;
+  position: absolute;
   height: 60px;
   border-bottom: 1px solid #e6e6e6;
   margin-top: 1px;
-  width: calc(100% - 180px);
+  width: calc(100%);
   background: #fff;
   z-index: 8;
   display: flex;
@@ -680,17 +708,26 @@ html,body, .app{
     text-shadow: -1px 0px 2px #e2eff9;
 }
 
-
+.upload-input{
+  opacity: 0;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+}
 .disabled{
-  background: #c4d6ec!important;
+  background: #e0eaf3;
+  background-image: linear-gradient(180deg,#e9edf2,#d9e0e9);
   .m-button-default{
-    background: #c4d6ec!important;
+    background:#e0eaf3!important;
   }
   .m-button-primary{
-    background: #c4d6ec;
+    background: #e0eaf3!important;
   }
   .m-button-danger{
-    background: #c4d6ec;
+    background:#e0eaf3!important;
   }
 }
 .single-selected{
@@ -709,15 +746,13 @@ html,body, .app{
 }
 
 .table {
-  display: table;
   width: 100%;
   min-width: 300px;
   &-header__tr {
-    display: table-row;
+    display: flex;
     height: 35px;
     line-height: 35px;
-    max-width: 300px;
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid #adb0b8;
     cursor: pointer;
     color: #333;
     &:hover{
@@ -726,14 +761,16 @@ html,body, .app{
     }
   }
   &-tr {
-    display: table-row;
+    display: flex;
+    width: 100%;
     height: 35px;
     line-height: 35px;
-    max-width: 300px;
     cursor: pointer;
+    border-bottom: 1px solid #adb0b8;
   }
   &-td {
-    display: table-cell;
+    flex: 1 1 auto;
+    width: 0px;
     height: 35px;
     line-height: 35px;
     padding: 0px 10px;
@@ -743,8 +780,7 @@ html,body, .app{
     text-overflow: ellipsis;
     text-align: left;
     margin-right:5px;
-    width: 5em;
-    border-bottom: 1px solid #ebeef5;
+    width: 100px;
     box-sizing: border-box;
   }
   &-radio {
@@ -791,6 +827,53 @@ html,body, .app{
 }
 
 .taskmodal-content{
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: 300px;
+  padding-top: 10px;
+  .table{
+    background: #f5f5f5;
+    padding: 0px 10px;
+    font-family: 'Courier New';
+  }
+  .table-tr{
+    width: 100%;
+    height: auto;
+  }
+}
+
+*:focus { outline: none;} 
+::-webkit-scrollbar{
+  width: 8px;
+  border-radius: 6px;
+  background: #f5f5f5;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb{
+  width: 6px;
+  border-radius: 6px;
+  background: rgba(144,147,153,.3);
+}
+
+.el-table td, .el-table th{
+  padding: 10px 0px!important;
+}
+/*内容溢出*/
+.ellipsis{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.el-loading-mask
+{
+  z-index: 1;
+}
+.page-table-pagination{
+  background: #f5f5f5;
+  margin: 10px 0px;
+  overflow-y: hidden;
+  border: 1px solid transparent;
+}
+.el-pagination__editor.el-input .el-input__inner{
+  width: 100px;
 }

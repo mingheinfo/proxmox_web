@@ -1,5 +1,5 @@
 <script>
-import { deepCopy } from "@libs/utils/index";
+import { deepCopy, confirm } from "@libs/utils/index";
 export default {
   name: "DataCenterBackUpHttp",
   methods: {
@@ -27,6 +27,7 @@ export default {
             })
             .catch((e) => {
               this.incEventFail(event);
+              confirm.call(this, e, 'confirm', 'icon-warning');
             });
         })(item.id);
         tasks.push(p);
@@ -94,8 +95,9 @@ export default {
           this.incEventSuccess(event);
           this.queryBackUpList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+           confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     updateBackUp(param) {
@@ -112,8 +114,9 @@ export default {
           this.incEventSuccess(event);
           this.queryBackUpList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+           confirm.call(this, res, 'confirm', 'icon-warning');
         });
     },
     run() {
@@ -138,13 +141,13 @@ export default {
               this.queryBackUpList();
               this.incEventSuccess(event);
             })
-            .catch((e) => {
+            .catch((res) => {
               this.incEventFail(event);
+               confirm.call(this, res, 'confirm', 'icon-warning');
             });
         })(item);
         tasks.push(p);
       });
-      debugger
       return Promise.all(tasks);
     },
   },

@@ -49,7 +49,7 @@ export default {
   mounted() {
     let _this = this;
     _this.f_NewsContent = _this.param.content;
-    _this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 10) + 'px';
+    _this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 30) + 'px';
 		window.addEventListener('resize', _this.updateAceEditorHeight, false)
 	},
   methods: {
@@ -59,7 +59,7 @@ export default {
     },
     updateAceEditorHeight() {
 			 let _this = this;
-				_this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 10) + 'px';
+				_this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 30) + 'px';
 		},
     confirm() {
 			this.addNotes(this.param.node,{

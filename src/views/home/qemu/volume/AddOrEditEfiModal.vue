@@ -23,7 +23,7 @@
                 v-model="storage"
 								validateEvent
                 @validate="validate"
-                :readonly="false"
+                :readonly="true"
                 placeholder="请选缓存"
               >
 								<div class="table">
@@ -33,17 +33,17 @@
 										:value="item.storage"
 										:label="item.storage"
 									>
-								   <div v-if="index === 0" class="table-row">
+								   <div v-if="index === 0" class="table-tr">
 										 <div class="table-td">名称</div>
 										 <div class="table-td">类别</div>
 										 <div class="table-td">可用</div>
 										 <div class="table-td">容量</div>
 									 </div>
-									 <div class="table-row">
-										 <div class="table-td">{{item.storage}}</div>
-										 <div class="table-td">{{item.type}}</div>
-										 <div class="table-td">{{byteToSize(item.avail)}}</div>
-										 <div class="table-td">{{byteToSize(item.total)}}</div>
+									 <div class="table-tr">
+										 <div class="table-td" :title="item.storage">{{item.storage}}</div>
+										 <div class="table-td" :title="item.type">{{item.type}}</div>
+										 <div class="table-td" :title="byteToSize(item.avail)">{{byteToSize(item.avail)}}</div>
+										 <div class="table-td" :title="byteToSize(item.total)">{{byteToSize(item.total)}}</div>
 									 </div>
                 	</m-option>
 								</div>

@@ -3,9 +3,9 @@ import { Message } from 'element-ui';
 import axios from 'axios';
 import store from '@src/store/'
 function handleError(error, errorTip) {
-  // if(error.error && error.error.message && !error.error.message.status) {
-  //   Message.error(error.error.message);
-  // }
+  if(error.error.response &&error.error.response.status === 401) {
+      window.location.href='/login'
+  }
   if(error.error && error.error.response && error.error.response.statusText) {
     return Promise.reject(error.error.response.statusText);
   }

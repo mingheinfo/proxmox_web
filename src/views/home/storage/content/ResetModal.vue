@@ -28,30 +28,36 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-          <div class="table" v-if="tab === 'log'">
-            <div
-              class="table-tr"
-              v-for="item in db.addClusterLogList"
-              :key="item.n"
-            >
-              {{ item.t }}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-            <template v-for="(item, key) in db.addClusterStatusObj">
-              <div
-                class="table-tr"
-                v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
-                :key="key"
-              >
-                <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
-                <div class="table-td" v-if="key === 'starttime'">
-                  {{ dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm") }}
+          <el-scrollbar style="height: 100%">
+            <div class="taskmodal-content">
+              <div class="table" v-if="tab === 'log'">
+                <div
+                  class="table-tr"
+                  v-for="item in db.addClusterLogList"
+                  :key="item.n"
+                >
+                  {{ item.t }}
                 </div>
-                <div class="table-td" v-else>{{ item }}</div>
               </div>
-            </template>
-          </div>
+              <div class="table" v-if="tab === 'status'">
+                <template v-for="(item, key) in db.addClusterStatusObj">
+                  <div
+                    class="table-tr"
+                    v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
+                    :key="key"
+                  >
+                    <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
+                    <div class="table-td" v-if="key === 'starttime'">
+                      {{
+                        dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm")
+                      }}
+                    </div>
+                    <div class="table-td" v-else>{{ item }}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -96,10 +102,10 @@
                         <div class="table-td">容量</div>
                       </div>
                       <div class="table-row">
-                        <div class="table-td">{{ item.storage }}</div>
-                        <div class="table-td">{{ item.type }}</div>
-                        <div class="table-td">{{ byteToSize(item.avail) }}</div>
-                        <div class="table-td">{{ byteToSize(item.total) }}</div>
+                        <div class="table-td" :title="item.storage">{{ item.storage }}</div>
+                        <div class="table-td" :title="item.type">{{ item.type }}</div>
+                        <div class="table-td" :title="byteToSize(item.avail)">{{ byteToSize(item.avail) }}</div>
+                        <div class="table-td" :title="byteToSize(item.total)">{{ byteToSize(item.total) }}</div>
                       </div>
                     </m-option>
                   </template>
@@ -166,8 +172,8 @@ import StorageContentHttp from "@src/views/home/storage/content/http";
 import {
   render_storage_content,
   byteToSize,
-	format_task_description,
-	dateFormat
+  format_task_description,
+  dateFormat,
 } from "@libs/utils/index";
 import { gettext } from "@src/i18n/local_zhCN.js";
 export default {
@@ -224,7 +230,7 @@ export default {
     this.__init__();
   },
   methods: {
-		dateFormat,
+    dateFormat,
     byteToSize,
     // //请求磁盘
     async __init__() {

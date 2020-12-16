@@ -35,17 +35,20 @@
         background: #409eff;
         border: 1px solid #409eff;
         color: #fff;
+        background-image: linear-gradient(180deg, #66b2f5, #409eff);
       }
       &:nth-child(3) {
         background: #409eff;
         border: 1px solid #409eff;
         color: #fff;
+        background-image: linear-gradient(180deg, #66b2f5, #409eff);
       }
       &:nth-child(4) {
         background: #409eff;
         border: 1px solid #409eff;
         color: #fff;
         padding: 0;
+        background-image: linear-gradient(180deg, #66b2f5, #409eff);
       }
     }
   }
@@ -71,10 +74,16 @@
       line-height: 0px;
       outline: none;
       background: #fff;
+      max-height: 300px;
+      overflow-y: auto;
     }
   }
 }
 
 .tab-item{
   display: inline-block;
+}
+
+/deep/.el-table td{
+  padding: 0px;
 }

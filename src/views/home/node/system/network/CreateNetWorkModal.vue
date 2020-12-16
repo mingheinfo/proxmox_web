@@ -53,8 +53,8 @@
                     </div>
                   </template>
                   <div class="table-tr">
-                    <span class="table-td">{{ item.iface }}</span>
-                    <span class="table-td">
+                    <span class="table-td" :title="item.iface">{{ item.iface }}</span>
+                    <span class="table-td" :title="item.active && item.active === 1 ? '是' : '否'">
                       <table-info-state
                         :content="
                           item.active && item.active === 1 ? '是' : '否'
@@ -66,7 +66,7 @@
                         "
                       ></table-info-state>
                     </span>
-                    <span class="table-td">
+                    <span class="table-td" :title="item.comments">
                       {{ item.comments }}
                     </span>
                   </div>

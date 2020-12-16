@@ -48,7 +48,11 @@
               >
               <m-button
                 type="danger"
-                @on-click="handleDelete"
+                v-confirm="{
+                  msg: '确定要删除已选择项?',
+                  ok: () => handleDelete(),
+                  icon:'icon-question'
+                }"
                 icon="el-icon-delete"
                 :disabled="selectedList.length <= 0"
                 >删除</m-button
@@ -141,15 +145,7 @@ export default {
       this.selectedList = row;
     },
     handleDelete(type) {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteHa();
-        })
-        .catch(() => {});
+      this.deleteHa();
     },
     handleCollpise(type) {
       if (type === "status") {
@@ -203,5 +199,8 @@ export default {
 }
 /deep/.card{
 	min-height: auto!important;
+}
+/deep/.page-template__content{
+  height: auto!important;;
 }
 </style>

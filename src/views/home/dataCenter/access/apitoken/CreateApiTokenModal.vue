@@ -38,13 +38,15 @@
                     <span class="table-td">备注</span>
                   </div>
                   <div class="table-tr">
-                    <span class="table-td">{{ item.userid }}</span>
-                    <span class="table-td">{{
+                    <span class="table-td" :title="item.userid">{{ item.userid }}</span>
+                    <span class="table-td" :title="`${item.firstname ? item.firstname : ''} ${
+                        item.lastname ? item.lastname : ''
+                      }`">{{
                       `${item.firstname ? item.firstname : ""} ${
                         item.lastname ? item.lastname : ""
                       }`
                     }}</span>
-                    <span class="table-td">{{ item.comment }}</span>
+                    <span class="table-td" :title="item.comment">{{ item.comment }}</span>
                   </div>
                 </m-option>
               </m-select>
@@ -66,7 +68,7 @@
                 :disabled="modalType !== 'create'"
                 placeholder="请输入Token ID"
               />
-              <m-input prop="expire" labelWidth="100px" label="选择日期">
+              <m-input prop="expire" labelWidth="100px" label="选择日期" :__conStyle="{'width': '202px'}">
                 <template slot="other">
                   <el-date-picker
                     v-model="expire"

@@ -1,5 +1,5 @@
 <template>
-  <page-template>
+  <page-template v-loading="loading" :element-loading-text="loadingText">
     <div slot="toolbar-left">
       <m-button
         type="primary"
@@ -19,14 +19,14 @@
         type="primary"
         @on-click="downLoadTemplate()"
         icon="el-icon-download"
-				:disabled="inStatus('vztmpl')"
+				:disabled="!templ"
         >模板</m-button
       >
 				<m-button
         type="primary"
         @on-click="showModal()"
         icon="el-icon-upload2"
-				:disabled="inStatus('iso')"
+				:disabled="!upload && !templ"
         >上传</m-button
       >
       <m-button
@@ -39,12 +39,12 @@
     </div>
     <div slot="page-content">
       <el-table
-        :data="db.storageContentList"
+        :data="storageContentList"
         @selection-change="handleSelect"
         ref="dataTable"
       >
         <el-table-column type="selection" width="55px"></el-table-column>
-        <el-table-column label="名称" prop="volid">
+        <el-table-column label="名称" prop="volid" width="300px" show-overflow-tooltip>
 					<template slot-scope="scope">
 						{{render_storage_content(null, null, scope.row)}}
 					</template>
@@ -70,6 +70,7 @@
         :title="title"
         :visible="visible"
 				v-if="visible"
+        :contents="contents"
         @close="
           visible = false;
           __init__()
@@ -100,7 +101,7 @@ import LinePercentChart from '@src/components/chart/line/LineCharts';
 import StorageContentHttp from "@src/views/home/storage/content/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { percentToFixed, byteToSize,render_storage_content, dateFormat, format_content_types } from '@libs/utils/index';
+import { percentToFixed, byteToSize,render_storage_content, dateFormat, format_content_types, quickSort } from '@libs/utils/index';
 import UploadImageModal from './UploadImageModal'; 
 import TemplateModal from './TemplateModal';
 import ConfigModal from './ConfigModal';
@@ -127,7 +128,13 @@ export default {
       showConfig: false,
       configParam: {},
       showReset: false,
-      resetParam: {}
+      resetParam: {},
+      storageContentList: [],
+      loading: false,
+      loadingText: '',
+      contents: [],
+      templ: false,
+      upload: false
     };
   },
   mounted() {
@@ -141,12 +148,33 @@ export default {
 		format_content_types,
     //初始化查找
     __init__() {
-			this.queryStorageContent();
-			this.queryStroageStatus();
+      this.queryStorageContent()
+          .then(res => {
+            this.storageContentList = quickSort(this.db.storageContentList, 'content', '+');
+          });
+      this.queryStroageStatus()
+          .then(res => {
+            this.templ = false;
+	          this.upload = false;
+	          var cts = [];
+            this.db.storageStatusObj.content.split(',').forEach(content => {
+              debugger;
+              if (content === 'vztmpl') {
+                     this.templ = true;
+                    cts.push('vztmpl');
+                } else if (content === 'iso') {
+                    this.upload = true;
+                    cts.push('iso');
+                }
+               if (this.templ !== this.upload) {
+		              this.contents = cts;
+	              }
+            })
+          });
     },
     //是否展示弹框
     showModal() {
-      this.title = "创建：上传镜像";
+      this.title = "上传镜像";
       this.visible = true;
     },
     //按钮是否可点击

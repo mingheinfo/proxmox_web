@@ -29,6 +29,8 @@ export default {
 									 if(res.data) {
 										 return Promise.resolve(res.data);
 									 }
+								 }).catch(res => {
+									 return Promise.reject(res);
 								 })
 		},
 		//查询批量操作日志

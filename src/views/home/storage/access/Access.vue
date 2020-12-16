@@ -63,7 +63,7 @@
   </page-template>
 </template>
 <script>
-import StorageAccessHttp from "@src/views/home/storage/access/http";
+import StorageAccessHttp from "@src/views/home/qemu/access/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import CreateAccessModal from './CreateAccessModal';

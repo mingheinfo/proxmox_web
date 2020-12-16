@@ -7,38 +7,61 @@
     @close="$emit('close')"
   >
     <div slot="content" style="max-height: 500px">
-			     <Dialog :visible="showLog"
-              @close="closeLog"
-              :_style="{
-      width: '800px',
-    }"
-    title="Task Viewer: 下载模板">
+      <Dialog
+        :visible="showLog"
+        @close="closeLog"
+        :_style="{
+          width: '800px',
+        }"
+        title="Task Viewer: 下载模板"
+      >
         <template slot="content">
           <m-tab v-model="tab" @tab-click="handleTabChange">
             <m-tab-panel label="输出" name="log"></m-tab-panel>
-             <m-tab-panel label="状态" name="status"></m-tab-panel>
+            <m-tab-panel label="状态" name="status"></m-tab-panel>
           </m-tab>
-          <m-button class="create-btn m-margin-top-10" type="primary" @on-click="stopTask1" :disabled="db.addClusterStatusObj.status !== 'running'"
-          >停止</m-button>
-          <div class="table" v-if="tab === 'log'">
-            <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
-              {{item.t}}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-              <template v-for="(item, key) in db.addClusterStatusObj">
-                <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
-                  <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
-                  <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
-                  <div class="table-td" v-else>{{item}}</div>
+          <m-button
+            class="create-btn m-margin-top-10"
+            type="primary"
+            @on-click="stopTask1"
+            :disabled="db.addClusterStatusObj.status !== 'running'"
+            >停止</m-button
+          >
+          <el-scrollbar style="height: 100%">
+            <div class="taskmodal-content">
+              <div class="table" v-if="tab === 'log'">
+                <div
+                  class="table-tr"
+                  v-for="item in db.addClusterLogList"
+                  :key="item.n"
+                >
+                  {{ item.t }}
                 </div>
-              </template>
-          </div>
+              </div>
+              <div class="table" v-if="tab === 'status'">
+                <template v-for="(item, key) in db.addClusterStatusObj">
+                  <div
+                    class="table-tr"
+                    v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
+                    :key="key"
+                  >
+                    <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
+                    <div class="table-td" v-if="key === 'starttime'">
+                      {{
+                        dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm")
+                      }}
+                    </div>
+                    <div class="table-td" v-else>{{ item }}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
         </template>
-      </Dialog> 
+      </Dialog>
       <page-template>
         <div slot="toolbar-right">
           <m-input
@@ -116,17 +139,17 @@ export default {
     return {
       searchText: "",
       currentPkg: "",
-			templateList: [],
-			interVal: null,
-			showLog: false,
-			tab: 'log'
+      templateList: [],
+      interVal: null,
+      showLog: false,
+      tab: "log",
     };
   },
   mounted() {
     this.__init__();
   },
   methods: {
-		dateFormat,
+    dateFormat,
     // //请求磁盘
     __init__() {
       let _this = this;
@@ -141,43 +164,48 @@ export default {
     //关闭弹框
     close() {
       this.$emit("close");
-		},
-		closeLog() {
-			this.$emit("close");
-		},
-		//节流搜索
-    search() {
-      throttle(
-        this.filterData(),
-        500,
-        false
-      );
-		},
-		filterData() {
-			 this.templateList = this.db.storageTemplateList.filter((item) => {
-          if (item.package.indexOf(this.searchText) >= 0) return item;
-        });
-		},
-		downLoad() {
-			this.downLoadTemplate({
-				storage: this.storage,
-				template: this.currentPkg
-			})
-			this.showLog = true;
-      this.interVal = setInterval(() => {
-				this.queryLog(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
-				this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid)
-			}, 3000);
-		},
-		//切换tab
-		handleTabChange(value) {
-			this.tab = value;
-		},
-		stopTask1() {
-      this.stopTask(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
     },
-	},
-	beforeDestroy() {
+    closeLog() {
+      this.$emit("close");
+    },
+    //节流搜索
+    search() {
+      throttle(this.filterData(), 500, false);
+    },
+    filterData() {
+      this.templateList = this.db.storageTemplateList.filter((item) => {
+        if (item.package.indexOf(this.searchText) >= 0) return item;
+      });
+    },
+    downLoad() {
+      this.downLoadTemplate({
+        storage: this.storage,
+        template: this.currentPkg,
+      });
+      this.showLog = true;
+      this.interVal = setInterval(() => {
+        this.queryLog(
+          this.db.addClusterStatusObj.node,
+          this.db.addClusterStatusObj.upid
+        );
+        this.queryStatus(
+          this.db.addClusterStatusObj.node,
+          this.db.addClusterStatusObj.upid
+        );
+      }, 3000);
+    },
+    //切换tab
+    handleTabChange(value) {
+      this.tab = value;
+    },
+    stopTask1() {
+      this.stopTask(
+        this.db.addClusterStatusObj.node,
+        this.db.addClusterStatusObj.upid
+      );
+    },
+  },
+  beforeDestroy() {
     if (this.interVal) {
       clearInterval(this.interVal);
       this.interVal = null;

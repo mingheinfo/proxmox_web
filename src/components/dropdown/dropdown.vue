@@ -5,7 +5,7 @@
     :class="{
       show: trigger === 'hover' && isOpen,
       'is-click': isOpen,
-      disabled: disabled,
+      'disabled': disabled,
     }"
     @click.stop="!disabled ? (isOpen = !isOpen) : null"
     @blur.stop="handleBlur"
@@ -50,7 +50,6 @@ export default {
         }, 10);
         return true;
       } else {
-        debugger;
         if (
           this.$refs &&
           this.$refs["dropdown-menu"] &&

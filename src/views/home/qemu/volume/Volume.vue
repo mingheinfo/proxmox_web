@@ -61,16 +61,16 @@
       >
       <m-button
         type="info"
-        @on-click="handleRestSize()"
+        @on-click="handleCommand('resize', 'resize')"
         icon="el-icon-edit-outline"
-        :disabled="inType('scsi')"
+        :disabled="inType('scsi') || canResume()"
         >调整磁盘大小</m-button
       >
       <m-button
         type="info"
         @on-click="handleMoveDisk()"
         icon="el-icon-edit-outline"
-        :disabled="inType('scsi')"
+        :disabled="inType('scsi') || canResume()"
         >移动磁盘</m-button
       >
     </div>
@@ -161,6 +161,7 @@ export default {
       statusObj: {},
       jobVisible: '',
       jobTitle: '',
+      //可以添加的硬盘配置
       hardware_counts: {
         net: 32,
         usb: 5,
@@ -170,6 +171,7 @@ export default {
         serial: 4,
         rng: 1,
       },
+      //添加菜单
       menu_items: [
 			    {
 				   text: gettext('Hard Disk'),
@@ -238,9 +240,11 @@ export default {
     this.__init__();
   },
   methods: {
+    //初始化请求
     __init__() {   
       let _this = this;
       _this.queryResource().then((res) => {
+        //装配数据得到格式为{key: value}的数据以便后期数据处理
         _this.store = _this.db.volumeList.reduce((target, source) => {
           if (!target.hasOwnProperty(source.key)) {
             target[source.key] = {
@@ -249,14 +253,14 @@ export default {
           }
           return target;
         }, {});
-        console.log(_this.store);
+        //表格数据
         this.hardwareList = [
           {
-            name: gettext("Memory"),
-            type: "memory",
-            icon: "icon-ram",
-            itemId: 'addmemory',
-            render: function (pending) {
+            name: gettext("Memory"),//名称
+            type: "memory",//数据类型
+            icon: "icon-ram",//icon
+            itemId: 'addmemory',//添加弹框id
+            render: function (pending) {//渲染值
               var res = "";
               var max = _this.getObjectValue("memory", 512, pending);
               var balloon = _this.getObjectValue("balloon", undefined, pending);
@@ -329,7 +333,7 @@ export default {
               if(pending)
                return _this.store.bios && _this.store.bios.data &&  _this.store.bios.data.pending ? render_qemu_bios(_this.store.bios.data && _this.store.bios.data.pending) : '';
               else 
-                return _this.store.bios ? render_qemu_bios(_this.store.bios.data && _this.store.bios.data.value) : '';
+                return _this.store.bios ? render_qemu_bios(_this.store.bios.data && _this.store.bios.data.value) : '默认 (SeaBIOS)';
             },
           },
           {
@@ -737,13 +741,13 @@ export default {
       return defaultValue;
     },
     //添加硬盘等
-    handleCommand(type, modaltype) {
+    handleCommand(type, modaltype = 'create') {
       debugger;
       //硬盘类型如果modalType存在证明是添加
-      this.type = !modaltype ? type : this.currentObj.itemId;
+      this.type =(modaltype === 'create' || modaltype === 'resize') ? type : this.currentObj.itemId;
       //创建或者编辑
-      this.modalType = modaltype ? modaltype : 'create';
-      this.param = modaltype ? this.currentObj : {};
+      this.modalType = modaltype !== 'create' ? modaltype : 'create';
+      this.param = modaltype !== 'create' ? this.currentObj : {};
       this.visible = true;
     },
     //改变磁盘大小
@@ -752,7 +756,12 @@ export default {
     },
     //移动磁盘
     handleMoveDisk() {
-
+    //硬盘类型如果modalType存在证明是添加
+      this.type = 'migratedisk';
+      //创建或者编辑
+      this.modalType = 'create';
+      this.param =this.currentObj;
+      this.visible = true;
     },
     handleSingleSelect(row) {
       this.current = row.type;
@@ -774,8 +783,10 @@ export default {
       })
     },
     canResume() {
-      return (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.pending) 
-             ||  (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.delete);
+      return ( (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.pending) 
+             ||  (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.delete) )
+             ? true 
+             : false;
     },
     handleResume() {
       let param = {};
@@ -816,5 +827,8 @@ export default {
 }
 /deep/.base-icon{
   background-size: 16px;
+}
+/deep/.tool-bar-left{
+   flex: 2;
 }
 </style>

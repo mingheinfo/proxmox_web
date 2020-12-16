@@ -2,9 +2,17 @@
 	 <page-template>
 		 <div slot="toolbar-left">
         <m-button type="primary" icon="el-icon-plus" @on-click="showModal('create')">添加</m-button>
-				<m-button type="danger" icon="el-icon-delete" @on-click="deleteBackUp" :disabled="selectedList.length <= 0">删除</m-button>
+				<m-button type="danger" icon="el-icon-delete" 
+				           v-confirm="{
+                     msg: `确定要删除已选项吗?`,
+										 ok: () => deleteBackUp()
+				           }" :disabled="selectedList.length <= 0">删除</m-button>
 				<m-button type="primary" icon="el-icon-edit" @on-click="showModal('edit')" :disabled="selectedList.length !== 1">编辑</m-button>
-					<m-button type="info" icon="el-icon-video-play" @on-click="runNow" :disabled="selectedList.length <= 0 ">现在运行</m-button>
+					<m-button type="info" icon="el-icon-video-play" 
+					          v-confirm="{
+                     msg: `你确定你要启动已选择的备份作业吗?`,
+										 ok: () => runNow()
+				           }" :disabled="selectedList.length <= 0 ">现在运行</m-button>
 		 </div>
 		 <div slot="page-content">
 			 <el-table :data="db.backUpList" ref="dataTable" @selection-change="handleSelect">
@@ -99,12 +107,7 @@ export default {
 			}).join(',')
 		},
 		deleteBackUp() {
-			this.$confirm.confirm({
-				msg: `你确定你要删除已选择项吗？`,
-				type: 'info'
-			}).then(() => {
-         this.delete();
-			}).catch(() => {})
+      this.delete();
 		},
 		//选择
 		handleSelect(rows) {
@@ -112,12 +115,7 @@ export default {
 		},
 		//现在运行
 		runNow() {
-			this.$confirm.confirm({
-				msg: `你确定你要启动已选择的备份作业吗？`,
-				type: 'info'
-			}).then(() => {
-         this.run();
-			}).catch(() => {})
+      this.run();
 		}
 	}
 }

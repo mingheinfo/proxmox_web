@@ -171,9 +171,6 @@ export default class Http {
         const isCanceled = err && err.message && err.message.canceled;
         if (isCanceled) return; // 如果是用户主动cancel，不做任何处理，不会触发任何函数
         this.onShowErrorTip(err, errorTip);
-        if(err.response && err.response.status === 401) {
-          window.location.href='/login'
-        }
         if(err.response && err.response.data && err.response.data && err.response.data.errors) reject(err.response.data.errors);
         else reject(err.response && err.response.statusText && err.response.statusText);
         //loadingInstance && loadingInstance.close();

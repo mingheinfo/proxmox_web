@@ -3,8 +3,16 @@
 		 <div slot="toolbar-left">
         <m-button type="primary" @on-click="showModal('create')" icon="el-icon-plus">添加</m-button>
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
-				<m-button type="danger" @on-click="handleDelete('keep')" icon="el-icon-delete" :disabled="inStatus()">删除</m-button>
-				<m-button type="danger" @on-click="handleDelete('force')" icon="el-icon-delete" :disabled="inStatus()">强制删除</m-button>
+				<m-button type="danger" 
+				          v-confirm="{
+											msg: `你确定你要删除已选择项吗?`,
+											ok: () => handleDelete('keep')
+				            }" icon="el-icon-delete" :disabled="inStatus()">删除</m-button>
+				<m-button type="danger"
+				          v-confirm="{
+											msg: `你确定你要强制删除已选择项吗?`,
+											ok: () => handleDelete('force')
+				            }" icon="el-icon-delete" :disabled="inStatus()">强制删除</m-button>
 		 </div>
 		 <div slot="page-content">
 			 <el-table :data="db.dataCenterReplicationList" ref="dataTable" @selection-change="handleSelect">
@@ -81,12 +89,7 @@ export default {
       this.selectedList = row;
 		},
 		handleDelete(type) {
-			this.$confirm.confirm({
-				msg: `你确定你要删除已选择项吗？`,
-				type: 'info'
-			}).then(() => {
-         this.delete(type);
-			}).catch(() => {})
+      this.delete(type);
 		}
 	}
 }

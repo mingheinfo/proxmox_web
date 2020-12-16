@@ -27,6 +27,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
+         <el-scrollbar style="height: 100%">
+          <div class="taskmodal-content">
           <div class="table" v-if="tab === 'log'">
             <div
               class="table-tr"
@@ -51,6 +53,8 @@
               </div>
             </template>
           </div>
+          </div>
+         </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -138,8 +142,8 @@
 										</div>
 									</template>
 									<div class="table-tr">
-										<div class="table-td">{{item.name}}</div>
-										<div class="table-td">{{item.url}}</div>
+										<div class="table-td" :title="item.name">{{item.name}}</div>
+										<div class="table-td" :title="item.url">{{item.url}}</div>
 									</div>
 							</m-option>
               </m-select>
@@ -303,7 +307,7 @@ export default {
 			} 
 			if(this.modalType === 'domains') {
 					let param = {
-					acme: this.param.acme.indexOf('domains') > -1 ? this.param.acme +`;${this.domains}` : `${this.param.acme},domains=${this.domains}`,
+					acme: this.param.acme && this.param.acme.indexOf('domains') > -1 ? this.param.acme +`;${this.domains}` : `${this.param.acme},domains=${this.domains}`,
 				  digest: this.db.certificatesConfigObj.digest
 				}
 				this.createAcmeDomains(param)

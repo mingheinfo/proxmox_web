@@ -3,10 +3,18 @@
 		 <div slot="toolbar-left">
         <m-button type="primary" @on-click="showModal('create')" icon="el-icon-plus">添加</m-button>
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
-				<m-button type="danger" @on-click="handleDelete('keep')" icon="el-icon-delete" :disabled="inStatus()">删除</m-button>
-				<m-button type="danger" @on-click="handleDelete('force')" icon="el-icon-delete" :disabled="inStatus()">强制删除</m-button>
-				<m-button type="danger" @on-click="handleDelete('force')" icon="el-icon-delete" :disabled="inStatus()">日志</m-button>
-				<m-button type="danger" @on-click="handleDelete('force')" icon="el-icon-delete" :disabled="inStatus()">立即安排</m-button>
+				<m-button type="danger"  v-confirm="{
+                  msg: '确认要删除已选择项?',
+                  icon: 'icon-question',
+                  ok: () => handleDelete('keep')
+                }" icon="el-icon-delete" :disabled="inStatus()">删除</m-button>
+				<m-button type="danger" v-confirm="{
+                  msg: '确认要强制删除已选择项?',
+                  icon: 'icon-question',
+                  ok: () => handleDelete('force')
+                }" icon="el-icon-delete" :disabled="inStatus()">强制删除</m-button>
+				<m-button type="danger" @on-click="handleShowLog()" icon="el-icon-delete" :disabled="inStatus()">日志</m-button>
+				<m-button type="danger" @on-click="handleImmidiateSchedule()" icon="el-icon-delete" :disabled="inStatus()">立即安排</m-button>
 		 </div>
 		 <div slot="page-content">
 			 <el-table :data="db.dataCenterReplicationList" ref="dataTable" @selection-change="handleSelect">
@@ -32,6 +40,10 @@
 																 :param="param"
 																 v-if="visible"
 			                           :visible="visible" :modal-type="type" @close="visible = false"></create-node-replication-modal>
+			 <log-modal :visible="showLog"
+			            v-if="showLog"
+									:param="logParam"
+									@close="showLog = false; __init__()"></log-modal>
 		 </div>
 	 </page-template>
 </template>
@@ -57,7 +69,9 @@ export default {
 			isCreate: true,
 			param: {},
 			loading: false,
-			loadingText: ''
+			loadingText: '',
+			showLog: false,
+			logParam: {}
 		}
 	},
 	mounted() {
@@ -100,6 +114,11 @@ export default {
 			}).then(() => {
          this.delete(type);
 			}).catch(() => {})
+		},
+		//展示日志
+		handleShowLog() {
+			this.logParam = this.selectedList[0];
+			this.showLog = true;
 		}
 	}
 }
@@ -124,5 +143,8 @@ export default {
 			flex: 1 1 auto;
 			display: inline-flex;
 		}
+	}
+	.toolbar-left{
+		flex: 2;
 	}
 </style>

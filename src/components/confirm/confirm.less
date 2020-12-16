@@ -14,14 +14,13 @@
     padding: 10px 20px;
     font-size: 16px;
     border-bottom: 1px solid #dde4ed;
-    background: #e2e7ec;
+    background: #fff;
     cursor: move;
   }
   &-close{
     overflow: hidden;
     width: 16px;
     height: 30px;
-    background: url(~@images/tool-sprites.png);
     margin: 0;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
     opacity: .8;
@@ -34,6 +33,10 @@
     top: 0;
     line-height: 42px;
     cursor: pointer;
+    font-size: 28px;
+    &:hover{
+      color: #3973ff;
+    }
   }
 }
 
@@ -54,8 +57,6 @@
   border: 1px solid #eee;
   border-radius: 2px;
   z-index: 10;
-  transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transform: translate(-50%, -50%);
 }
 
 .popup{
@@ -105,14 +106,26 @@
     padding: 13px 0px;
     border-top: 1px solid #dde4ed;
     text-align: center;
-    background: #e2e7ec;
-  }
-  &-alert{
-
+    background: #fff;
+    &:after{
+      content: '';
+      border-top: 1px solid #dde4ed;
+      transform: scale(0.5,0.5);
+    }
   }
 }
 .yes-btn{
   background: #3973ff;
+  color: #fff;
+}
+.confirm-btn{
+  padding: 0 23px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 2px;
+  height: 40px;
+  line-height: 42px;
   color: #fff;
 }
 .hasTitle{
@@ -120,7 +133,6 @@
   min-height: 100px;
   height: calc(100% - 86px);
   padding: 10px 20px;
-  display: flex;
 }
 
 .cancel{

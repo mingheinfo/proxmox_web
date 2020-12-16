@@ -88,7 +88,7 @@
                   @validate="validate"
                   :show-error="rules['storage'].error"
                   :error-msg="rules['storage'].message"
-                  :readonly="false"
+                  :readonly="true"
                   :disabled="mediaType !== 'iso'"
                   placeholder="请选存储"
                 >
@@ -99,17 +99,17 @@
                       :value="item.storage"
                       :label="item.storage"
                     >
-                      <div v-if="index === 0" class="table-row">
+                      <div v-if="index === 0" class="table-tr">
                         <div class="table-td">名称</div>
                         <div class="table-td">类别</div>
                         <div class="table-td">可用</div>
                         <div class="table-td">容量</div>
                       </div>
-                      <div class="table-row">
-                        <div class="table-td">{{ item.storage }}</div>
-                        <div class="table-td">{{ item.type }}</div>
-                        <div class="table-td">{{ byteToSize(item.avail) }}</div>
-                        <div class="table-td">{{ byteToSize(item.total) }}</div>
+                      <div class="table-tr">
+                        <div class="table-td" :title="item.storage">{{ item.storage }}</div>
+                        <div class="table-td" :title="item.type">{{ item.type }}</div>
+                        <div class="table-td" :title="byteToSize(item.avail)">{{ byteToSize(item.avail) }}</div>
+                        <div class="table-td" :title="byteToSize(item.total)">{{ byteToSize(item.total) }}</div>
                       </div>
                     </m-option>
                   </div>
@@ -122,7 +122,7 @@
                   v-model="image"
                   validateEvent
                   @validate="validate"
-                  :readonly="false"
+                  :readonly="true"
                   :show-error="rules['image'].error"
                   :error-msg="rules['image'].message"
                   :disabled="mediaType !== 'iso'"
@@ -135,17 +135,17 @@
                       :value="item.volid"
                       :label="render_storage_content(null, null, item)"
                     >
-                      <div v-if="index === 0" class="table-row">
+                      <div v-if="index === 0" class="table-tr">
                         <div class="table-td">名称</div>
                         <div class="table-td">格式</div>
                         <div class="table-td">大小</div>
                       </div>
-                      <div class="table-row">
+                      <div class="table-tr">
                         <div class="table-td">
                           {{ render_storage_content(null, null, item) }}
                         </div>
-                        <div class="table-td">{{ item.format }}</div>
-                        <div class="table-td">{{ byteToSize(item.size) }}</div>
+                        <div class="table-td" :title="item.format">{{ item.format }}</div>
+                        <div class="table-td" :title="byteToSize(item.size)">{{ byteToSize(item.size) }}</div>
                       </div>
                     </m-option>
                   </div>

@@ -5,7 +5,11 @@
 			<m-button type="warning" @on-click="showModal('copy')" icon="el-icon-copy-document"
                 :disabled="inStatus() || selectedList && selectedList[0] && selectedList[0].type === 'group'">拷贝</m-button>
 			<m-button type="primary" @on-click="showModal('rule')" icon="el-icon-folder-add" :disabled="inStatus()">插入：安全组</m-button>
-			<m-button type="danger" @on-click="handleDelete" icon="el-icon-delete" :disabled="selectedList.length <=0 ">删除</m-button>
+			<m-button type="danger" v-confirm="{
+                  msg: '确定要删除已选择项?',
+                  ok: () => handleDelete(),
+                  icon:'icon-question'
+                }" icon="el-icon-delete" :disabled="selectedList.length <=0 ">删除</m-button>
       <m-button
         type="info"
         icon="el-icon-edit"
@@ -121,15 +125,7 @@ export default {
       this.selectedList = row;
     },
     handleDelete(type) {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteFireWallRule();
-        })
-        .catch(() => {});
+      this.deleteFireWallRule();
 		},
 		handleCommand(command) {
 			 this.type = command;

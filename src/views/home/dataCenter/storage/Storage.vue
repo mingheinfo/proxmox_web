@@ -24,7 +24,11 @@
 											:command="item.type"
 											:icon="item.iconCls">{{item.text}}</DropdownItem>
       </Dropdown>
-      <m-button type="danger" icon="el-icon-delete" :disabled="curStorage.length !== 1" @on-click="handleDelete">删除</m-button>
+      <m-button type="danger" icon="el-icon-delete" :disabled="curStorage.length !== 1" 
+                v-confirm="{
+                   msg: `确定要删除${curStorage && curStorage[0] && curStorage[0].storage}?`, 
+                   ok: () => handleDelete()
+                }">删除</m-button>
       <m-button type="primary" icon="el-icon-edit" :disabled="curStorage.length !== 1" @on-click="handleEdit">编辑</m-button>
     </div>
     <div slot="page-content">
@@ -147,13 +151,7 @@ export default {
       this.curStorage = row;
 		},
 		handleDelete() {
-			this.$confirm.confirm({
-				msg: `确定要删除${this.curStorage[0].storage}`,
-				title:'确认',
-				type: 'warning'
-			}).then(() => {
-         this.delete(this.curStorage[0].storage);
-			}).catch(() => {})
+      this.delete(this.curStorage[0].storage);
 		},
 		handleEdit() {
 			this.handleCommand(this.curStorage[0].type, 'edit');

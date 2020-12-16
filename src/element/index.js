@@ -12,7 +12,9 @@ import {
   FormItem,
   Radio,
   DatePicker,
-  Loading
+  Loading,
+  Scrollbar,
+  Pagination
 } from 'element-ui';
 import MInput from '@src/components/input/mInput';
 import MDropdown from '@src/components/dropdown/dropdown';
@@ -45,6 +47,8 @@ const element = {
     vue.component('m-dialog', Dialog);
     vue.component('m-switch', Switch);
     vue.use(Loading);
+    vue.use(Scrollbar);
+    vue.use(Pagination);
   }
 }
 

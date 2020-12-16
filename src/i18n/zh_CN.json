@@ -10,6 +10,7 @@
       "placeholder": "请输入密码"
     }
   },
+  "404": "404-页面未找到",
   "No Subscription": "没有订阅",
   "You have at least one node without subscription.": "至少有一个节点没有订阅。",
   "Mixed Subscriptions": "混合订购",
@@ -135,5 +136,11 @@
   "node-disk-lvmthin": "Lvm Thin",
   "node-disk-directory": "目录",
   "node-disk-zfs": "ZFS",
-  "content": "内容"
+  "content": "内容",
+  "task": "历史任务",
+  "monitor": "监视器",
+  "snapshot": "快照",
+  "resource": "资源",
+  "disk": "磁盘",
+  "apt-update":"更新"
 }

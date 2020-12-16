@@ -8,7 +8,7 @@
             title="状态"
             :isDouble="false"
             type="cluster"
-            :icon="`${status && status.cluster && status.cluster[0] && status.cluster[0].quorate && status.cluster[0].quorate == '0' ? 'fa critical fa-times-circle' : 'good fa-circle'}`"
+            :icon="`${status && status.cluster && status.cluster[0] && status.cluster[0].quorate && status.cluster[0].quorate == '0' ? 'fa critical fa-times-circle' : 'good fa-check-circle'}`"
             :des="`集群${
               status && status.cluster && status.cluster[0] && status.cluster[0].name ? status.cluster[0].name : ''
             },具有法定数目的:${
@@ -91,7 +91,7 @@
       <div slot="content">
         <el-table :data="nodes" class="m-margin-top-10">
           <el-table-column label="节点" prop="name"></el-table-column>
-          <el-table-column label="ID" prop="nodeid"></el-table-column>
+          <el-table-column label="ID" prop="nodeid" width="50px"></el-table-column>
           <el-table-column label="在线" prop="online">
             <template slot-scope="scope">
               <i
@@ -101,7 +101,12 @@
               ></i>
             </template>
           </el-table-column>
-          <el-table-column label="支持" prop="level"></el-table-column>
+          <el-table-column label="支持" prop="level">
+            <template slot-scope="scope">
+              <span v-if="scope.row.level">{{scope.row.level}}</span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column label="服务器地址" prop="ip">
             <template slot-scope="scope">
               <span style="font-size: 12px">{{ scope.row.ip }}</span>
@@ -165,6 +170,7 @@ import LineItem from "./LineItem";
 import Circle from "@src/components/chart/circle/index.vue";
 import LineCharts from "@src/components/chart/line/LineCharts";
 import { dateFormat, byteToSize, render_uptime } from "@libs/utils";
+import PageTemplate from "@src/components/page/PageTemplate";
 
 export default {
   name: "index",
@@ -173,6 +179,7 @@ export default {
     LineItem,
     "mh-circle": Circle,
     "line-charts": LineCharts,
+    PageTemplate
   },
   data() {
     return {
@@ -394,5 +401,11 @@ export default {
 }
 .card-item{
    height: 100%;
+}
+/deep/.el-table td, .el-table th{
+  padding: 0px;
+}
+/deep/.el-table .cell{
+ white-space: nowrap;
 }
 </style>

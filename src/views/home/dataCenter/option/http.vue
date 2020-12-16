@@ -1,4 +1,5 @@
 <script>
+import { confirm } from '@libs/utils/index';
 export default {
   name: "OptionHttp",
   methods: {
@@ -31,8 +32,9 @@ export default {
         .then((res) => {
 					this.incEventSuccess(event);
           this.queryOptionList();
-        }).catch(() => {
+        }).catch((res) => {
 						this.incEventFail(event);
+						confirm.call(this, res, 'confirm', 'icon-warning');
 				});
 		},
 		//查询网络

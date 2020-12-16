@@ -32,9 +32,9 @@
                   :value="item.node"
                 >
 								  <div class="table-tr">
-                    <span class="table-td">{{item.node}}</span>
-                    <span class="table-td">{{percentToFixed(item.mem / item.maxmem, 3)}}</span>
-                    <span class="table-td">{{`${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`}}</span>
+                    <span class="table-td" :title="item.node">{{item.node}}</span>
+                    <span class="table-td" :title="item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)">{{item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)}}</span>
+                    <span class="table-td" :title="item.cpu && item.maxcpu && `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`">{{item.cpu && item.maxcpu && `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`}}</span>
                   </div>
 								</m-option>
               </m-select>
@@ -70,10 +70,10 @@
                   :value="item.storage"
                 >
 								 <div class="table-tr">
-                    <span class="table-td">{{item.storage}}(名称)</span>
-                    <span class="table-td">{{item.type}}(类别)</span>
-                    <span class="table-td">{{byteToSize(item.avail)}}(可用)</span>
-                    <span class="table-td">{{byteToSize(item.total)}}(总量)</span>
+                    <span class="table-td" :title="item.storage +`(名称)`">{{item.storage}}(名称)</span>
+                    <span class="table-td" :title="item.type +`(类别)`">{{item.type}}(类别)</span>
+                    <span class="table-td" :title="byteToSize(item.avail) +`(可用)`">{{byteToSize(item.avail)}}(可用)</span>
+                    <span class="table-td" :title="byteToSize(item.total) +`(总量)`">{{byteToSize(item.total)}}(总量)</span>
                   </div>
 								</m-option>
               </m-select>
@@ -188,8 +188,8 @@
                          :value="item.poolid" 
                          :key="item.poolid">
                             <div class="table-tr">
-                              <span class="table-td">{{item.poolid}}(名称)</span>
-                              <span class="table-td">{{item.comment}}(备注)</span>
+                              <span class="table-td" :title="item.poolid + `(名称)`">{{item.poolid}}(名称)</span>
+                              <span class="table-td" :title="item.comment + `(备注)`">{{item.comment}}(备注)</span>
                             </div>
                          </m-option>
               </m-select>

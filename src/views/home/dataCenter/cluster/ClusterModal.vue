@@ -26,6 +26,7 @@
                 v-model="ipAddress"
                 readonly
                 :_style="{ width: '650px' }"
+                :__conStyle="{'width':'auto'}"
                 placeholder="请输入IP地址"
               />
             </dd>
@@ -39,6 +40,7 @@
                 v-model="fingerprint"
                 readonly
                 :_style="{ width: '650px' }"
+                :__conStyle="{'width':'auto'}"
                 placeholder="请输入指纹"
               />
             </dd>
@@ -54,6 +56,7 @@
                 :rows="10"
                 :_style="{ width: '650px' }"
                 readonly
+                :__conStyle="{'width':'auto'}"
                 placeholder="请输入信息"
               />
             </dd>
@@ -113,15 +116,15 @@
                     </div>
                   </template>
                   <div class="table-tr">
-                    <span class="table-td">{{ item.address }}</span>
-                    <span class="table-td">{{ item.iface }}</span>
-                    <span class="table-td">
+                    <span class="table-td" :title="item.address">{{ item.address }}</span>
+                    <span class="table-td" :title="item.iface">{{ item.iface }}</span>
+                    <span class="table-td" :title="item.active">
                       <table-info-state
                         :content="item.active === 1 ? '是' : '否'"
                         :state="item.active === 1 ? 'actived' : 'unactived'"
                       ></table-info-state>
                     </span>
-                    <span class="table-td">
+                    <span class="table-td" :title="item.comment">
                       {{ item.comment }}
                     </span>
                   </div>
@@ -137,6 +140,7 @@
                   v-model="link[item]"
 									@on-change="(value) => $data.link[item] = value"
                   placeholder="请选择"
+                  :key="num"
                 >
                   <m-option
                     v-for="(item, index) in netWorkList"
@@ -153,15 +157,15 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.address }}</span>
-                      <span class="table-td">{{ item.iface }}</span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.address">{{ item.address }}</span>
+                      <span class="table-td" :title="item.iface">{{ item.iface }}</span>
+                      <span class="table-td" :title="item.active">
                         <table-info-state
                           :content="item.active === 1 ? '是' : '否'"
                           :state="item.active === 1 ? 'actived' : 'unactived'"
                         ></table-info-state>
                       </span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.comment">
                         {{ item.comment }}
                       </span>
                     </div>
@@ -171,6 +175,7 @@
                   type="danger"
                   icon="el-icon-delete"
                   @on-click="handleLinkDelete(item, num)"
+                  :key="num"
                   >删除</m-button
                 >
               </template>
@@ -288,15 +293,15 @@
                     </div>
                   </template>
                   <div class="table-tr">
-                    <span class="table-td">{{ item.address }}</span>
-                    <span class="table-td">{{ item.iface }}</span>
+                    <span class="table-td" :title="item.address">{{ item.address }}</span>
+                    <span class="table-td" :title="item.iface">{{ item.iface }}</span>
                     <span class="table-td">
                       <table-info-state
                         :content="item.active === 1 ? '是' : '否'"
                         :state="item.active === 1 ? 'actived' : 'unactived'"
                       ></table-info-state>
                     </span>
-                    <span class="table-td">
+                    <span class="table-td" :title="item.comment">
                       {{ item.comment }}
                     </span>
                   </div>
@@ -330,15 +335,15 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.address }}</span>
-                      <span class="table-td">{{ item.iface }}</span>
+                      <span class="table-td" :title="item.address">{{ item.address }}</span>
+                      <span class="table-td" :title="item.iface">{{ item.iface }}</span>
                       <span class="table-td">
                         <table-info-state
                           :content="item.active === 1 ? '是' : '否'"
                           :state="item.active === 1 ? 'actived' : 'unactived'"
                         ></table-info-state>
                       </span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.comment">
                         {{ item.comment }}
                       </span>
                     </div>
@@ -348,6 +353,7 @@
                   type="danger"
                   icon="el-icon-delete"
                   @on-click="handleLinkDelete(item, num)"
+                  :key="item"
                   >删除</m-button
                 >
               </template>
@@ -364,6 +370,8 @@
           </dl>
         </div>
       </div>
+    </template>
+    <template slot="footer">
       <Dialog :visible="showLog"
               @close="closeLog"
               :_style="{
@@ -377,27 +385,29 @@
           </m-tab>
           <m-button class="create-btn" type="primary" @on-click="stopTask1" :disabled="db.addClusterStatusObj.status !== 'running'"
           >停止</m-button>
-          <div class="table" v-if="tab === 'log'">
-            <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
-              {{item.t}}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-              <template v-for="(item, key) in db.addClusterStatusObj">
-                <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
-                  <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
-                  <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
-                  <div class="table-td" v-else>{{item}}</div>
+          <el-scrollbar style="height: 100%">
+             <div class="taskmodal-content">
+               <div class="table" v-if="tab === 'log'">
+                <div class="table-tr" v-for="item in db.addClusterLogList" :key="item.n">
+                  {{item.t}}
                 </div>
-              </template>
-          </div>
+              </div>
+              <div class="table" v-if="tab === 'status'">
+                  <template v-for="(item, key) in db.addClusterStatusObj">
+                    <div class="table-tr" v-if="!['exitstatus', 'id', 'pstart'].includes(key)" :key="key">
+                      <div class="table-td">{{$t(`clusterStatus.${key}`)}}</div>
+                      <div class="table-td" v-if="key === 'starttime'">{{dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm')}}</div>
+                      <div class="table-td" v-else>{{item}}</div>
+                    </div>
+                  </template>
+              </div>
+             </div>
+          </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
         </template>
       </Dialog>
-    </template>
-    <template slot="footer">
       <m-button @on-click="copy" v-if="type === 'info'">拷贝信息</m-button>
       <template v-if="type === 'create'">
         <div class="label_box">
@@ -598,7 +608,6 @@ export default {
         if (!this.ring0Needed) {
           props.concat("link1");
         }
-        console.log(props);
         props.forEach((prop) => this.validate(prop));
       }
     },
@@ -614,8 +623,7 @@ export default {
 			  	param[`link${i}`] = this.link[i]
 				}
 				param['link0'] = this.link0;
-			}
-			console.log(param);
+      }
       this.createCluster(param).then((res) => {
          this.showLog = true;
          this.interVal = setInterval(() => this.queryStatus(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid), 3000);

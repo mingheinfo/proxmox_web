@@ -1,5 +1,5 @@
 <script>
-import { deepCopy } from '@libs/utils/index';
+import { deepCopy, confirm } from '@libs/utils/index';
 export default {
   name: "DataStorageHttp",
   methods: {
@@ -24,19 +24,20 @@ export default {
       });
     },
     createStorage(param) {
-      let event = this.createEvent("action.storage.create", param.storage);
-      return this.$http
+      let _this = this, event = this.createEvent("action.storage.create", param.storage);
+      return _this.$http
         .post("json/storage", param, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           },
         })
         .then((res) => {
-          this.incEventSuccess(event);
-          this.queryStorageList();
+          _this.incEventSuccess(event);
+          _this.queryStorageList();
         })
-        .catch(() => {
-          this.incEventFail(event);
+        .catch((res) => {
+          _this.incEventFail(event);
+          confirm.call(_this, res, 'confirm', 'icon-warning');
         });
 		},
 		updateStorage(param) {
@@ -59,8 +60,9 @@ export default {
           this.incEventSuccess(event);
           this.queryStorageList();
         })
-        .catch(() => {
+        .catch((res) => {
           this.incEventFail(event);
+          confirm.call(this, res, 'confirm', 'icon-warning');
         });
 		},
     queryVg(nodename) {
@@ -180,8 +182,9 @@ export default {
       return this.$http.del(`/json/storage/${storage}`).then((res) => {
         this.incEventSuccess(event);
         this.queryStorageList();
-      }).catch(() => {
-				this.incEventFail(event);
+      }).catch((res) => {
+        this.incEventFail(event);
+        confirm.call(this, res, 'confirm', 'icon-warning');
 			});
     },
   },

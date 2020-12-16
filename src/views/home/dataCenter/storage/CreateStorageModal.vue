@@ -9,8 +9,19 @@
     @close="$emit('close')"
   >
     <div slot="content" style="max-height: 500px;">
-      <component :is="type" :ref="type" :isCreate="isCreate" :param="param"></component>
+      <component :is="type" :ref="type" :isCreate="isCreate" :param="param" :isAdvice="isAdvice"></component>
     </div>
+   <template slot="footer" v-if="type === 'nfs'">
+     <div class="label_box">
+          <label>
+            <input type="checkbox" v-model="isAdvice" />
+            <div>高级</div>
+          </label>
+        </div>
+      <m-button class="create-btn" type="primary" @on-click="confirm"
+          >创建</m-button
+        >
+	</template>
   </Dialog>
 </template>
 
@@ -66,6 +77,11 @@ export default {
 			type: Object
 		}
   },
+  data() {
+    return {
+      isAdvice: false,
+    }
+  },
   methods: {
     cancel() {
       this.$emit("close");
@@ -119,6 +135,9 @@ export default {
           type: "nfs",
           disable: this.$refs.nfs.$data.disable ? 0 : 1,
         };
+        if(this.isAdvice && this.$refs.nfs.$data.options !== '__default__') {
+          param['options'] = `vers=${this.$refs.nfs.$data.options}`;
+        }
       }
       if (this.type === "cifs") {
         if (this.$refs.cifs.validateAll()) return;

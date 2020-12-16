@@ -63,9 +63,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.groupid }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.groupid">{{ item.groupid }}</span>
+                      <span class="table-td" :title="item.comment">{{ item.comment }}</span>
+                      <span class="table-td" :title="item.users">
                         {{ item.users}}
                       </span>
                     </div>
@@ -101,9 +101,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.userid }}</span>
-                      <span class="table-td">{{ `${item.firstname ? item.firstname : '' } ${item.lastname ? item.lastname : ''}` }}</span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.userid">{{ item.userid }}</span>
+                      <span class="table-td" :title="`${item.firstname ? item.firstname : '' } ${item.lastname ? item.lastname : ''}`">{{ `${item.firstname ? item.firstname : '' } ${item.lastname ? item.lastname : ''}` }}</span>
+                      <span class="table-td" :title="item.comment">
                         {{ item.comment}}
                       </span>
                     </div>
@@ -138,8 +138,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.tokenid }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
+                      <span class="table-td" :title="item.tokenid">{{ item.tokenid }}</span>
+                      <span class="table-td" :title="item.comment">{{ item.comment }}</span>
                     </div>
                   </div>
                 </m-option>

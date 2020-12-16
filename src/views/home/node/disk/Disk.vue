@@ -86,7 +86,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-         <div style="max-height: 300px;overflow: auto;">
+         <el-scrollbar style="height: 100%">
+          <div class="taskmodal-content">
 					  <div class="table">
             <div
               class="table-tr"
@@ -112,6 +113,7 @@
             </template>
           </div>
 				 </div>
+         </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>

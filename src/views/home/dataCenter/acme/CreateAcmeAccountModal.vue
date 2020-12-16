@@ -21,9 +21,9 @@
                 v-model="name"
                 validateEvent
                 @validate="validate"
-                :show-error="rules.name.error"
-                :error-msg="rules.name.message"
-                v-if="modalType === 'account'"
+                :show-error="rules['name'].error"
+                :error-msg="rules['name'].message"
+                v-if="modalType === 'create'"
                 placeholder="请输入名称"
               />
               <m-input
@@ -36,6 +36,7 @@
                 @validate="validate"
                 :show-error="rules.domains.error"
                 :error-msg="rules.domains.message"
+                v-if="modalType !== 'create'"
                 placeholder="请输入名称"
               />
               <m-select
@@ -66,8 +67,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.name }}</span>
-                      <span class="table-td">{{ item.url }}</span>
+                      <span class="table-td" :title="item.name">{{ item.name }}</span>
+                      <span class="table-td" :title="item.url">{{ item.url }}</span>
                     </div>
                   </div>
                 </m-option>
@@ -105,31 +106,31 @@
           <div class="service-police">
             <div class="service-police-label">Eamil</div>
             <div class="service-police-content">
-              {{ db.acmeAccountObj.contact && db.acmeAccountObj.contact[0] }}
+              {{ db.acmeAccountObj.account.contact && db.acmeAccountObj.account.contact.join(';') }}
             </div>
           </div>
           <div class="service-police">
             <div class="service-police-label">已创建</div>
             <div class="service-police-content">
-              {{ db.acmeAccountObj.createAt && db.acmeAccountObj.createAt }}
+              {{ db.acmeAccountObj.account.createdAt && db.acmeAccountObj.account.createdAt }}
             </div>
           </div>
           <div class="service-police">
             <div class="service-police-label">状态</div>
             <div class="service-police-content">
-              {{ db.acmeAccountObj.status && db.acmeAccountObj.status }}
+              {{ db.acmeAccountObj.account.status && db.acmeAccountObj.account.status }}
             </div>
           </div>
           <div class="service-police">
             <div class="service-police-label">目录</div>
             <div class="service-police-content">
-              {{ db.acmeAccountObj.tos_url_display && db.acmeAccountObj.tos_url_display }}
+              <a :href="db.acmeAccountObj.directory && db.acmeAccountObj.directory" target="_blank">{{ db.acmeAccountObj.directory&& db.acmeAccountObj.directory }}</a>
             </div>
           </div>
           <div class="service-police">
             <div class="service-police-label">服务条款</div>
             <div class="service-police-content">
-              {{  db.acmeAccountObj.tos_url && db.acmeAccountObj.tos_url_display.tos_url }}
+              <a :href="db.acmeAccountObj.tos && db.acmeAccountObj.tos"  target="_blank">{{  db.acmeAccountObj.tos && db.acmeAccountObj.tos }}</a>
             </div>
           </div>
         </div>
@@ -140,7 +141,7 @@
         :_style="{
           width: '800px',
         }"
-        title="Task Viewer: 加入集群"
+        title="Task Viewer: 任务进度"
       >
         <template slot="content">
           <m-tab v-model="tab" @tab-click="handleTabChange">
@@ -148,36 +149,40 @@
             <m-tab-panel label="状态" name="status"></m-tab-panel>
           </m-tab>
           <m-button
-            class="create-btn"
+            class="create-btn m-margin-top-10"
             type="primary"
             @on-click="stopTask1"
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-          <div class="table" v-if="tab === 'log'">
-            <div
-              class="table-tr"
-              v-for="item in db.addClusterLogList"
-              :key="item.n"
-            >
-              {{ item.t }}
-            </div>
-          </div>
-          <div class="table" v-if="tab === 'status'">
-            <template v-for="(item, key) in db.addClusterStatusObj">
+         <el-scrollbar style="height:100%">
+            <div class="taskmodal-content">
+              <div class="table" v-if="tab === 'log'">
               <div
                 class="table-tr"
-                v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
-                :key="key"
+                v-for="item in db.addClusterLogList"
+                :key="item.n"
               >
-                <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
-                <div class="table-td" v-if="key === 'starttime'">
-                  {{ dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm") }}
-                </div>
-                <div class="table-td" v-else>{{ item }}</div>
+                {{ item.t }}
               </div>
-            </template>
-          </div>
+            </div>
+            <div class="table" v-if="tab === 'status'">
+              <template v-for="(item, key) in db.addClusterStatusObj">
+                <div
+                  class="table-tr"
+                  v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
+                  :key="key"
+                >
+                  <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
+                  <div class="table-td" v-if="key === 'starttime'">
+                    {{ dateFormat(new Date(item * 1000), "yyyy-MM-dd hh:mm") }}
+                  </div>
+                  <div class="table-td" v-else>{{ item }}</div>
+                </div>
+              </template>
+            </div>
+            </div>
+         </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -250,6 +255,10 @@ export default {
           error: false,
           message: "",
         },
+        domains: {
+          error: false,
+          message: "",
+        }
       },
     };
   },
@@ -268,7 +277,7 @@ export default {
         });
       } else {
         Object.assign(this.$data, this.$options.data());
-        this.queryAcmeAccountById(this.param.name);
+        this.queryAcmeAccountById(this.param.name)
       }
     },
     handleDirectorySelect(value) {
@@ -302,6 +311,7 @@ export default {
       }
     },
     validateAll() {
+      debugger;
       let props = ["name", "contact"];
       props.forEach((prop) => this.validate(prop));
       return props.some((prop) => this.rules[prop].error === true);

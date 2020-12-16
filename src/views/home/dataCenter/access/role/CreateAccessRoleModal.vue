@@ -136,7 +136,6 @@ export default {
       return props.some((prop) => this.rules[prop].error === true);
     },
     confirm() {
-			console.log(this.validateAll());
       if (this.validateAll()) return;
       let param = {
         roleid: this.roleid,

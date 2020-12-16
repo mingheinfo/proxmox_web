@@ -95,6 +95,10 @@ export default {
     title: {
       type: String,
       default: "",
+    },
+    contents: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -105,16 +109,7 @@ export default {
       percentComplete: 0,
       xhr: null,
       status: 'init',
-			contentItems: [
-				{
-					label: 'ISO镜像',
-					value: 'iso'
-				},
-				{
-					label: '容器模板',
-					value: 'vztmpl'
-				}
-			],
+			contentItems: [],
       rules: {
         content: {
           error: false,
@@ -134,6 +129,20 @@ export default {
     // //请求磁盘
     async __init__() {
       let _this = this;
+      this.contentItems = this.contents.map(item => {
+        if(item === 'iso') {
+          return {
+            	label: 'ISO镜像',
+					    value: 'iso'
+          }
+        } 
+        if(item === 'vztmpl') {
+          return {
+            label: '容器模板',
+            value: 'vztmpl'
+				  }
+        }
+      })
       //this.queryListNodeDiskList({type: 'unused'});
 		},
 		//选择磁盘
@@ -191,6 +200,7 @@ export default {
     //上传文件回调
 		uploadCallback(e, xhr, bytes) {
       this.xhr = xhr;
+      console.log(e);
       if(e.type === 'load') {
 				 if (xhr.status == 200) {
 		     	this.close();

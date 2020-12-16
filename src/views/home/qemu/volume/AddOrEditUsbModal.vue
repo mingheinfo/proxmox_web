@@ -41,7 +41,7 @@
               v-model="device"
               validateEvent
               @validate="validate"
-              :readonly="false"
+              :readonly="true"
               :show-error="rules['device'].error"
               :error-msg="rules['device'].message"
               :disabled="type !== 'device'"
@@ -56,19 +56,19 @@
                     item.product + '(' + item.vendid + ':' + item.prodid + ')'
                   "
                 >
-                  <div v-if="index === 0" class="table-row">
+                  <div v-if="index === 0" class="table-tr">
                     <div class="table-td">设备</div>
                     <div class="table-td">生产厂商</div>
                     <div class="table-td">产品</div>
                     <div class="table-td">速度</div>
                   </div>
-                  <div class="table-row">
-                    <div class="table-td">
+                  <div class="table-tr">
+                    <div class="table-td" :title="item.vendid + ':' + item.prodid ">
                       {{ item.vendid + ":" + item.prodid }}
                     </div>
-                    <div class="table-td">{{ item.manufacturer }}</div>
-                    <div class="table-td">{{ item.product }}</div>
-                    <div class="table-td">{{ renderSpeed(item.speed) }}</div>
+                    <div class="table-td" :title="item.manufacturer">{{ item.manufacturer }}</div>
+                    <div class="table-td" :title="item.product">{{ item.product }}</div>
+                    <div class="table-td" :title="renderSpeed(item.speed)">{{ renderSpeed(item.speed) }}</div>
                   </div>
                 </m-option>
               </div>
@@ -97,7 +97,7 @@
               @validate="validate"
               :show-error="rules['port'].error"
               :error-msg="rules['port'].message"
-              :readonly="false"
+              :readonly="true"
               :disabled="type !== 'port'"
               placeholder="请选择端口"
             >
@@ -110,19 +110,19 @@
                     item.product + '(' + item.busnum + '-' + item.usbpath + ')'
                   "
                 >
-                  <div v-if="index === 0" class="table-row">
+                  <div v-if="index === 0" class="table-tr">
                     <div class="table-td">端口</div>
                     <div class="table-td">生产厂商</div>
                     <div class="table-td">产品</div>
                     <div class="table-td">速度</div>
                   </div>
-                  <div class="table-row">
-                    <div class="table-td">
+                  <div class="table-tr">
+                    <div class="table-td" :title="item.busnum + '-' + item.usbpath">
                       {{ item.busnum + "-" + item.usbpath }}
                     </div>
-                    <div class="table-td">{{ item.manufacturer }}</div>
-                    <div class="table-td">{{ item.product }}</div>
-                    <div class="table-td">{{ renderSpeed(item.speed) }}</div>
+                    <div class="table-td" :title="item.manufacturer">{{ item.manufacturer }}</div>
+                    <div class="table-td" :title="item.product">{{ item.product }}</div>
+                    <div class="table-td" :title="renderSpeed(item.speed)">{{ renderSpeed(item.speed) }}</div>
                   </div>
                 </m-option>
               </div>

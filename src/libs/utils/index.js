@@ -1,6 +1,6 @@
 const path = require('path');
 import { http } from '@libs/http/index';
-import { Message } from 'element-ui';
+import { Container, Message } from 'element-ui';
 import { gettext } from '@src/i18n/local_zhCN.js';
 import { kvm_vga_drivers } from '@libs/enum/enum.js';
 
@@ -33,11 +33,13 @@ function getEvent(ev) {
 }
 //阻止事件冒泡
 function stopEvent(ev) {
-  if (ev.stopPropagination) {
-    ev.stopPropagination();
-  } else {
-    ev.cancelBubble = true;
-  }
+    //如果提供了事件对象，则这是一个非IE浏览器
+    if ( ev && ev.stopPropagation )
+    //因此它支持W3C的stopPropagation()方法
+    ev.stopPropagation();
+   else
+  //否则，我们需要使用IE的方式来取消事件冒泡
+    window.event.cancelBubble = true;
 }
 /**
  * @param fn要触发的回调，
@@ -201,23 +203,36 @@ function bubbleSort(arr) {
   return arr;
 }
 /**
- * 快速排序
+ * 快速排序 @parma array原数组; 
+ * prop 根据哪个字段排序
+ * order 默认降序排列 -表示降序, +表示升序
  * */
-function quickSort(array, prop) {
+function quickSort(array, prop, order = '-') {
   if (!Array.isArray(array)) return;
   let sort = (arr, left = 0, right = arr.length - 1) => {
     if (left >= right) return;
     let i = left, j = right, baseVal = arr[j]//以最后一个元素为基准;
     while (i < j) {
-      if (Object.prototype.toString.call(arr[i]) === '[Object Object]' || Object.prototype.toString.call(arr[j]) === '[Object Object]') {
-        while (i < j && arr[i][prop] < baseVal[prop]) {
-          i++;
+      if (Object.prototype.toString.call(arr[i]) === '[object Object]' || Object.prototype.toString.call(arr[j]) === '[object Object]') {
+        if (order == '-') {
+          while (i < j && arr[i][prop] >= baseVal[prop]) {
+            i++;
+          }
+          arr[j] = arr[i];
+          while (i < j && arr[j][prop] <= baseVal[prop]) {
+            j--;
+          }
+          arr[i] = arr[j];
+        } else {
+          while (i < j && arr[i][prop] <= baseVal[prop]) {
+            i++;
+          }
+          arr[j] = arr[i];
+          while (i < j && arr[j][prop] >= baseVal[prop]) {
+            j--;
+          }
+          arr[i] = arr[j];
         }
-        arr[j] = arr[i];
-        while (i < j && arr[j][prop] > baseVal[prop]) {
-          j--;
-        }
-        arr[i] = arr[j];
       } else {
         while (i < j && arr[i] <= baseVal) {
           i++;
@@ -524,7 +539,7 @@ function genUniqueId() {
 }
 
 function browserLocalStorageGetItem(item) {
-  return window.localStorage.getItem(item)
+  return window.localStorage.getItem(item);
 }
 
 function browserLocalStorageSetItem(item, value) {
@@ -663,7 +678,9 @@ function copyText(content) {
     })
   })
 }
-
+/***
+ * 指纹解析
+*/
 function printPropertyString(data, defaultKey) {
   let stringparts = [],
     gotDefaultKeyVal = false,
@@ -717,11 +734,13 @@ function parse_task_upid(upid) {
   //task.desc = format_task_description(task.type, task.id);
   return task;
 }
-
+/***
+ * 判断值是否为空
+*/
 const isEmpty = function (val) {
   // null or undefined
   if (val == null) return true;
-  if(val == undefined) return true;
+  if (val == undefined) return true;
 
   if (typeof val === 'boolean') return false;
 
@@ -749,7 +768,9 @@ const isEmpty = function (val) {
 
   return false;
 }
-
+/***
+ * 解析ACMA证书
+*/
 function parseACME(value) {
   if (!value) {
     return {};
@@ -779,7 +800,9 @@ function parseACME(value) {
 
   return res;
 }
-
+/**
+ * 上传文件并在展示内容
+*/
 function uplodFile(file, callback) {
   if (file.size > 8192) {
     Vue.$confim.error({
@@ -838,7 +861,9 @@ function render_upid(value, metaData, record) {
 
   return format_task_description(type, id);
 }
-
+/***
+ * 格式化任务日志描述
+*/
 function format_task_description(type, id) {
   var farray = task_desc_table[type];
   var text;
@@ -997,7 +1022,9 @@ const log_severity_hash = {
 function render_serverity(value) {
   return log_severity_hash[value] || value;
 }
-
+/***
+ * 格式化字符串描述将字符串中的{数字}用参数中的值代替
+*/
 function stringFormat(str) {
   let arg = arguments;
   for (let i in arg) {
@@ -1068,13 +1095,13 @@ function parsePropertyString(value, defaultKey) {
 }
 
 const diskControllerMaxIDs = {
-	ide: 4,
-	sata: 6,
-	scsi: 31,
-	virtio: 16,
+  ide: 4,
+  sata: 6,
+  scsi: 31,
+  virtio: 16,
 }
 
-function forEachBus (types, func) {
+function forEachBus(types, func) {
   var busses = Object.keys(diskControllerMaxIDs);
   var i, j, count, cont;
 
@@ -1101,7 +1128,324 @@ function forEachBus (types, func) {
     }
   }
 }
+//解析启动
+function parseStartup(value) {
+  if (value === undefined) {
+    return;
+  }
 
+  var res = {};
+
+  var errors = false;
+  value.split(',').forEach(function (p) {
+    if (!p || p.match(/^\s*$/)) {
+      return; // continue
+    }
+
+    var match_res;
+
+    if ((match_res = p.match(/^(order)?=(\d+)$/)) !== null) {
+      res.order = match_res[2];
+    } else if ((match_res = p.match(/^up=(\d+)$/)) !== null) {
+      res.up = match_res[1];
+    } else if ((match_res = p.match(/^down=(\d+)$/)) !== null) {
+      res.down = match_res[1];
+    } else {
+      errors = true;
+      return false; // break
+    }
+  });
+
+  if (errors) {
+    return;
+  }
+  return res;
+}
+
+function render_kvm_ostype(value) {
+  var osinfo = get_kvm_osinfo(value);
+  if (osinfo.desc && osinfo.desc !== '-') {
+    return osinfo.base + ' ' + osinfo.desc;
+  } else {
+    return osinfo.base;
+  }
+}
+const kvm_ostypes = {
+  'Linux': [
+    { desc: '5.x - 2.6 Kernel', val: 'l26' },
+    { desc: '2.4 Kernel', val: 'l24' }
+  ],
+  'Microsoft Windows': [
+    { desc: '10/2016/2019', val: 'win10' },
+    { desc: '8.x/2012/2012r2', val: 'win8' },
+    { desc: '7/2008r2', val: 'win7' },
+    { desc: 'Vista/2008', val: 'w2k8' },
+    { desc: 'XP/2003', val: 'wxp' },
+    { desc: '2000', val: 'w2k' }
+  ],
+  'Solaris Kernel': [
+    { desc: '-', val: 'solaris' }
+  ],
+  'Other': [
+    { desc: '-', val: 'other' }
+  ]
+}
+
+function get_kvm_osinfo(value) {
+  var info = { base: 'Other' }; // default
+  if (value) {
+    Object.keys(kvm_ostypes).forEach(function (k) {
+      kvm_ostypes[k].forEach(function (e) {
+        if (e.val === value) {
+          info = { desc: e.desc, base: k };
+        }
+      });
+    });
+  }
+  return info;
+}
+
+function render_hotplug_features(value) {
+  var fa = [];
+
+  if (!value || (value === '0')) {
+    return gettext('Disabled');
+  }
+
+  if (value === '1') {
+    value = 'disk,network,usb';
+  }
+
+  value.split(',').forEach(function (el) {
+    if (el === 'disk') {
+      fa.push(gettext('Disk'));
+    } else if (el === 'network') {
+      fa.push(gettext('Network'));
+    } else if (el === 'usb') {
+      fa.push('USB');
+    } else if (el === 'memory') {
+      fa.push(gettext('Memory'));
+    } else if (el === 'cpu') {
+      fa.push(gettext('CPU'));
+    } else {
+      fa.push(el);
+    }
+  });
+
+  return fa.join(', ');
+}
+
+function render_spice_enhancements(values) {
+  let props = parsePropertyString(values);
+  if (isEmpty(props)) {
+    return '否';
+  }
+
+  let output = [];
+  if (parseBoolean(props.foldersharing)) {
+    output.push('Folder Sharing: ' + gettext('Enabled'));
+  }
+  if (props.videostreaming === 'all' || props.videostreaming === 'filter') {
+    output.push('Video Streaming: ' + props.videostreaming);
+  }
+  return output.join(', ');
+}
+function parseBoolean(value, default_value) {
+  if (isEmpty(value)) {
+    return default_value;
+  }
+  value = value.toLowerCase();
+  return value === '1' ||
+    value === 'on' ||
+    value === 'yes' ||
+    value === 'true';
+}
+
+
+function render_qga_features(value) {
+  if (!value) {
+    return '默认' + ' (已禁用)';
+  }
+  var props = parsePropertyString(value, 'enabled');
+  if (props && props.enabled && !parseBoolean(props.enabled)) {
+    return '已禁用';
+  }
+
+  delete props.enabled;
+  var agentstring = '可用';
+
+  Object.keys(props).forEach((value, index) => {
+    var keystring = '';
+    agentstring += ', ' + value + ': ';
+
+    if (value === 'type') {
+      let map = {
+        isa: "ISA",
+        virtio: "VirtIO",
+      };
+      agentstring += map[props[value]] || '未知';
+    } else {
+      if (parseBoolean(value)) {
+        agentstring += '可用';
+      } else {
+        agentstring += '可用';
+      }
+    }
+  });
+
+  return agentstring;
+}
+
+function format_duration_short(ut) {
+
+  if (ut < 60) {
+    return ut.toFixed(1) + 's';
+  }
+
+  if (ut < 3600) {
+    var mins = ut / 60;
+    return mins.toFixed(1) + 'm';
+  }
+
+  if (ut < 86400) {
+    var hours = ut / 3600;
+    return hours.toFixed(1) + 'h';
+  }
+
+  var days = ut / 86400;
+  return days.toFixed(1) + 'd';
+}
+
+/**
+ * 格式化日期带有星期 Fri Nov 27 2020 09:04:55 GMT+0800
+ * @param value 时间戳
+*/
+function formatDateForWeek(value, format) {
+  if (isEmpty(value)) return;
+  let date = new Date(value);
+  let d = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+  }
+  if (/(y+)/.test(format)) {
+    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  let week = {
+    5: '星期五',
+    4: '星期四',
+    3: '星期三',
+    2: '星期二',
+    1: '星期一',
+    6: '星期六',
+    0: '星期日'
+  }
+  if (/(w+)/.test(format)) {
+    format = format.replace(RegExp.$1, (week[date.getDay()] + ' '))
+  }
+  for (let o in d) {
+    if (new RegExp(`(${o})`).test(format)) {
+      let str = d[o] + ''
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? str : padLeftZero(str))
+    }
+  }
+  return format;
+}
+
+const mp_counts = { mps: 256, unused: 256 };
+
+function forEachMP(func, includeUnused) {
+  var i, cont;
+  for (i = 0; i < mp_counts.mps; i++) {
+    cont = func('mp', i);
+    if (!cont && cont !== undefined) {
+      return;
+    }
+  }
+
+  if (!includeUnused) {
+    return;
+  }
+
+  for (i = 0; i < mp_counts.unused; i++) {
+    cont = func('unused', i);
+    if (!cont && cont !== undefined) {
+      return;
+    }
+  }
+}
+/***
+ * 解析公钥数据 @param key公钥字符串
+*/
+function parseSSHKey(key) {
+	//                |--- options can have quotes--|     type    key        comment
+	var keyre = /^(?:((?:[^\s"]|\"(?:\\.|[^"\\])*")+)\s+)?(\S+)\s+(\S+)(?:\s+(.*))?$/;
+	var typere = /^(?:ssh-(?:dss|rsa|ed25519)|ecdsa-sha2-nistp\d+)$/;
+
+	var m = key.match(keyre);
+	if (!m) {
+	    return null;
+	}
+	if (m.length < 3 || !m[2]) { // [2] is always either type or key
+	    return null;
+	}
+	if (m[1] && m[1].match(typere)) {
+	    return {
+		type: m[1],
+		key: m[2],
+		comment: m[3]
+	    };
+	}
+	if (m[2].match(typere)) {
+	    return {
+		options: m[1],
+		type: m[2],
+		key: m[3],
+		comment: m[4]
+	    };
+	}
+	return null;
+}
+
+/**
+ * 展示错误信息
+ * **/
+function confirm(message, type, icon) {
+  return this.$confirm[type ? type : 'error']({
+    msg: message,
+    icon: icon ? icon : 'icon-error'
+  })
+}
+
+/**
+ * 前端分组
+ * **/
+function chunkData(arr, pageSize) {
+   let num =0, chunkArr = [];
+   //计算总页数当页码大于总条数时除以总条数
+   if(pageSize <= arr.length) {
+     num = Math.ceil(arr.length / pageSize)
+   } else {
+    num = Math.ceil(arr.length / arr.length)
+   }
+   for(let i = 0, j = 0 ; i < num; i++) {
+     let newArr = [], k = (i + 1) * pageSize;;
+     while(j < arr.length) {
+        while(j < k ) {
+          if(arr[j]) {
+            newArr.push(arr[j]);
+          }
+          j++;
+          continue;
+        }
+        if(j == k) break;      
+     }
+     chunkArr.push(newArr);
+   }
+   return chunkArr;
+}
 export {
   getEvent,
   stopEvent,
@@ -1161,5 +1505,16 @@ export {
   stringFormat,
   render_qemu_bios,
   render_kvm_vga_driver,
-  forEachBus
+  forEachBus,
+  parseStartup,
+  render_kvm_ostype,
+  render_hotplug_features,
+  render_spice_enhancements,
+  render_qga_features,
+  format_duration_short,
+  formatDateForWeek,
+  forEachMP,
+  parseSSHKey,
+  confirm,
+  chunkData
 }

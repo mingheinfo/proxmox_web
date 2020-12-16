@@ -20,6 +20,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
+        <el-scrollbar style="height: 100%">
+          <div class="taskmodal-content">
           <div class="table" v-if="tab === 'log'">
             <div
               class="table-tr"
@@ -44,6 +46,8 @@
               </div>
             </template>
           </div>
+          </div>
+        </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -140,7 +144,11 @@
               >
               <m-button
                 type="danger"
-                @on-click="handleAcmeDelete"
+                v-confirm="{
+                  msg: '确认要删除已选择项?',
+                  icon: 'icon-question',
+                  ok: () => handleAcmeDelete()
+                }"
                 icon="el-icon-delete"
                 :disabled="selectedAcmeList.length <= 0"
                 >删除</m-button
@@ -497,5 +505,8 @@ export default {
 }
 /deep/.tool-bar-left /deep/.prefix-icon:after{
   color: #525457!important;
+}
+/deep/.page-template__content{
+  height: auto!important;;
 }
 </style>

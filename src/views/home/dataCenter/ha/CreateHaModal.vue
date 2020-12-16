@@ -44,8 +44,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.vmid }}</span>
-                      <span class="table-td">{{ item.name }}</span>
+                      <span class="table-td" :title="item.vmid">{{ item.vmid }}</span>
+                      <span class="table-td" :title="item.name">{{ item.name }}</span>
                       <span class="table-td">
                         {{ item.node }}
                       </span>
@@ -61,7 +61,7 @@
                           "
                         ></table-info-state>
                       </span>
-                      <span class="table-td"> 虚拟机 </span>
+                      <span class="table-td" :title="'虚拟机'"> 虚拟机 </span>
                     </div>
                   </div>
                 </m-option>
@@ -77,9 +77,9 @@
               >
                 <m-option
                   v-for="(item, index) in db.groupsList"
-                  :key="item.groupid"
-                  :label="item.groupid"
-                  :value="item.groupid"
+                  :key="item.group"
+                  :label="item.group"
+                  :value="item.group"
                 >
                   <div class="table">
                     <template v-if="index === 0">
@@ -90,9 +90,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.group }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
-                      <span class="table-td">
+                      <span class="table-td" :title="item.group">{{ item.group }}</span>
+                      <span class="table-td" :title="item.comment">{{ item.comment }}</span>
+                      <span class="table-td" :title="item.users">
                         {{ item.users }}
                       </span>
                     </div>

@@ -4,23 +4,28 @@
        <div class="m-operate">
          <div class="m-operate-left">节点test</div>
          <div class="m-operate-right">
-           <m-button icon="fa fa-undo" @on-click="handleReset">重启</m-button>
-           <m-button icon="fa fa-power-off" @on-click="handleClose">关机</m-button>
-           <dropdown style="width: auto; border: 1px solid #e6e6e6;display: inline-block;" @on-change="handleConsole">
-             <m-button icon="fa fa-terminal" slot="label" style="border: none;">
+           <m-button icon="fa fa-undo"
+                     v-confirm="{msg: `重启节点\'${node}\'？`,
+                                  ok: () => handleReset()
+                      }">重启</m-button>
+           <m-button icon="fa fa-power-off" v-confirm="{msg: `关闭节点\'${node}\'？`,
+                                  ok: () => handleClose()
+                      }">关机</m-button>
+           <dropdown style="width: auto; border: 1px solid #adb0b8;display: inline-block;" @on-change="handleConsole">
+             <m-button icon="fa fa-terminal" slot="label" style="border: none;height: 28px;">
                shell
              </m-button>
              <dropdown-item command="novnc" name="novnc">NoVNC</dropdown-item>
              <dropdown-item command="spice" name="virt-viewer">SPICE</dropdown-item>
              <dropdown-item command="xtermjs" name="xtermjs">xtermjs</dropdown-item>
            </dropdown>
-           <dropdown style="width: auto; border: 1px solid #e6e6e6;display: inline-block;" @on-change="handleMoreOpration">
-             <m-button icon="fa fa-fw fa-ellipsis-v" slot="label" style="border: none;">
+           <dropdown style="width: auto; border: 1px solid #adb0b8;display: inline-block;" @on-change="handleMoreOpration">
+             <m-button icon="fa fa-fw fa-ellipsis-v" slot="label" style="border: none; height: 28px;">
                批量操作
              </m-button>
-             <dropdown-item command="startall">批量启动</dropdown-item>
-             <dropdown-item command="stopall">批量停止</dropdown-item>
-             <dropdown-item command="xtermjs">批量迁移</dropdown-item>
+             <dropdown-item command="startall" icon="fa el-icon-video-play">批量启动</dropdown-item>
+             <dropdown-item command="stopall" icon="fa el-icon-video-pause">批量停止</dropdown-item>
+             <dropdown-item command="migrateall" icon="fa fa-paper-plane-o">批量迁移</dropdown-item>
            </dropdown>
          </div>
        </div>
@@ -34,6 +39,7 @@
            :visible="visible"
            v-if="visible"
            :param="nodeModalParam"
+           :modalType="type"
            :title="title"
            @close="visible = false"
            ></node-select-modal>
@@ -71,7 +77,8 @@
         menuData: nodeMenuList,
         nodeModalParam: {},
         visible: false,//是否展示批量操作框，
-        title: '批量启动'
+        title: '批量启动',
+        type: ''
       }
     },
     computed: {
@@ -81,41 +88,23 @@
     },
     methods: {
       handleReset() {
-        this.$confirm.confirm({
-          title: '确定',
-          msg: `重启节点\'${this.node}\'？`,
-          icon: 'icon-warning',
-          yesBtnText: "确定"
+        let event = this.createEvent(`action.node.reboot`, this.node);
+        this.$http.post(`/json/nodes/${this.node}/status`, {
+          command: 'reboot'
+        }, {
+          headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         }).then(() => {
-          let event = this.createEvent(`action.node.reboot`, this.node);
-          this.$http.post(`/json/nodes/${this.node}/status`, {
-            command: 'reboot'
-          }, {
-            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-          }).then(() => {
-            this.incEventSuccess(event);
-          }).catch(() => {
-            this.incEventFail(event);
-          })
+          this.incEventSuccess(event);
         }).catch(() => {
-
-        });
+          this.incEventFail(event);
+        })
       },
       handleClose() {
-        this.$confirm.confirm({
-          title: '确定',
-          msg: `关闭节点\'${this.node}\'？`,
-          yesBtnText: "确定"
-        }).then(() => {
-          this.$http.post(`/json/nodes/${this.node}/status`, {
-            command: 'stop'
-          }, {
-            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-          })
+        this.$http.post(`/json/nodes/${this.node}/status`, {
+          command: 'stop'
+        }, {
+          headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         })
-          .catch(() => {
-            console.log('cancel')
-          });
       },
       handleConsole(e) {
         let options = {
@@ -141,7 +130,8 @@
           operate,
           node: this.node
         }
-        this.title = operate === 'stopall' ? '批量停止' : operate === 'startall' ? '批量启动' : '批量迁移'
+        this.title = operate === 'stopall' ? '批量停止' : operate === 'startall' ? '批量启动' : '批量迁移';
+        this.type = operate;
         this.visible = true;
          //this.beatchOperate(operate);
       }

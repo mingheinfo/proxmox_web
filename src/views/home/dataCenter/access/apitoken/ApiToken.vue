@@ -9,7 +9,10 @@
 			<m-button type="info" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
       <m-button
         type="danger"
-        @on-click="handleDelete"
+        v-confirm="{
+            msg: `你确定你要删除已选择项吗?`,
+            ok: () => handleDelete()
+				}"
         icon="el-icon-delete"
         :disabled="selectedList.length <= 0"
         >删除</m-button
@@ -67,7 +70,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false"
+        @close="visible = false; __init__()"
       ></create-api-token-modal>
     </div>
   </page-template>
@@ -104,10 +107,12 @@ export default {
 		dateFormat,
     //初始化查找
     __init__() {
+      this.records = [];
 			this.queryUsersList({full:1, _dc: new Date().getTime()})
 			    .then(() => {
 						this.db.usersList.forEach(user => {
 							user.tokens && user.tokens.forEach(token => {
+                  let r = {};
 								  r.id = user.userid + '!' + token.tokenid;
 			            r.userid = user.userid;
 			            r.tokenid = token.tokenid;
@@ -136,15 +141,7 @@ export default {
       this.selectedList = row;
     },
     handleDelete(type) {
-      this.$confirm
-        .confirm({
-          msg: `你确定你要删除已选择项吗？`,
-          type: "info",
-        })
-        .then(() => {
-          this.deleteApiToken();
-        })
-        .catch(() => {});
+      this.deleteApiToken();
     },
     handelEditTfa() {
 

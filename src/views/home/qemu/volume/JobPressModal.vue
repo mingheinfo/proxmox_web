@@ -39,6 +39,7 @@ export default {
 				return newVal;
 			}
 		},
+		//任务进度信息完成之后显示done!
 		msg: function(newVal, oldVal) {
 				if(newVal !== oldVal) {
 				return newVal;

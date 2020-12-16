@@ -43,8 +43,8 @@
                   </template>
 
                   <div class="table-tr">
-                    <div class="table-td">{{ item.value }}</div>
-                    <div class="table-td">{{ item.vendor }}</div>
+                    <div class="table-td" :title="item.value">{{ item.value }}</div>
+                    <div class="table-td" :title="item.vendor">{{ item.vendor }}</div>
                   </div>
                 </div>
               </m-option>

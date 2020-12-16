@@ -1,17 +1,18 @@
 <template>
   <div class="overview">
-    <div class="overview-select">
-      <select class="pv-form-input"
-              style="width: 180px;"
-              @change="handleIntervalChange"
+    <div class="overview-time__select">
+      <m-button class="soft-version" @on-click="watchVersion">软件包版本</m-button>
+      <m-select
+              @on-change="handleIntervalChange"
               v-model="timeframe">
-        <option v-for="item of intervalList"
+        <m-option v-for="item of intervalList"
                 :key="item.value"
-                :value="item.value">{{item.label}}
-        </option>
-      </select>
+                :label="item.label"
+                :value="item.value">
+        </m-option>
+      </m-select>
     </div>
-    <overview-card>
+    <overview-card  v-loading="loading"  :element-loading-text="loadingText">
       <div slot="title">{{node}}(运行时间:{{render_uptime(baseInfo.uptime)}})</div>
       <div slot="content" class="card-content">
         <div class="card-item">
@@ -102,6 +103,27 @@
         <line-graph :data="network"></line-graph>
       </template>
     </overview-card>
+    <m-dialog :visible="visible" 
+              v-if="visible"
+              title="软件包版本"
+              @close="visible = false">
+        <template slot="content">
+          <el-scrollbar style="height: 100%">
+            <div class="m-form__section" style="max-height: 400px;">
+              <div class="m-form__content">
+                <div class="table-tr" v-for="item in versionList" :key="item.package">
+                  {{item.Package +": "+ item.Version}}
+                  {{item.RunningKernel ? ' (running kernel' + item.RunningKernel +')' : ''}}
+                   {{item.ManagerVersion ? ' (running version' + item.ManagerVersion +')' : ''}}
+                </div>
+              </div>
+            </div>
+          </el-scrollbar>
+        </template>
+        <template slot="footer">
+          <div></div>
+        </template>
+    </m-dialog>
   </div>
 </template>
 
@@ -126,6 +148,10 @@
         baseInfo: {},
         interval: null,
         timeframe: 'hour(AVERAGE)',
+        loading: false,
+        loadingText: '',
+        versionList: [],
+        visible: false,
         intervalList: [
           {
             label: '小时（平均）',
@@ -238,14 +264,18 @@
       __init__() {
         let last = window.localStorage.getItem("lastsel") || '[]';
         this.node = (JSON.parse(last).node && JSON.parse(last).node) || '';
-        this.queryResource();
+         this.loading = false;
+        this.queryResource()
         this.queryRrdData();
       },
       queryResource() {
         this.$http.get(`/json/nodes/${this.node}/status`)
           .then(res => {
             this.baseInfo = res.data;
-          })
+          }).catch(res =>{
+            this.loading = true;
+            this.loadingText = res;
+          });
       },
       queryRrdData() {
         this.$http.get(`/json/nodes/${this.node}/rrddata?timeframe=${this.timeframe.replace(/(.*?)\((.*?)\)/g, '$1')}&cf=${this.timeframe.replace(/(.*?)\((.*?)\)/g, '$2')}`)
@@ -275,7 +305,8 @@
             })
           })
       },
-      handleIntervalChange(){
+      handleIntervalChange(value){
+        this.timeframe = value;
         this.queryRrdData();
         if(this.interval) {
           clearInterval(this.interval);
@@ -283,6 +314,17 @@
         }
         this.interval = setInterval(() => this.queryResource(), 60 * 1000);
       },
+      //软件包版本
+      watchVersion() {
+        this.visible = true;
+        this.$http.get(`json/nodes/${this.node}/apt/versions`, {
+          _dc: new Date().getTime()
+        }).then(res => {
+          if(res.data) {
+            this.versionList = res.data;
+          }
+        })
+      }
     },
     mounted() {
       this.__init__();
@@ -292,29 +334,28 @@
       if (this.interval)
         clearInterval(this.interval);
       this.interval = null;
+    },
+     watch: {
+       "$store.state.db.lastSelectObj": function (newVal, oldVal) {
+          if (newVal !== oldVal && (newVal.type === "node")) {
+            this.__init__();
+          }
+        },
     }
   }
 </script>
 
 <style scoped lang="less">
   .overview {
-    &-select {
+    &-time__select {
       margin: 5px 10px;
       position: relative;
       background-color: #fff;
       text-align: right;
-
-      &:after {
-        position: absolute;
-        top: 36%;
-        right: 11px;
-        background-color: transparent;
-        color: #52545c;
-        font: normal normal normal 12px FontAwesome;
-        content: "\F0D7";
-        pointer-events: none;
-        font-size: 11px;
-      }
     }
+  }
+  .soft-version{
+    display: inline-block;
+    vertical-align: middle;
   }
 </style>

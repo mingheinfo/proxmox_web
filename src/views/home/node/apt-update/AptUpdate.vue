@@ -78,7 +78,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-         <div style="max-height: 300px;overflow: auto;">
+         <el-scrollbar style="height: 100%">
+          <div class="taskmodal-content">
 					  <div class="table" v-if="tab === 'log'">
             <div
               class="table-tr"
@@ -104,6 +105,7 @@
             </template>
           </div>
 				 </div>
+         </el-scrollbar>
         </template>
 				<template slot="content" v-if="modalType === 'changeLog'">
            <ace-editor v-model="changeLogContent"

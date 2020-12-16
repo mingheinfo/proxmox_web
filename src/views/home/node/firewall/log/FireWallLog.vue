@@ -1,27 +1,8 @@
 <template>
 	<page-template>
 		<div slot="toolbar-left"></div>
-			<div slot="toolbar-right" style="text-align: right">
-			  <m-select
-                prop="theme"
-                label="选择主题"
-                labelWidth="65px"
-                v-model="theme"
-								@on-change="(value) => {theme = value;}"
-                placeholder="请选择主题"
-              >
-                <m-option
-                  v-for="(item) in themeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >             
-                </m-option>
-              </m-select>
-		</div>
 		<div slot="page-content">
 				<ace-editor v-model="logContent"
-				            :theme='theme'
 										:read-only="true"
 				            ref="ace-editor"></ace-editor>
 		</div>
@@ -37,15 +18,6 @@ export default {
 	data() {
 		return {
 			logContent:'',
-			theme: 'chrome',
-			themeOptions: [
-				{label: 'tomorrow_night_eighties', value: 'tomorrow_night_eighties'},
-				{label: 'tomorrow_night_blue', value: 'tomorrow_night_blue'},
-				{label: 'tomorrow_night_bright', value: 'tomorrow_night_bright'},
-				{label: 'tomorrow_night', value: 'tomorrow_night'},
-				{label: 'chrome', value: 'chrome'},
-				{label: 'monokai', value: 'monokai'}
-			]
 		}
 	},
 	components: {

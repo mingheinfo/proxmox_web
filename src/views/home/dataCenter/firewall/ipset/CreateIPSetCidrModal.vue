@@ -40,8 +40,8 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.name }}</span>
-                      <span class="table-td">{{ item.comment }}</span>
+                      <span class="table-td"  :title="item.name">{{ item.name }}</span>
+                      <span class="table-td"  :title="item.comment">{{ item.comment }}</span>
                     </div>
                   </div>
                 </m-option>

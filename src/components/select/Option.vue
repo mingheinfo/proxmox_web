@@ -1,7 +1,7 @@
 <template>
   <div class="option-item"
        :class="{'disabled': disabled}">
-    <div v-show="Select.type !== 'multiple'"  @mousedown.stop="handleClick">
+    <div v-if="Select.type !== 'multiple'"  @mousedown.stop="handleClick">
       <span v-if="icon" :class="['icon', icon]"></span>
       <base-icon v-if="name" :class="['icon']" :name="name" :_style="{width: '16px', 'height': '16px'}"></base-icon>
      <template>
@@ -13,21 +13,21 @@
 			</div>
 		 </template>
     </div>
-    <div v-show="Select.type === 'multiple'"  @click.stop="handleClick">
+    <div v-if="Select.type === 'multiple'"  @click="handleClick">
       <span v-if="icon" :class="['icon', icon]"></span>
-    <base-icon v-if="name" :class="['icon']" :name="name" :_style="{width: '16px', 'height': '16px'}"></base-icon>
-		 <template>
-				<label class="option-item__checkbox">
-           <input type="checkbox" v-model="isChecked"/>
-           <div></div>
-        </label>
-				<div class="option-item__content" :class="{'option-item__selected': isChecked}">
-			   <template v-if="$slots['default']">
-            <slot></slot>
-          </template>
-          <template v-else>{{label}}</template>
-			 </div>
-			</template>
+      <base-icon v-if="name" :class="['icon']" :name="name" :_style="{width: '16px', 'height': '16px'}"></base-icon>
+      <template>
+          <label class="option-item__checkbox">
+            <input type="checkbox" v-model="isChecked"/>
+            <div></div>
+          </label>
+          <div class="option-item__content" :class="{'option-item__selected': isChecked}">
+          <template v-if="$slots['default']">
+              <slot></slot>
+            </template>
+            <template v-else>{{label}}</template>
+        </div>
+        </template>
     </div>
   </div>
 </template>
@@ -61,9 +61,15 @@
     methods: {
       //点击下拉框时触发的时间
       handleClick(e) {
+        e.preventDefault();
+        stopEvent(e);//阻止事件冒泡
         if(!this.disabled){
-					this.isChecked = !this.isChecked;
-          this.Select.handleChange('on-change', this.value,this.isChecked);
+          this.$nextTick(
+            () => {
+              	this.isChecked = !this.isChecked;//切换选中状态
+                this.Select.handleChange('on-change', this.value,this.isChecked);
+            }
+          )
 				}
       },
       setChecked(newVal) {

@@ -49,12 +49,12 @@
                   :value="item.node"
                 >
                   <div class="table-tr">
-                    <span class="table-td">{{ item.node }}</span>
-                    <span class="table-td">{{
-                      percentToFixed(item.mem / item.maxmem, 3)
+                    <span class="table-td" :title="item.node">{{ item.node }}</span>
+                    <span class="table-td" :title="item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)">{{
+                      item.mem && item.maxmem && percentToFixed(item.mem / item.maxmem, 3)
                     }}</span>
-                    <span class="table-td">{{
-                      `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`
+                    <span class="table-td" :title="item.cpu && item.maxcpu && `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`">{{
+                      item.cpu && item.maxcpu && `${percentToFixed(item.cpu, 3)} of ${item.maxcpu}`
                     }}</span>
                   </div>
                 </m-option>

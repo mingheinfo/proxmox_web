@@ -1,9 +1,14 @@
+const webpack = require('webpack');
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HappyPack = require('happypack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const os = require('os')
+const bundleConfig = require("./bundle-config.json");
+const manifest = require('../vendor-manifest.json');
+//拆分三方库并将其注入到html中
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const os = require('os');
 //开启线程
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
@@ -13,16 +18,18 @@ function resolve(dirname) {
 }
 const isDevMode = process.env.NODE_ENV === 'development' ? true : false;
 module.exports = {
+  mode: isDevMode ? 'development' : 'production',
   entry: {
-    'pve': ['babel-polyfill', resolve('../src/main.js')],
+    'pve': ['babel-polyfill', resolve('../src/main.js')]
   },
   output: {
     publicPath: isDevMode ? '/public/' : '/',
     path: path.resolve(__dirname,'../public/dist'),
-    filename: isDevMode ? 'js/[name].[hash:16].js' : 'js/[name].[contenthash].js',
-    chunkFilename: isDevMode ? 'js/[name].[hash:16].js' : 'js/[name].[contenthash].js',
+    filename: isDevMode ? 'js/[name].[hash:16].js' : 'mhflex/js/[name].[contenthash].js',
+    chunkFilename: isDevMode ? 'js/[name].[hash:16].js' : 'mhflex/js/[name].[contenthash].js',
   },
   module: {
+    unknownContextCritical: false,
     rules: [{
       test: /\.(js)$/,
       loader: 'happypack/loader?id=happyBabel',
@@ -34,7 +41,7 @@ module.exports = {
       test: /\.(c|le)ss$/,
       use: [
         'vue-style-loader',
-        isDevMode ? 'style-loader': MiniCssExtractPlugin.loader,
+        !isDevMode ? 'style-loader': MiniCssExtractPlugin.loader,
         {
           loader: 'css-loader',
           options: {
@@ -69,7 +76,7 @@ module.exports = {
       loader: 'url-loader',
       options: {
         limit: 8192,
-        name: 'font/[name].[hash:4].[ext]',
+        name: isDevMode ? 'font/[name].[hash:4].[ext]' : 'mhflex/font/[name].[hash:4].[ext]',
         esModule: false
       }
     }]
@@ -88,13 +95,14 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[hash:16].css'
+      filename: isDevMode ? 'css/[name].[hash:16].css' : '/mhflex/css/[name].[hash:16].css'
     }),
     new HappyPack({
       id: 'happyBabel',
       loaders: [{
         loader: 'babel-loader',
         exclude: /node_modules/,
+        include: /node_modules\/ace-builds\/.*/,
         options: {
           // babelrc: true,
           cacheDirectory: true, // 启用缓存
@@ -146,11 +154,19 @@ module.exports = {
       //允许 HappyPack 输出日志
       verbose: false,
     }),
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname),
+      manifest
+    }),
     new HtmlWebpackPlugin({
       template: resolve("../public/index.html"),
       filename: "index.html",
       minify: false,
-      inject: true
-    })
+      inject: true,
+      excludeChunks: [resolve('../node_modules')]
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.resolve(__dirname, '../public/dist/static/dll.vendor_*.js'),
+    }),
   ]
 }

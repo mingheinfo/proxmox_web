@@ -6,21 +6,21 @@
         <div class="pop-content" ref="pop-wrapper" :style="contentStyles">
           <div class="pop-tit" ref="pop-header" @mousedown="handleMoveStart">
             {{title}}
-            <span class="pop-close" @click.prevent="noClick"></span>
+            <span class="pop-close" @click.prevent="noClick">&times;</span>
           </div>
           <p class="pop-note hasTitle">
             <base-icon :name="icon" v-if="icon"/>
             <slot>
-              <p v-if="!dangerouslyUseHTMLString" style="display: inline-block">{{ msg }}</p>
-              <p v-else v-html="msg" style="display: inline-block"></p>
+              <p v-if="!dangerouslyUseHTMLString" style="display: inline-block; width: calc(100% - 80px);">{{ msg }}</p>
+              <p v-else v-html="msg" style="display: inline-block; width: calc(100% - 80px);"></p>
             </slot>
           </p>
-          <div class="btn-wrapper" v-if="type == 'alert'" @click.stop="alertClick">
-            <span class="btn btn-block yes-btn">{{alertBtnText}}</span>
+          <div class="btn-wrapper" v-if="type == 'alert'">
+            <m-button class="confirm-btn" type="primary" @on-click="alertClick">{{alertBtnText}}</m-button>
           </div>
           <div class="btn-wrapper">
-            <span @click.prevent="noClick" class="btn cancel">{{noBtnText}}</span>
-            <span @click.prevent="yesClick" v-if="['confirm', 'info', 'warning'].includes(type)" class="btn yes-btn">{{yesBtnText}}</span>
+            <m-button class="confirm-btn" type="danger" @on-click="noClick">{{noBtnText}}</m-button>
+            <m-button class="confirm-btn" type="primary" @on-click="yesClick" v-if="['confirm', 'info', 'warning'].includes(type)">{{yesBtnText}}</m-button>
           </div>
         </div>
       </div>
@@ -80,9 +80,9 @@
     },
     data() {
       return {
-        promiseStatus: null,
-        show: false,
-        isMounted: false,
+        promiseStatus: null,//点击alert的状态
+        show: false,//是否展示alert
+        isMounted: false,//是否已经在挂载阶段
         draggable: true,
         mouseStartPoint:{"left":0,"top":  0},
         mouseEndPoint : {"left": getDocument().clientWidth / 2,"top": getDocument().clientHeight / 2},
@@ -225,4 +225,13 @@
 
 <style lang='less' scoped>
   @import "~@src/components/confirm/confirm.less";
+  /deep/ .base-icon {
+    display: inline-block;
+    height: 36px;
+    width: 50px;
+    margin-right: 10px;
+    background-size: 36px 36px;
+    background-repeat: no-repeat;
+    vertical-align: top;
+  }
 </style>

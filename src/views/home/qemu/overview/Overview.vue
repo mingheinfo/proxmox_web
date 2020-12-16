@@ -1,20 +1,20 @@
 <template>
   <div class="overview">
     <div class="overview-select">
-      <select class="pv-form-input"
-              style="width: 180px;"
-              @change="handleIntervalChange"
+        <m-select
+              @on-change="handleIntervalChange"
               v-model="timeframe">
-        <option v-for="item of intervalList"
+        <m-option v-for="item of intervalList"
                 :key="item.value"
-                :value="item.value">{{item.label}}
-        </option>
-      </select>
+                :label="item.label"
+                :value="item.value">
+        </m-option>
+      </m-select>
     </div>
     <div style="display: inline;">
       <overview-card style="width: calc(calc(100% / 4) - 23px)">
         <div slot="title">状态</div>
-        <div slot="content" class="card-content">
+        <div slot="content" class="card-content" v-loading="loading"  :element-loading-text="loadingText">
           <div class="card-item">
             <single-line title="状态"
                          icon="fa fa-info"
@@ -47,8 +47,11 @@
       <overview-card style="width: calc(calc(100% / 4) - 23px)">
         <div slot="title">备注</div>
         <div slot="operate" class="m-tool-img" @click.stop="handleComment"></div>
-        <div slot="content" class="card-content">
-           {{this.config.description}}
+        <div slot="content" class="card-content" ref="comment-content">
+          	<ace-editor v-model="comment"
+										:read-only="true"
+                    style="width: 100%;height: 250px"
+                    ref='ace-comment'></ace-editor>
         </div>
       </overview-card>
     </div>
@@ -81,12 +84,13 @@
             @confirm="confirm"
             @cancel="cancel"
             cancelText="重置"
+            :_style="{
+              width: '800px'
+            }"
             title="备注">
-      <template slot="content">
-        <div>
-          <textarea class="m-overview-comment" v-model="comment"/>
+        <div slot="content" ref="content">
+          <ace-editor v-model="comment"  ref="ace-editor"></ace-editor>
         </div>
-      </template>
     </Dialog>
   </div>
 </template>
@@ -99,6 +103,7 @@
   import OverviewCard from '@src/components/card/OverviewCard';
   import {render_uptime, byteToSize} from "@libs/utils";
   import Dialog from "@src/components/dialog/Dialog";
+  import AceEditor from '@src/components/ace/AceEditor';
 
   export default {
     name: "Overview",
@@ -108,7 +113,8 @@
       OverviewCard,
       LinePercentChart,
       SingleLine,
-      LineGraph
+      LineGraph,
+      AceEditor
     },
     data() {
       return {
@@ -117,6 +123,8 @@
         showComment: false,
         interval: null,
         timeframe: 'hour(AVERAGE)',
+        loading: false,
+        loadingText: '',
         intervalList: [
           {
             label: '小时（平均）',
@@ -234,10 +242,16 @@
       __init__() {
         let last = window.localStorage.getItem("lastsel") || '[]';
         this.node = (JSON.parse(last) && JSON.parse(last)) || '';
-        this.queryRrdData();
-        this.queryConfig();
+        this.queryResource();
+        this.queryConfig()
+            .catch(res => {
+              debugger;
+              this.comment = res ? res : '';
+            });
+        this.handleIntervalChange(this.timeframe);
       },
-      handleIntervalChange(){
+      handleIntervalChange(value){
+        this.timeframe = value;
         this.queryRrdData();
         if(this.interval) {
           clearInterval(this.interval);
@@ -246,22 +260,41 @@
         this.interval = setInterval(() => this.queryRrdData(), 60 * 1000);
       },
       handleComment() {
-        this.showComment = true;
+        let _this = this;
+        _this.comment = _this.comment ? _this.comment : '';
+        _this.showComment = true;
+        _this.$nextTick(() => {
+           _this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 30) + 'px';
+		       window.addEventListener('resize', _this.updateAceEditorHeight, false)
+        })
       },
       confirm() {
         this.setComment();
+        window.removeEventListener('resize', this.updateAceEditorHeight, false)
       },
       cancel() {
         this.comment = "";
-      }
+      },
+      /***
+       * 当弹框高度变化是计算弹框高度
+      */
+      updateAceEditorHeight() {
+			 let _this = this;
+				_this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 30) + 'px';
+	  	},
     },
+    /**
+     * 初始化请求
+    */
     mounted() {
-      this.__init__();
+      let _this = this;
+      _this.__init__();
     },
-    destroyed() {
-      if (this.interval)
+    beforeDestroy() {
+      if (this.interval){
         window.clearInterval(this.interval);
-      this.interval = null;
+        this.interval = null;
+      }
     },
     watch: {
       '$store.state.db.lastSelectObj': function(newVal, oldVal) {
@@ -280,18 +313,6 @@
       position: relative;
       background-color: #fff;
       text-align: right;
-
-      &:after {
-        position: absolute;
-        top: 36%;
-        right: 11px;
-        background-color: transparent;
-        color: #52545c;
-        font: normal normal normal 12px FontAwesome;
-        content: "\F0D7";
-        pointer-events: none;
-        font-size: 11px;
-      }
     }
   }
   .m-tool-img{

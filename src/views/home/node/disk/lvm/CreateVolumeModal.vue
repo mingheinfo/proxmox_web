@@ -41,9 +41,9 @@
                       </div>
                     </template>
                     <div class="table-tr">
-                      <span class="table-td">{{ item.devpath }}</span>
-                      <span class="table-td">{{ item.size && byteToSize(item.size) || 0 }}</span>
-                      <span class="table-td">{{ item.serial }}</span>
+                      <span class="table-td" :title="item.devpath">{{ item.devpath }}</span>
+                      <span class="table-td" :title="item.size && byteToSize(item.size) || 0">{{ item.size && byteToSize(item.size) || 0 }}</span>
+                      <span class="table-td" :title="item.serial">{{ item.serial }}</span>
                     </div>
                   </div>
                 </m-option>

@@ -28,7 +28,7 @@
     </div>
     <div slot="page-content">
       <el-table
-        :data="db.nodeTaskList"
+        :data="chunkDataList"
         ref="dataTable"
 				:row-key="setRowKeys"
         :expand-row-keys="expands"
@@ -95,6 +95,15 @@
           </template>
         </el-table-column>
       </el-table>
+        <el-pagination class="page-table-pagination"
+          @size-change="(val) => {pageSize = val; __init__()}"
+          @current-change="(val) => {currentPage = val; __init__()}"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="pageSize"
+          :total="nodeTaskList.length"
+          layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
 			<Dialog
         :visible="showLog"
         @close="closeLog"
@@ -115,7 +124,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-         <div style="max-height: 300px;overflow: auto;">
+         <el-scrollbar style="height: 100%">
+          <div class="taskmodal-content">
 					  <div class="table" v-if="tab === 'log'">
             <div
               class="table-tr"
@@ -130,7 +140,7 @@
               <div
                 class="table-tr"
                 v-if="!['exitstatus', 'id', 'pstart'].includes(key)"
-                :key="key"
+                :key="item.pid"
               >
                 <div class="table-td">{{ $t(`clusterStatus.${key}`) }}</div>
                 <div class="table-td" v-if="key === 'starttime'">
@@ -141,6 +151,7 @@
             </template>
           </div>
 				 </div>
+         </el-scrollbar>
         </template>
         <template slot="footer">
           <span></span>
@@ -154,7 +165,7 @@ import NodeTaskHttp from "@src/views/home/node/task/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import Dialog from "@src/components/dialog/Dialog";
-import { dateFormat, render_upid } from "@libs/utils/index";
+import { dateFormat, render_upid, quickSort, chunkData } from "@libs/utils/index";
 export default {
   name: "Replication",
   mixins: [NodeTaskHttp],
@@ -177,7 +188,11 @@ export default {
       interVal: null,
 			tab: 'log',
 			error: false,
-			expands: []
+      expands: [],
+      nodeTaskList: [],
+      currentPage: 1,
+      pageSize: 10,
+      chunkDataList: []
     };
   },
   mounted() {
@@ -185,15 +200,19 @@ export default {
   },
   methods: {
 		dateFormat,
-		render_upid,
+    render_upid,
+    chunkData,
     //初始化查找
     __init__() {
       let _this = this;
-      this.queryTask();
+      this.queryTask()
+          .then(res => {
+            this.nodeTaskList  = quickSort(this.db.nodeTaskList, 'starttime');
+            this.chunkDataList = chunkData(this.nodeTaskList, this.pageSize)[this.currentPage - 1];
+          });
     },
     //是否展示弹框
     async showModal() {
-			debugger;
       if(this.selectedList.length !== 1) return;
 			this.title = `查看： ${this.render_upid(null, null, this.selectedList[0])}`;
 			this.queryLog(this.selectedList[0].node, this.selectedList[0].upid);
@@ -211,8 +230,8 @@ export default {
     //选择
     handleSelect(row) {
       this.selectedList = row;
-		},
-		 handleTabChange(tab) {
+    },
+		handleTabChange(tab) {
 			this.tab = tab;
 		},
     closeLog() {
@@ -242,14 +261,14 @@ export default {
       if (expandedRows.length) {
         that.expands = [];
         if (row) {
-          that.expands.push(row.pid);
+          that.expands.push(row.upid);
         }
       } else {
         that.expands = [];
       }
     },
     setRowKeys(row) {
-      return row.pid;
+      return row.upid;
 		},
 		//设置row className
 		setRoleCalssName({row, rowIndex}) {
@@ -260,24 +279,16 @@ export default {
     filter(type) {
       if (type === "user") {
 				if(this.user){
-					let data = this.db.nodeTaskList.filter((item) => {
+					this.nodeTaskList = this.db.nodeTaskList.filter((item) => {
           return item.user === this.user;
-        });
-        this.updateTable({
-          tableName: "nodeTaskList",
-          list: data,
         });
 				} else {
 					this.__init__();
 				}
       } else if (type === "error") {
         if (this.error) {
-          let data = this.db.nodeTaskList.filter((item) => {
+          this.nodeTaskList = this.db.nodeTaskList.filter((item) => {
             return item.status !== "OK";
-          });
-          this.updateTable({
-            tableName: "nodeTaskList",
-            list: data,
           });
         } else {
           this.__init__();
@@ -314,5 +325,8 @@ export default {
 	&:hover{
 		color: #606266!important;
 	}
+}
+/deep/.tool-bar-right{
+   flex: 2;
 }
 </style>
