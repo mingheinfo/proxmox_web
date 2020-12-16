@@ -14,11 +14,11 @@ class Directive {
 			  vnode    = vNode,//虚拟dom树
 				oldValue = binding.oldValue;
 				vm.$nextTick(() => {
-					if(el.ariaDisabled) {
+					if(el.className.indexOf('disabled') >= 0) {
 						el.onclick = null;
 						return;
 					};
-					if (name === 'confirm' && value && !el.ariaDisabled) {
+					if (name === 'confirm' && value && el.className.indexOf('disabled') <= 0) {
 						 if(value.msg) {
 								el.onclick = () => {
 									//如果是对象的时候触发
