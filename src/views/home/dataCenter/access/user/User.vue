@@ -97,7 +97,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false"
+        @close="visible = false; __init__()"
       ></create-user-modal>
     </div>
   </page-template>

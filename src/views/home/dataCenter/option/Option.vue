@@ -166,10 +166,10 @@
           </div>
         </div>
       </div>
-			<OptionModal :visible="visible" 
+			<OptionModal :visible="visible"
 			             v-if="visible"
 									 :title="title"
-									 @close="visible = false" 
+									 @close="visible = false; __init__();"
 									 :type="type"></OptionModal>
     </div>
   </page-template>
@@ -269,7 +269,7 @@ export default {
 					break;
 				case 'mac_prefix':
 					this.title="编辑：MAC地址前缀"
-					break;	
+					break;
 			}
 			this.visible = true;
 		}

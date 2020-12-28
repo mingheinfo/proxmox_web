@@ -35,7 +35,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false; queryGroups()"
+        @close="visible = false; __init__()"
       ></create-ha-group-modal>
     </div>
   </page-template>

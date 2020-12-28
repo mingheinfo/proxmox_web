@@ -121,10 +121,10 @@
           </div>
         </div>
       </div>
-			<OptionModal :visible="visible" 
+			<OptionModal :visible="visible"
 			             v-if="visible"
 									 :title="title"
-									 @close="visible = false; queryFireOptionList()" 
+									 @close="visible = false; __init__()"
 									 :type="type"></OptionModal>
     </div>
   </page-template>

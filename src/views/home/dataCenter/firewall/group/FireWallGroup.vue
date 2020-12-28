@@ -167,7 +167,7 @@
         :modal-type="type"
         @close="
           visible = false;
-          queryFireWallGroupList(group);
+          __init__();
         "
       ></create-fire-wall-group-modal>
     </div>

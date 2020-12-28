@@ -27,7 +27,7 @@
 				 <el-table-column label="Link0" prop="ring0_addr"></el-table-column>
 				<el-table-column label="Link1" prop="ring1_addr"></el-table-column>
 			 </el-table>
-			 <cluster-modal v-if="visible" :visible="visible" :type="type" @close="visible = false"></cluster-modal>
+			 <cluster-modal v-if="visible" :visible="visible" :type="type" @close="visible = false; __init__()"></cluster-modal>
 		 </div>
 	 </page-template>
 </template>

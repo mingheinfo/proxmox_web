@@ -160,7 +160,7 @@
                   scope.row.cpu &&
                   scope.row.cpu &&
                   scope.row.maxcpu &&
-                  percentToFixed(scope.row.cpu, 3) + `% of ${scope.row.maxcpu}`
+                  percentToFixed(scope.row.cpu, 3) + ` of ${scope.row.maxcpu}`
                 }}
               </template>
             </el-table-column>

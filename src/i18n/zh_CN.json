@@ -142,5 +142,6 @@
   "snapshot": "快照",
   "resource": "资源",
   "disk": "磁盘",
-  "apt-update":"更新"
+  "apt-update":"更新",
+  "member": "成员"
 }

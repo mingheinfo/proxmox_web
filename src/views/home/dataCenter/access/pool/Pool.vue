@@ -38,7 +38,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false"
+        @close="visible = false; __init__()"
       ></create-access-pool-modal>
     </div>
   </page-template>

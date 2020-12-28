@@ -69,7 +69,7 @@
         v-if="visible"
         :modal-type="type"
         :isGroup="isGroup"
-        @close="visible = false; queryFireWallList()"
+        @close="visible = false; __init__()"
       ></create-firewall-Rule-modal>
     </div>
   </page-template>

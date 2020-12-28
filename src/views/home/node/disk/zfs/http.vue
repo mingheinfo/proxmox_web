@@ -37,7 +37,7 @@ export default {
     },
     querySda(param) {
       return this.$http
-        .get(`json/nodes/${this.node}/disks/zfs/${this.selectedList[0].sda}`, param)
+        .get(`json/nodes/${this.node}/disks/zfs/${param.name}`,{_dc:  param._dc})
         .then((res) => {
           if (res.data) {
             this.updateDbObject({
@@ -50,7 +50,7 @@ export default {
     createZfs(param) {
       let event = this.createEvent(`action.node.disk.directory.create`);
       return this.$http
-        .post(`json/nodes/${this.node}/disks/zfs"`, param, {
+        .post(`json/nodes/${this.node}/disks/zfs`, param, {
           headers: {
             "content-type": "application/x-www-form-urlencoded; charset=utf8",
           },

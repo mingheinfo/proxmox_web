@@ -806,7 +806,7 @@ import MSteps from "../step/MSteps";
 import MStep from "../step/MStep";
 import Button from "../button/Button";
 import CreateQemuHttp from "./Http";
-import { flotToFixed, byteToSize, getEvent, percentToFixed, IP6_match, IP4_match, IP6_cidr_match, IP4_cidr_match, isEmpty, parseSSHKey,quickSort } from "@libs/utils/";
+import { flotToFixed, byteToSize, getEvent, percentToFixed, IP6_match, IP4_match, IP6_cidr_match, IP4_cidr_match, isEmpty, parseSSHKey,quickSort, dateFormat  } from "@libs/utils/";
 import {
   VGALIST,
   BIOSLIST,
@@ -1008,7 +1008,8 @@ export default {
   methods: {
     flotToFixed, //格式化内存、磁盘数据
 		byteToSize, //格式化内存、磁盘数据
-		percentToFixed,
+    percentToFixed,
+    dateFormat,
     //确定添加
     confirm() {
 			//创建请求

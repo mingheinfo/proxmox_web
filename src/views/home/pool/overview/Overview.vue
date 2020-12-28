@@ -16,28 +16,25 @@
 </template>
 
 <script>
-import PoolsOverviewHttp from "@src/views/home/pool/overview/http";
+import PoolsHttp from "@src/views/home/pool/http";
 import SingleLine from "@src/components/chart/line/SingleLine";
 import OverviewCard from "@src/components/card/OverviewCard";
 import { render_uptime, byteToSize } from "@libs/utils";
 export default {
   name: "StorageOverview",
-  mixins: [PoolsOverviewHttp],
+  mixins: [PoolsHttp],
   components: {
     SingleLine,
     OverviewCard
   },
   data() {
     return {
-     pools: {}
     };
   },
   methods: {
     render_uptime,
     byteToSize,
     __init__() {
-      let last = window.localStorage.getItem("lastsel") || "[]";
-      this.pools = (JSON.parse(last) && JSON.parse(last)) || "";
       this.queryPoolList();
     },
   },

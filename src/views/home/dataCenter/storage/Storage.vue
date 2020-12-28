@@ -19,20 +19,20 @@
             >添加</m-button
           >
         </span>
-        <DropdownItem v-for="(item) in storageItems" 
+        <DropdownItem v-for="(item) in storageItems"
 				              :key="item.type"
 											:command="item.type"
 											:icon="item.iconCls">{{item.text}}</DropdownItem>
       </Dropdown>
-      <m-button type="danger" icon="el-icon-delete" :disabled="curStorage.length !== 1" 
+      <m-button type="danger" icon="el-icon-delete" :disabled="curStorage.length !== 1"
                 v-confirm="{
-                   msg: `确定要删除${curStorage && curStorage[0] && curStorage[0].storage}?`, 
+                   msg: `确定要删除${curStorage && curStorage[0] && curStorage[0].storage}?`,
                    ok: () => handleDelete()
                 }">删除</m-button>
       <m-button type="primary" icon="el-icon-edit" :disabled="curStorage.length !== 1" @on-click="handleEdit">编辑</m-button>
     </div>
     <div slot="page-content">
-      <el-table :data="db.storageList" @selection-change="handleSelection">
+      <el-table :data="storageList" @selection-change="handleSelection" @sort-change="handleSort">
 				<el-table-column type="selection" width="55px"></el-table-column>
         <el-table-column label="ID" prop="storage" sortable></el-table-column>
         <el-table-column label="类别" prop="type">
@@ -60,13 +60,13 @@
         </el-table-column>
         <el-table-column label="宽带限制"></el-table-column>
       </el-table>
-				<CreateStorageModal :visible="visible" 
+				<CreateStorageModal :visible="visible"
 														:type="type"
 													  :title="title"
 														:isCreate="isCreate"
                             v-if="visible"
 														:param= "editParam"
-				                    @close="visible = false"></CreateStorageModal>
+				                    @close="visible = false; __init__()"></CreateStorageModal>
     </div>
   </page-template>
 </template>
@@ -79,6 +79,7 @@ import { STORAGESCHEMA } from "@libs/enum/enum.js";
 import Dropdown from "@src/components/dropdown/dropdown";
 import MButton from "@src/components/button/Button";
 import CreateStorageModal from '@src/views/home/dataCenter/storage/CreateStorageModal';
+import { quickSort } from '@libs/utils/index';
 export default {
   name: "DataCenterStorage",
   mixins: [DataCenterStorageHttp],
@@ -97,7 +98,8 @@ export default {
 			title: '',
 			curStorage: [],
 			isCreate: true,
-			editParam: {}
+      editParam: {},
+      storageList: []
 		}
 	},
   mounted() {
@@ -105,7 +107,11 @@ export default {
   },
   methods: {
     __init__() {
-			this.queryStorageList().then(() => this.curStorage ='');
+			this.queryStorageList().then(() => {
+        this.curStorage =''
+        //排序
+        this.storageList = quickSort(this.db.storageList, 'storage', '+');
+      });
 			this.setStorageSchame();
     },
     setStorageSchame() {
@@ -139,7 +145,7 @@ export default {
 			this.type = item;
 			if(!type)
 			this.title = `添加： ` + this.format_storage_type(item);
-			else 
+			else
 			this.title = `编辑： ` + this.format_storage_type(item);
 			this.isCreate = type !== 'edit'
 			if(type ===  'edit') {
@@ -155,7 +161,15 @@ export default {
 		},
 		handleEdit() {
 			this.handleCommand(this.curStorage[0].type, 'edit');
-		}
+    },
+    /**
+     * 排序
+    */
+   handleSort({colume, prop, order}) {
+      let _this = this;
+      if(order !== null)
+      _this.storageList = quickSort(_this.db.storageList, prop, order === 'ascending' ? '+' : '-');
+   }
   },
 };
 </script>

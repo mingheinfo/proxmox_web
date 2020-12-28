@@ -96,7 +96,7 @@ export default {
       }
       //this.$forceUpdate();
     },
-    //选择树 
+    //选择树
     handleSelect(node) {
       let _this = this;
       //递归实现当前展开、选中哪个树
@@ -198,7 +198,7 @@ export default {
 .m-tree {
   width: 100%;
   padding: 0px 10px;
-  background: #fff;
+  background: #f7f7f7;
   overflow-y: auto;
   &-content {
     width: 100%;

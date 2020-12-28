@@ -46,7 +46,8 @@
           },
           legend: {
             show: true,
-            bottom: 0
+            bottom: 0,
+            textStyle: {}
           },
           grid: {
             top: 20,
@@ -54,7 +55,8 @@
           },
           xAxis: {
             type: 'category',
-            data: []
+            data: [],
+            axisLabel: {}
           },
           tooltip: {
             show: true,
@@ -148,6 +150,7 @@
         //省拷贝options
         let _options = deepCopy(this.options);
         this.loading = true;
+        debugger;
         if(!this.data || this.data.value.length < 0 || !this.data.time || !this.data.color) {
           this.nodata = true;
           this.loading = false
@@ -159,6 +162,11 @@
         _options.xAxis.data = this.data.time.map(item => {
           return dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm');
         });
+        if(this.data && this.data.axisLabelColor) {
+          _options.yAxis.axisLabel.color = this.data.axisLabelColor;
+          _options.xAxis.axisLabel.color = this.data.axisLabelColor;
+          _options.legend.textStyle.color = this.data.axisLabelColor;
+        }
         //格式化y轴数据
         _options.yAxis.axisLabel.formatter = (value) => {
           return this.data.func && this.data.func(value) || value;
@@ -255,11 +263,10 @@
     watch: {
       data: {
         handler: function (newVal, oldVal) {
-          if(newVal !== oldVal)
            this.setOption();
-         }
+         },
+        deep: true
       },
-      deep: true
     }
   }
 </script>
@@ -273,7 +280,7 @@
     height: 250px;
    }
    &-instance{
-     height: 100%; 
+     height: 100%;
    }
    &-nodata{
      display: flex;

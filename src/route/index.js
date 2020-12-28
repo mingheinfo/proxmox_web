@@ -207,12 +207,20 @@ const router = new VueRoute({
               meta: {
                 title: 'IPSet'
               }
+            },
+            {
+              path: 'ceph',
+              name: 'ceph',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ceph/Ceph.vue"),
+              meta: {
+                title: 'Ceph'
+              }
             }
           ]
         },
         {
           path: '/node',
-          name: 'node', 
+          name: 'node',
           component: () => import(/*webpackChunkName: 'node' */"@view/home/node/index.vue"),
           meta: {
             title: 'node'
@@ -235,7 +243,7 @@ const router = new VueRoute({
               }
             },
             {
-              path: 'shell',
+              path: 'console',
               name: 'shell',
               component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/shell/Shell.vue"),
               meta: {
@@ -250,7 +258,7 @@ const router = new VueRoute({
                 title: 'notes'
               }
             },
-            { 
+            {
               path: 'system',
               name: 'system',
               component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/System.vue"),
@@ -344,6 +352,54 @@ const router = new VueRoute({
               component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/Disk.vue"),
               meta: {
                 title: 'disk'
+              }
+            },
+            {
+              path: 'ceph',
+              name: 'ceph',
+              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ceph/Ceph.vue"),
+              meta: {
+                title: 'Ceph'
+              }
+            },
+            {
+                path: 'ceph/config',
+                name: 'node-ceph-config',
+                component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/config/Config.vue"),
+                meta: {
+                  title: 'config'
+                }
+             },
+            {
+              path: 'ceph/monitor',
+              name: 'node-ceph-monitor',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/monitor/monitor.vue"),
+              meta: {
+                title: 'monitor'
+              }
+            },
+            {
+              path: 'ceph/osd',
+              name: 'node-ceph-osd',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/osd/osd.vue"),
+              meta: {
+                title: 'OSD'
+              }
+            },
+            {
+              path: 'ceph/pools',
+              name: 'node-ceph-pools',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/pools/Pools.vue"),
+              meta: {
+                title: 'Pools'
+              }
+            },
+            {
+              path: 'ceph/log',
+              name: 'node-ceph-log',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/log/log.vue"),
+              meta: {
+                title: 'log'
               }
             },
             {
@@ -584,6 +640,22 @@ const router = new VueRoute({
                 title: 'overview'
               }
             },
+            {
+              path: 'member',
+              name: 'member',
+              component: () => import(/*webpackChunkName: 'overview' */"@view/home/pool/member/member.vue"),
+              meta: {
+                title: 'member'
+              }
+            },
+            {
+              path: 'access',
+              name: 'access',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/access/Access.vue"),
+              meta: {
+                title: 'access'
+              }
+            }
           ]
         }
       ]

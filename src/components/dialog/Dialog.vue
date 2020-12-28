@@ -1,8 +1,8 @@
 <template>
-  <div class="dialog" v-if="visible" ref="dialog" :key="key">
+  <div class="dialog" v-if="visible" ref="dialog" :key="key" :class="{'show': visible}">
     <div class="dialog-mask"></div>
     <div class="dialog-wrapper">
-      <div class="dialog-content" ref="pop-wrapper" :style="contentStyles">
+      <div class="dialog-content animate__backInLeft animate__backOutRight" ref="pop-wrapper" :style="contentStyles">
         <div
           class="dialog-header"
           ref="pop-header"
@@ -91,6 +91,7 @@ export default {
     //关闭弹出框回调
     close() {
       let _this = this;
+      _this.show = false;
       this.interval = setTimeout(() => {
        _this.$emit("close");
        _this.closed = true;

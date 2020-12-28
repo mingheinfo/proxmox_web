@@ -46,7 +46,7 @@
       <el-table
         :data="db.domainsList"
         ref="dataTable"
-        @selection-change="handleSelect" 
+        @selection-change="handleSelect"
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="领域" prop="realm"></el-table-column>
@@ -62,7 +62,7 @@
         v-if="visible"
         :modalType="modalType"
 				:_type="type"
-        @close="visible = false"
+        @close="visible = false; __init__()"
       ></create-access-domain-modal>
     </div>
   </page-template>

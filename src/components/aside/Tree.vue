@@ -119,6 +119,7 @@ export default {
     };
   },
   methods: {
+    //查询所有资源
     queryResource() {
        this.$http.get("/json/cluster/resources").then(async (res) => {
         if (res.data) {
@@ -131,6 +132,7 @@ export default {
          }
       });
     },
+    //过滤视图
     setViewFilter() {
       this.treeData = { dataIndex: {}, updateCount: 0 };
       this.updateTree();
@@ -157,6 +159,7 @@ export default {
         p = lastsel,
         index = this.treeData.dataIndex,//下标
         groups = this.viewTypeList[this.view].groups || [],//组
+        //初始化数据
         restore = Object.assign(
           [],
           this.$store.state.db.resources.map((item) => {
@@ -190,6 +193,7 @@ export default {
         key;
       this.rootnode.childNodes = [];
       window.localStorage.setItem("lastselview", this.view || "");
+      //遍历源数据比较节点判断是否有数据节点更改
       for (key in index) {
         if (index.hasOwnProperty(key)) {
           let olditem = index[key],
@@ -231,12 +235,12 @@ export default {
             // fixme: also test filterfn()?
           }
           if (changed) {
-            setIconCls(olditem.data, this.typeDefaults);
+              let info = olditem.data;
+              Object.assign(info, item.data);
+              setIconCls(info, this.typeDefaults);
           }
           if ((!item || moved) && olditem.data.leaf) {
-              
             delete index[key];
-            this.refresh();
             this.handleChangeExpand(this.defaultExpandKeys)
             var parentNode = olditem.parentNode;
             if (lastsel && lastsel.data && olditem.data.id === lastsel.data.id) {
@@ -252,6 +256,7 @@ export default {
       } else {
         isChange = false;
       }
+      //给节点数据分组并排序
       restore.forEach((item) => {
         var olditem = index[item.data.id];
         if (olditem) {
@@ -266,9 +271,6 @@ export default {
           index[item.data.id] = child;
         }
       });
-       if(isChange) {
-          this.refresh();
-       }
       let sel = JSON.parse(window.localStorage.getItem("lastsel"));
       if(sel && sel.id && sel.id === 'root')  Object.assign(this.rootnode, { selected: true })
       if (_this.view !== "type") {
@@ -277,7 +279,8 @@ export default {
         });
       }
       if(isChange) {
-        this.handleChangeExpand(this.defaultExpandKeys)
+        this.handleChangeExpand(this.defaultExpandKeys);
+        this.refresh()
         isChange = false;
       }
       if (lastsel && !this.findChild(this.rootnode, "id", lastsel.id)) {
@@ -307,7 +310,6 @@ export default {
         //rootnode.
       }
       this.treeData.updateCount++;
-      //this.commitUpdateChangeTree(false);
     },
     refresh() {
       let rootnode = {
@@ -432,6 +434,7 @@ export default {
           return group;
         }
         if (group) {
+          //setIconCls(group.data, this.typeDefaults);
           return _this.groupChild(group, info, groups, level + 1);
         }
       }
@@ -568,7 +571,7 @@ export default {
     // "$store.state.db.changeTree":  function(newVal,oldVal) {
     //     if(newVal) {
     //       this.queryResource();
-    //     }                                                    
+    //     }
     // }
   }
 };
@@ -581,7 +584,7 @@ export default {
   padding-top: 60px;
   min-height: 100%;
   cursor: pointer;
-  background: #fff;
+  background: #f7f7f7;
   border-right: 1px solid #f5f5f5;
   &-select {
     margin: 5px 10px;

@@ -1,5 +1,5 @@
 <template>
-  <Dialog
+  <m-dialog
     :visible="visible"
     @cancel="close"
     @confirm="confirm"
@@ -165,7 +165,7 @@
       >
 			<div v-else></div>
     </template>
-  </Dialog>
+  </m-dialog>
 </template>
 
 <script>
@@ -199,7 +199,9 @@ export default {
 		},
 		param: {
 			type: Object,
-			default: ''
+			default: () => {
+        return {}
+      }
 		}
   },
   data() {
@@ -259,7 +261,7 @@ export default {
       if (_this.modalType === "create")
         this.queryListNodeDiskList({ type: "unused" });
       else if (_this.modalType === "detail")
-				_this.querySda({ _dc: new Date().getTime() })
+				_this.querySda({ _dc: new Date().getTime(), name: this.param.name })
 				     .then(() => {
 							 _this.expands = _this.db.nodeDiskSdaObj && _this.db.nodeDiskSdaObj.name && [_this.db.nodeDiskSdaObj.name]
 						 });
@@ -274,7 +276,7 @@ export default {
     },
     //选择设备
     handleSelect(row) {
-      this.device = row;
+      this.selectedList = row.map(item =>  item.devpath);
     },
     //关闭弹框
     close() {
@@ -322,8 +324,9 @@ export default {
         })
         .catch((res) => {
           this.$confirm
-            .info({
+            .error({
               msg: res,
+              icon: 'icon-error'
             })
             .then(() => this.close());
         });

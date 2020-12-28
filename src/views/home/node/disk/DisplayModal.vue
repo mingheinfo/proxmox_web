@@ -4,10 +4,10 @@
     @cancel="close"
     @confirm="confirm"
     :title="title"
-    :_style="{ width: '956px' }"
+    :_style="{ width: '956px', maxHeight: '400px' }"
     @close="$emit('close')"
   >
-    <div slot="content" style="max-height: 500px">
+    <div slot="content" style="max-height: 500px" v-if="param.health!== 'OK'">
        <el-table v-loading="loading"
                  :element-loading-text="loadingText">
 				 <el-table-column label="ID"></el-table-column>
@@ -19,7 +19,12 @@
 				 <el-table-column label="标记"></el-table-column>
 				 <el-table-column label="失败"></el-table-column>
 			 </el-table>
-    </div> 
+    </div>
+    <div slot="content" style="max-height: 500px" v-if="param.health === 'OK'">
+       <ace-editor v-model="smartContent"
+                   style="height: 260px"
+                   :read-only="true"></ace-editor>
+    </div>
     <template slot="footer">
       <m-button class="create-btn" type="danger" @on-click="close"
         >取消</m-button
@@ -35,10 +40,12 @@
 import Dialog from "@src/components/dialog/Dialog";
 import NodeDiskHttp from "@src/views/home/node/disk/http";
 import { flotToFixed, percentToFixed, byteToSize } from "@libs/utils/index";
+import AceEditor from "@src/components/ace/AceEditor";
 export default {
   name: "DisplayModal",
   mixins: [NodeDiskHttp],
   components: {
+    AceEditor,
     Dialog,
   },
   props: {
@@ -72,7 +79,8 @@ export default {
   data() {
     return {
 			loading: false,
-			loadingText: ''
+			loadingText: '',
+      smartContent: ''
 		}
   },
   mounted() {
@@ -83,6 +91,9 @@ export default {
     async __init__() {
 			let _this = this;
 			_this.querySMartList({disk: this.param.devpath})
+        .then(res => {
+          _this.smartContent = _this.db.nodeSmartList.text;
+        })
 			.catch(res => {
          _this.loadingText = res;
 			});

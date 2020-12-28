@@ -94,8 +94,13 @@ export default {
       let _this = this;
       _this.queryAccessList()
           .then(() => {
-            debugger;
-            _this.accessList = _this.db.accessList.filter(item => item.path.indexOf(_this.vmid) >= 0)
+            let last = window.localStorage.getItem("lastsel") || "[]",
+                _last = JSON.parse(last);
+            if(_last.type === 'pool') {
+              _this.accessList = _this.db.accessList.filter(item => item.path.indexOf(_last.pool) >= 0);
+            } else {
+              _this.accessList = _this.db.accessList.filter(item => item.path.indexOf(_this.vmid) >= 0);
+            }
           });
     },
     //是否展示弹框

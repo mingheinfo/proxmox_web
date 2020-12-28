@@ -213,7 +213,7 @@ export default {
           username: this.$refs.rbd.$data.username,
           nodes: this.$refs.rbd.$data.nodes.join(","),
           content: this.$refs.rbd.$data.content.join(","),
-          krbd: this.$refs.rbd.$data.krbd ? 0 : 1,
+          krbd: this.$refs.rbd.$data.krbd ? 1 : 0,
           type: "rbd",
           disable: this.$refs.rbd.$data.disable ? 0 : 1,
         };

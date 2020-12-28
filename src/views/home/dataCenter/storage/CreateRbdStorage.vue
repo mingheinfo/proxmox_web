@@ -17,19 +17,21 @@
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
-					<m-input
-            type="text"
-            prop="pool"
-            label="资源池"
-            labelWidth="100px"
-            validateEvent
-            @validate="validate"
-            :show-error="rules.pool.error"
-            :error-msg="rules.pool.message"
-            v-model="pool"
-						:disabled="!isCreate"
-            placeholder="请输入pool"
-          />
+						<m-select
+					          labelWidth="100px"
+										prop="pool"
+										@on-change="(value) => pool = value"
+									  validateEvent
+										@validate="validate"
+										:show-error="rules.pool.error"
+										:error-msg="rules.pool.message"
+										v-model="pool"
+					          label="内容">
+						<m-option v-for="item in cephPoolsList" 
+						          :key="item.pool_name"
+                      :label="item.pool_name"
+                      :value="item.pool_name"></m-option>
+					</m-select>
           <m-input
             type="text"
             prop="monhost"
@@ -37,6 +39,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						:disabled="pveceph"
             :show-error="rules.monhost.error"
             :error-msg="rules.monhost.message"
             v-model="monhost"
@@ -50,9 +53,9 @@
             type="text"
             prop="username"
             label="用户名"
-						:disabled="!isCreate"
             labelWidth="100px"
             v-model="username"
+						:disabled="!isCreate || pveceph"
             placeholder="请输入用户名"
           />
 				  	<m-select type="multiple"
@@ -91,8 +94,17 @@
 						<m-checkbox  
 					    label=""
 							v-model="pveceph"
-							:disabled="db.cephMonList.length<=0"
-              labelWidth="100px">使用Proxmox VE管理的超融合cephFS</m-checkbox>
+							:disabled="!pvecephPossible"
+							@change="(value) => {
+								if(value) {
+								   monhost = quickSort(this.db.cephMonList.map(item => item.name), 'name').join(',');
+									 username = 'admin';
+								} else {
+									monhost = '';
+									username = '';
+								}
+							}"
+              labelWidth="100px">使用Proxmox VE管理的超融合ceph池</m-checkbox>
         </dd>
       </dl>
 			<dl>
@@ -112,7 +124,7 @@
 						</el-table-column>
 						<el-table-column label="CPU使用率">
 							<template slot-scope="scope">
-								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + `% of ${scope.row.maxcpu}`}}
+								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + ` of ${scope.row.maxcpu}`}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -123,7 +135,7 @@
 </template>
 <script>
 import DataCenterStorageHttp from "@src/views/home/dataCenter/storage/http";
-import { flotToFixed, percentToFixed} from '@libs/utils/index';
+import { flotToFixed, percentToFixed, quickSort} from '@libs/utils/index';
 export default {
 	name: 'CreateDirStorage',
 	mixins: [DataCenterStorageHttp],
@@ -142,13 +154,15 @@ export default {
       monhost: '',
       content: ['images'],
 			nodes: [],
-			username: '',
+			username: 'admin',
 			pool: '',
       shared: true,
       type: 'dir',
 			disable: false,
 			maxfiles: 1,
-			pveceph: false,
+			pveceph: true,
+			pvecephPossible: true,
+			cephPoolsList: [],
 			krbd: false,
 			options: [
 			  {
@@ -219,32 +233,41 @@ export default {
         });
       });
       if (this.isCreate) {
-        this.storage = '';
-        this.monhost= '';
-        this.content = ['images'];
-		  	this.nodes= [];
-			  this.username= '';
-			  this.pool= '';
-        this.shared = true;
-        this.type = 'dir';
-			  this.disable = false;
-			  this.maxfiles = 1;
-			  this.pveceph = false;
-			  this.krbd = false;
+      
       } else {
         Object.keys(this.param).forEach((key) => {
           if (["disable", 'shared', 'pveceph', 'krbd'].includes(key)) {
-            this[key] = this.param[key] === 0 ? true : false;
+            this[key] = this.param[key] === 1 ? true : false;
           } else if (key === "nodes" || key === "content") {
             this[key] = this.param[key].split(",");
           } else {
             this[key] = this.param[key];
           }
 				});
-					this.disable = this.param.disable ? false : true
+				this.disable = this.param.disable ? false : true;
+				this.queryCephPools()
+				    .then(res => {
+							this.cephPoolsList = quickSort(this.db.cephPoolsList, 'pool_name');
+						});
 			};
-			if(this.isCreate)
-			this.queryCephMon();
+			if(this.isCreate) {
+				this.queryCephMon().then(res => {
+							this.monhost = quickSort(this.db.cephMonList.map(item => item.name), 'name').join(',');
+							if (this.isCreate) {
+								this.pvecephPossible = true;
+							} else {
+								this.pveceph = false;
+							}
+			  }).catch(res => {
+					this.pvecephPossible = false;
+					this.pveceph = false;
+				});
+				this.queryCephPools()
+				    .then(res => {
+							this.cephPoolsList = quickSort(this.db.cephPoolsList, 'pool_name');
+							this.pool = this.cephPoolsList[0].pool_name;
+						});
+			}
 		},
 		//单个校验
 		validate(prop) {
@@ -278,7 +301,7 @@ export default {
 		},
 		//整体校验
 		validateAll() {
-			let props = ['storage', 'monhost',  'content',  'maxfiles', 'pool'];
+			let props = ['storage',  'content',  'maxfiles', 'pool'];
 			props.forEach(prop => this.validate(prop));
 			return props.some(prop => this.rules[prop].error === true);
 		}

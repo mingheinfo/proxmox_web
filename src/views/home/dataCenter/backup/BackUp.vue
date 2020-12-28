@@ -2,13 +2,13 @@
 	 <page-template>
 		 <div slot="toolbar-left">
         <m-button type="primary" icon="el-icon-plus" @on-click="showModal('create')">添加</m-button>
-				<m-button type="danger" icon="el-icon-delete" 
+				<m-button type="danger" icon="el-icon-delete"
 				           v-confirm="{
                      msg: `确定要删除已选项吗?`,
 										 ok: () => deleteBackUp()
 				           }" :disabled="selectedList.length <= 0">删除</m-button>
 				<m-button type="primary" icon="el-icon-edit" @on-click="showModal('edit')" :disabled="selectedList.length !== 1">编辑</m-button>
-					<m-button type="info" icon="el-icon-video-play" 
+					<m-button type="info" icon="el-icon-video-play"
 					          v-confirm="{
                      msg: `你确定你要启动已选择的备份作业吗?`,
 										 ok: () => runNow()
@@ -40,8 +40,8 @@
 					</template>
 				</el-table-column>
 			 </el-table>
-			 <CreateBackUpModal :visible="visible" 
-			                    @close="visible = false"
+			 <CreateBackUpModal :visible="visible"
+			                    @close="visible = false; __init__()"
 													:param="editParam"
 													v-if="visible"
 													:type="type"

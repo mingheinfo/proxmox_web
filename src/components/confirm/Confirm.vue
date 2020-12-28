@@ -3,7 +3,7 @@
     <div class="popup-mask" v-if="hasMark"></div>
     <transition name="bottom">
       <div class="popup-note bottom">
-        <div class="pop-content" ref="pop-wrapper" :style="contentStyles">
+        <div class="pop-content animate__backInLeft" ref="pop-wrapper" :style="contentStyles">
           <div class="pop-tit" ref="pop-header" @mousedown="handleMoveStart">
             {{title}}
             <span class="pop-close" @click.prevent="noClick">&times;</span>
@@ -109,10 +109,8 @@
       noClick() {
         this.show = false;
         this.promiseStatus && this.promiseStatus.reject();
-        setTimeout(() => {
-          document.body.removeChild(this.$el);
-          document.body.classList.toggle('hidden');
-        },500)
+        document.body.removeChild(this.$el);
+        document.body.classList.toggle('hidden');
       },
        //点击确定触发的回调
       yesClick() {
@@ -123,10 +121,8 @@
       },
       //点击关闭触发的回调
       close() {
-        setTimeout(() => {
-          document.body.removeChild(this.$el);
-          document.body.classList.toggle('hidden');
-        },500)
+        document.body.removeChild(this.$el);
+        document.body.classList.toggle('hidden');
       },
       //点击alert框触发的回调
       alertClick() {

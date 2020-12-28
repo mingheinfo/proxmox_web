@@ -64,7 +64,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false"
+        @close="visible = false; __init__()"
       ></create-access-role-modal>
     </div>
   </page-template>

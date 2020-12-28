@@ -59,7 +59,7 @@
       </span>
       <div class="error-message" v-show="showError">{{ errorMsg }}</div>
     </span>
-    <div class="m-select-menu" v-show="renderDropMenu" ref="select-menu">
+    <div class="m-select-menu animate__fadeInDown" v-show="renderDropMenu" ref="select-menu">
       <div x-arrow="" class="popper__arrow"></div>
       <div
         style="overflow-y: auto; max-height: 200px"

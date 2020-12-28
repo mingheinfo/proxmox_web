@@ -28,9 +28,9 @@ export default {
 				return this.$http.get(`json/nodes/${this.node}/disks/smart`, param)
 			           .then(res => {
 									 if(res.data) {
-										 this.updateTable({
-											 tableName: 'nodeSmartList',
-											 list: res.data
+										 this.updateDbObject({
+											 name: 'nodeSmartList',
+											 data: res.data
 										 })
 										 this.loading = false;
 									 }

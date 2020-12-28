@@ -96,8 +96,8 @@
         </el-table-column>
       </el-table>
         <el-pagination class="page-table-pagination"
-          @size-change="(val) => {pageSize = val; __init__()}"
-          @current-change="(val) => {currentPage = val; __init__()}"
+          @size-change="(val) => {pageSize = val; chunks()}"
+          @current-change="(val) => {currentPage = val; chunks()}"
           :current-page="currentPage"
           :page-sizes="[10, 20, 30, 40, 50]"
           :page-size="pageSize"
@@ -208,7 +208,7 @@ export default {
       this.queryTask()
           .then(res => {
             this.nodeTaskList  = quickSort(this.db.nodeTaskList, 'starttime');
-            this.chunkDataList = chunkData(this.nodeTaskList, this.pageSize)[this.currentPage - 1];
+            this.chunks();
           });
     },
     //是否展示弹框
@@ -277,6 +277,7 @@ export default {
 			}
 		},
     filter(type) {
+      this.currentPage = 1;
       if (type === "user") {
 				if(this.user){
 					this.nodeTaskList = this.db.nodeTaskList.filter((item) => {
@@ -294,7 +295,11 @@ export default {
           this.__init__();
         }
       }
+      this.chunks();
     },
+    chunks() {
+      this.chunkDataList = chunkData(this.nodeTaskList, this.pageSize)[this.currentPage - 1];
+    }
   },
 };
 </script>

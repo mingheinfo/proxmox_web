@@ -115,7 +115,7 @@
 						</el-table-column>
 						<el-table-column label="CPU使用率">
 							<template slot-scope="scope">
-								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + `% of ${scope.row.maxcpu}`}}
+								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + ` of ${scope.row.maxcpu}`}}
 							</template>
 						</el-table-column>
 					</el-table>

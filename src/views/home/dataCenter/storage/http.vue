@@ -142,7 +142,7 @@ export default {
     queryIscsi(nodename, server) {
       if (!nodename) nodename = "localhost";
       return this.$http
-        .get("/json/nodes/" + nodename + "/scan/iscsi", { server: server })
+        .get("/json/nodes/" + nodename + "/scan/iscsi", { 'portal': server })
         .then((res) => {
           if (res.data) {
             this.updateTable({
@@ -162,7 +162,23 @@ export default {
               list: res.data,
             });
           }
+        }).catch(res => {
+          return Promise.reject(res);
         });
+    },
+    queryCephPools() {
+      return this.$http
+                 .get(`json/nodes/localhost/ceph/pools`)
+                 .then((res) => {
+                  if (res.data) {
+                    this.updateTable({
+                      tableName: "cephPoolsList",
+                      list: res.data,
+                    });
+                  }
+                }).catch(res => {
+                  return Promise.reject(res);
+                });
     },
     queryZfs(nodename, server) {
       if (!nodename) nodename = "localhost";

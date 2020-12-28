@@ -6,8 +6,10 @@
     overflow: hidden;
     z-index: 9999;
     //display: none;
-    .pop-content{
-      animation: pop-animation-leave .5s linear;
+    .animate__backOutRight {
+      -webkit-animation-name: backOutRight;
+      animation-name: backOutRight;
+      animation-duration: .5s;
     }
   }
   &-tit{
@@ -42,8 +44,10 @@
 
 .show{
   display: block;
-  .pop-content{
-    animation: pop-animation .5s linear;
+  .animate__backInLeft {
+    -webkit-animation-name: backInLeft;
+    animation-name: backInLeft;
+    animation-duration: .5s;
   }
 }
 
@@ -149,24 +153,6 @@
   transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@keyframes pop-animation {
-  0% {
-    transform: skewX(40deg) translate(-200%, -50%);
-    transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  100% {
-    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-    transform: translate(-50%, -50%);
-  }
-}
-
-@keyframes pop-animation-leave {
-  100% {
-    left: 0;
-    transform: translate(-100%,-50%);
-  }
-  0% {
-    transform: skewX(-40deg) translate(-200%, -50%);
-    transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+.el-loading-mask{
+  z-index: 1;
 }

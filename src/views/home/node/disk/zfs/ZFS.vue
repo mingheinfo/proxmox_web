@@ -112,9 +112,10 @@ export default {
 		},
     //是否展示弹框
     showModal(type) {
-			this.title = "创建：Lvm Directory";
+			this.title = type === 'create' ? "创建：Lvm Directory" : "详情";
 			this.type = type;
-			this.visible = true;
+      this.visible = true;
+      this.param = type === 'detail' ? this.selectedList[0] : {}
     }
   },
 };

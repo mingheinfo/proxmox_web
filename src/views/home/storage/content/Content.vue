@@ -51,7 +51,7 @@
 				</el-table-column>
         <el-table-column label="日期" prop="ctime">
 						<template slot-scope="scope">
-						{{dateFormat(new Date(scope.row.ctime * 1000), 'yyyy-MM-dd hh:mm')}}
+						{{scope.row.ctime ? dateFormat(new Date(scope.row.ctime * 1000), 'yyyy-MM-dd hh:mm') : ''}}
 					</template>
 				</el-table-column>
         <el-table-column label="格式" prop="format"></el-table-column>
@@ -85,9 +85,9 @@
           __init__()
         "
       ></template-modal>
-      <config-modal :visible="showConfig" 
+      <config-modal :visible="showConfig"
                     v-if="showConfig"
-                    :param="configParam" 
+                    :param="configParam"
                     @close="showConfig = false; __init__()"></config-modal>
       <reset-modal :visible="showReset"
                    v-if="showReset"
@@ -102,7 +102,7 @@ import StorageContentHttp from "@src/views/home/storage/content/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import { percentToFixed, byteToSize,render_storage_content, dateFormat, format_content_types, quickSort } from '@libs/utils/index';
-import UploadImageModal from './UploadImageModal'; 
+import UploadImageModal from './UploadImageModal';
 import TemplateModal from './TemplateModal';
 import ConfigModal from './ConfigModal';
 import ResetModal from './ResetModal';
@@ -157,19 +157,23 @@ export default {
             this.templ = false;
 	          this.upload = false;
 	          var cts = [];
-            this.db.storageStatusObj.content.split(',').forEach(content => {
-              debugger;
-              if (content === 'vztmpl') {
-                     this.templ = true;
-                    cts.push('vztmpl');
+	          /**
+             * 如果content存在将content用，分割根据content内容设置镜像类型
+             * */
+	          if(this.db.storageStatusObj.content) {
+              this.db.storageStatusObj.content.split(',').forEach(content => {
+                if (content === 'vztmpl') {
+                  this.templ = true;
+                  cts.push('vztmpl');
                 } else if (content === 'iso') {
-                    this.upload = true;
-                    cts.push('iso');
+                  this.upload = true;
+                  cts.push('iso');
                 }
-               if (this.templ !== this.upload) {
-		              this.contents = cts;
-	              }
-            })
+                if (this.templ !== this.upload) {
+                  this.contents = cts;
+                }
+              })
+            }
           });
     },
     //是否展示弹框

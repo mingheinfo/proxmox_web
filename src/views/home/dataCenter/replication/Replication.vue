@@ -3,7 +3,7 @@
 		 <div slot="toolbar-left">
         <m-button type="primary" @on-click="showModal('create')" icon="el-icon-plus">添加</m-button>
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
-				<m-button type="danger" 
+				<m-button type="danger"
 				          v-confirm="{
 											msg: `你确定你要删除已选择项吗?`,
 											ok: () => handleDelete('keep')
@@ -23,7 +23,7 @@
 				<el-table-column label="已启用" prop="disable">
 					<template slot-scope="scope">
 						<table-info-state :content="scope.row.disable && scope.row.disable === 1 ? '否' : '是' "
-						                  :state="scope.row.disable && scope.row.disable === 1 ? 'unActived' : 'actived' "></table-info-state>
+						                  :state="scope.row.disable && scope.row.disable === 1 ? 'dead' : 'actived' "></table-info-state>
 					</template>
 				</el-table-column>
 				<el-table-column label="安排" prop="schedule">
@@ -37,7 +37,7 @@
 			                           :isCreate="isCreate"
 																 :param="param"
 																 v-if="visible"
-			                           :visible="visible" :modal-type="type" @close="visible = false"></create-replication-modal>
+			                           :visible="visible" :modal-type="type" @close="visible = false; __init__()"></create-replication-modal>
 		 </div>
 	 </page-template>
 </template>

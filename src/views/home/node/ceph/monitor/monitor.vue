@@ -1,0 +1,201 @@
+<template>
+  <div class="ceph-monitor">
+    <div class="ceph-monitor-monitor">
+      <overview-card>
+        <div slot="title">配置</div>
+        <div slot="content" class="card-content">
+          <page-template>
+            <div slot="toolbar-left">
+              <m-button icon="fa fa-play" type="primary"  :disabled="selectedList.length !== 1 || !inState('stopped')" @on-click="handleOperate('start')">启动</m-button>
+              <m-button icon="fa fa-stop" type="danger" :disabled="selectedList.length !== 1" @on-click="handleOperate('stop')">停止</m-button>
+              <m-button icon="fa fa-refresh" type="primary" :disabled="selectedList.length !== 1" @on-click="handleOperate('restart')">重启</m-button>
+              <m-button icon="el-icon-plus" type="primary"  @on-click="showModal('mon')">创建</m-button>
+              <m-button icon="el-icon-delete" type="danger" :disabled="selectedList.length !== 1"  @on-click="handleOperate('restart')">销毁</m-button>
+              <m-button icon="el-icon-document" type="info" :disabled="selectedList.length !== 1" @on-click="showLog('mon')">系统日志</m-button>
+              <m-button icon="el-icon-refresh" type="info" @on-click="__init__()">刷新</m-button>
+            </div>
+            <div slot="page-content">
+              <el-table :data="mon" @selection-change="handleSelect">
+                <el-table-column type="selection" width="55px;"></el-table-column>
+                <el-table-column  label="名称">
+                  <template slot-scope="scope">
+                    mon.{{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column  label="主机"  prop="host"></el-table-column>
+                <el-table-column  label="地址"  prop="addr"></el-table-column>
+                <el-table-column  label="状态"  prop="state">
+                  <template slot-scope="scope">
+                    <table-info-state :state="scope.row.state"
+                                      :content="scope.row.state"></table-info-state>
+                  </template>
+                </el-table-column>
+                <el-table-column  label="版本"  prop="ceph_version_short"></el-table-column>
+                <el-table-column  label="法定"  prop="quorum">
+                  <template slot-scope="scope">
+                    <table-info-state :state="scope.row.quorum == 1 ? 'actived' : 'unActived'"
+                                      :content="scope.row.quorum == 1 ? '是' : '否'"></table-info-state>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </page-template>
+        </div>
+      </overview-card>
+    </div>
+    <div class="ceph-monitor-manager">
+      <overview-card>
+        <div slot="title">配置</div>
+        <div slot="content" class="card-content">
+          <page-template>
+            <div slot="toolbar-left">
+              <m-button icon="fa fa-play" type="primary" :disabled="mgrSelectedList.length !== 1 || !inState('stopped')" @on-click="handleOperate('start')">启动</m-button>
+              <m-button icon="fa fa-stop" type="danger" :disabled="mgrSelectedList.length !== 1" @on-click="handleOperate('stop')">停止</m-button>
+              <m-button icon="fa fa-refresh" type="primary" :disabled="mgrSelectedList.length !== 1" @on-click="handleOperate('restart')">重启</m-button>
+              <m-button icon="el-icon-plus" type="primary"  @on-click="showModal('mgr')">创建</m-button>
+              <m-button icon="el-icon-delete" type="danger" :disabled="mgrSelectedList.length !== 1" @on-click="handleOperate('restart')">销毁</m-button>
+              <m-button icon="el-icon-document" type="info" :disabled="mgrSelectedList.length !== 1" @on-click="showLog('mgr')">系统日志</m-button>
+              <m-button icon="el-icon-refresh" type="info" @on-click="__init__()">刷新</m-button>
+            </div>
+            <div slot="page-content">
+              <el-table :data="mgr" @selection-change="handleMgrSelect">
+                <el-table-column type="selection" width="55px;"></el-table-column>
+                <el-table-column  label="名称">
+                  <template slot-scope="scope">
+                    mgr.{{scope.row.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column  label="主机"  prop="host"></el-table-column>
+                <el-table-column  label="地址"  prop="addr"></el-table-column>
+                <el-table-column  label="状态"  prop="state"></el-table-column>
+                <el-table-column  label="版本"  prop="ceph_version_short"></el-table-column>
+              </el-table>
+            </div>
+          </page-template>
+        </div>
+      </overview-card>
+    </div>
+    <add-monitor-modal :visible="visible"
+                       v-if="visible"
+                       :title="title"
+                       :modal-type="modalType"
+                       @close="visible = false; __init__()"></add-monitor-modal>
+    <show-log :visible="visibleLog"
+              v-if="visibleLog"
+              :modalType="modalType"
+              :title="title"
+              @close="visibleLog = false; __init__()"
+              :param="param"></show-log>
+  </div>
+</template>
+
+<script>
+  import PageTemplate from "@src/components/page/PageTemplate";
+  import OverviewCard from '@src/components/card/OverviewCard';
+  import CephHttp from '@src/views/home/node/ceph/http';
+  import AddMonitorModal from "./AddMonitorModal";
+  import showLog from './showLog'
+  export default {
+    name: "monitor",
+    mixins: [CephHttp],
+    components: {
+      AddMonitorModal,
+      PageTemplate,
+      OverviewCard,
+      showLog
+    },
+    data() {
+      return {
+        mon: [],
+        mgr: [],
+        modalType: '',
+        visible: false,
+        selectedList: [],
+        visibleLog: false,
+        param: {},
+        mgrSelectedList: []
+      }
+    },
+    mounted() {
+      this.__init__();
+    },
+    methods: {
+      __init__() {
+        this.queryMonitor('mon')
+          .then(res => {
+            this.mon = res;
+          });
+        this.queryMonitor('mgr')
+          .then(res => {
+            this.mgr = res;
+          });
+      },
+      showModal(type) {
+        this.modalType = type;
+        this.title = type === 'mon' ? '创建：监视器' : '创建：管理员';
+        this.visible = true;
+      },
+      //查看系统日志
+      showLog(type) {
+        this.param = type === 'mon' ? this.selectedList[0] : this.mgrSelectedList[0]
+        this.modalType = type;
+        this.title = type === 'mon' ? '查看：Cepn 监视器系统日志' : '查看：Ceph 管理员系统日志'
+        this.visibleLog = true;
+      },
+      //选择mon
+      handleSelect(row) {
+        this.selectedList = row;
+        this.modalType = 'mon';
+      },
+      //删除、重启、停止等操作
+       handleOperate(operate) {
+        this.$confirm.confirm({
+          msg: '确认要进行以下操作吗?',
+          icon: 'icon-warning'
+        }).then(res => {
+          let selectedList = this.modalType === 'mon' ? this.selectedList[0] : this.mgrSelectedList[0];
+          this.operateCeph(selectedList.host, operate, selectedList.name);
+        })
+      },
+      //选择mgr
+      handleMgrSelect(row) {
+        this.mgrSelectedList = row;
+        this.modalType = 'mgr';
+      },
+      //判断是否在某个状态下
+      inState() {
+        let states = [], _this = this;
+        for(let i = 0; i<arguments.length; i++) {
+          states.push(arguments[i]);
+        }
+        return states.some(state => {
+          if(_this.modalType === 'mon') {
+            return state === _this.selectedList[0].state;
+          }
+          if(_this.modalType === 'mgr') {
+            return state === _this.mgrSelectedList[0].state;
+          }
+        })
+      }
+    }
+  }
+</script>
+
+<style scoped lang="less">
+ .ceph-monitor{
+   width: 100%;
+   &-monitor{
+     height: 50%;
+     margin-bottom: 20px;
+   }
+   &-manager{
+     height: 50%;
+   }
+ }
+  .card{
+    width: 100%;
+  }
+ /deep/.tool-bar-left{
+   flex-grow: 3!important;
+ }
+</style>

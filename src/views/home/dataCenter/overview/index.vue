@@ -170,7 +170,6 @@ import LineItem from "./LineItem";
 import Circle from "@src/components/chart/circle/index.vue";
 import LineCharts from "@src/components/chart/line/LineCharts";
 import { dateFormat, byteToSize, render_uptime } from "@libs/utils";
-import PageTemplate from "@src/components/page/PageTemplate";
 
 export default {
   name: "index",
@@ -178,8 +177,7 @@ export default {
     OverviewCard,
     LineItem,
     "mh-circle": Circle,
-    "line-charts": LineCharts,
-    PageTemplate
+    "line-charts": LineCharts
   },
   data() {
     return {

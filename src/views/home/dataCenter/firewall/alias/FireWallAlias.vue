@@ -36,7 +36,7 @@
         :visible="visible"
         v-if="visible"
         :modal-type="type"
-        @close="visible = false; queryAliasList()"
+        @close="visible = false; __init__()"
       ></create-wall-alias-modal>
     </div>
   </page-template>

@@ -11,12 +11,18 @@ import confirm from '@src/components/confirm/';
 import VueMixins from '@src/mixins/VuexMixins';
 import VueLazyload from 'vue-lazyload';
 import directives from '@src/directives/directive';
+import Fragment from 'vue-fragment'
+Vue.use(Fragment.Plugin)
+// or
+
+import { Plugin } from 'vue-fragment'
+Vue.use(Plugin)
 Vue.directive('confirm', directives);
 // 配置
 Vue.use(VueLazyload, {
 	preLoad: 1.3,
 	attempt: 1,
-	error: require('./assets/error.svg'), 
+	error: require('./assets/error.svg'),
 	loading: require('./assets/loading.svg') // 注意路径使用require（我这里使用相对路径）
 })
 //确定提示框

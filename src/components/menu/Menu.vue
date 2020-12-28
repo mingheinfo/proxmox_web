@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar class="menu">
-    <el-menu @select="handleSelect" :default-active="$route.path">
+    <el-menu @select="handleSelect" :default-active="$route.path" unique-opened>
       <template v-for="menu of data">
         <el-menu-item v-if="!menu.children || menu.children.length <= 0"
                       :title="menu.title"

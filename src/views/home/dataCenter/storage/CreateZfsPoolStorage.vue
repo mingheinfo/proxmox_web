@@ -108,7 +108,7 @@
                   scope.row.cpu &&
                   scope.row.cpu &&
                   scope.row.maxcpu &&
-                  percentToFixed(scope.row.cpu, 3) + `% of ${scope.row.maxcpu}`
+                  percentToFixed(scope.row.cpu, 3) + ` of ${scope.row.maxcpu}`
                 }}
               </template>
             </el-table-column>
@@ -243,7 +243,7 @@ export default {
         this.rules[prop].message = "路径是以/开头的绝对路径";
         return;
 			}
-			if(prop === 'blocksize' && !/^[\d][k|m|t|p]/.test(value)) {
+			if(prop === 'blocksize' && !/^[\d][k|m|t|p|g]$/.test(value)) {
 				 this.rules[prop].error = true;
         this.rules[prop].message = "块大小格式不对";
         return;

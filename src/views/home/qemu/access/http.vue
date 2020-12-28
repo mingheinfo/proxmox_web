@@ -10,7 +10,6 @@ export default {
   },
   mounted() {
     let _this = this;
-    debugger;
     let last = window.localStorage.getItem("lastsel") || "[]";
     _this.node = (JSON.parse(last).node && JSON.parse(last).node) || "";
     _this.vmid = (JSON.parse(last).vmid && JSON.parse(last).vmid) || "";

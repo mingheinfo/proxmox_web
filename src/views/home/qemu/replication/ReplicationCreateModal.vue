@@ -8,7 +8,7 @@
     @close="$emit('close')"
   >
     <div slot="content" style="max-height: 500px">
-      <div class="m-form__content">
+      <div class="m-form__content"  v-if="modalType !== 'log'">
         <div class="m-form__section">
           <dl>
             <dt>基本信息</dt>
@@ -105,6 +105,12 @@
           </dl>
         </div>
       </div>
+      <template v-else>
+           <ace-editor ref="ace-editor"
+			             :read-only="true"
+									 v-model="logContent">
+			      </ace-editor>
+        </template>
     </div>
   </Dialog>
 </template>
@@ -113,11 +119,13 @@
 import Dialog from "@src/components/dialog/Dialog";
 import NodeReplicationHttp from "@src/views/home/qemu/replication/http";
 import { flotToFixed, percentToFixed, byteToSize } from "@libs/utils/index";
+import AceEditor from '@src/components/ace/AceEditor.vue';
 export default {
   name: "CreateReplicationModal",
   mixins: [NodeReplicationHttp],
   components: {
     Dialog,
+    AceEditor
   },
   props: {
     visible: {
@@ -153,7 +161,8 @@ export default {
       comment: "",
       schedule: "",
 			highestids: [],
-			nodeList: [],
+      nodeList: [],
+      logContent: '',
       scheduleList: [
         { value: "*/30", text: "每30分钟" },
         { value: "*/2:00", text: "每两小时" },
@@ -211,7 +220,7 @@ export default {
       _this.disable = true;
       _this.comment = "";
       _this.schedule = "";
-      if (_this.modalType !== "create") {
+      if (_this.modalType === "edit") {
         this.queryReplicationById(_this.param.id).then(() => {
           Object.keys(_this.db.dataCenterReplicationObj).forEach((it) => {
             if (it === "id") _this.id = _this.param.guest;
@@ -221,6 +230,16 @@ export default {
 						_this.validate("target");
           });
         });
+      }
+      if(_this.modalType === 'log') {
+        _this.logContent = '';
+        _this.queryReplicationLog(_this.param.id)
+             .then(res => {
+                res.map(item => {
+                  _this.logContent += item.t+'\n';
+                  console.log(_this.logContent);
+                });
+             });
       }
     },
     handleCompressSelect(value) {

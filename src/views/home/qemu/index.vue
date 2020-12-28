@@ -2,31 +2,35 @@
   <transition name="transition">
     <div class="content">
       <div class="m-operate">
-        <div class="m-operate-left">{{db.qemuObj.type === 'qemu' ? '虚拟机' : "容器"}}{{db.qemuObj.vmid}}({{db.qemuObj.name}})</div>
+        <div class="m-operate-left">{{qemu.type === 'qemu' ? '虚拟机' : "容器"}}{{qemu.vmid}}({{qemu.name}})</div>
         <div class="m-operate-right">
           <m-button
             v-if="qemu.type === 'qemu' && !isTempalte"
             icon="fa fa-play"
-            @on-click="!inStatus('running') && handleReset()"
+            v-confirm="{msg: `启动虚拟机\'${qemu.name}\'？`,
+                ok: () => handleReset()
+            }"
             :disabled="inStatus('running')"
-          >{{ !inStatus('runing') ? '启动' : '再继续'}}</m-button>
+          >{{ !inStatus('running') ? '启动' : '再继续'}}</m-button>
           <!--当为lxc容器时，在stopped状态下才可以启动-->
            <m-button
             v-if="qemu.type === 'lxc' && !isTempalte"
             icon="fa fa-play"
-            @on-click="inLxcStatus('stopped') && handleReset()"
+             v-confirm="{msg: `启动lxc容器\'${qemu.name}\'？`,
+                ok: () => handleReset()
+            }"
             :disabled="!inLxcStatus('stopped')"
           >启动</m-button>
           <dropdown
             style="width: auto; border: 1px solid #adb0b8;display: inline-block;padding:0px 10px;"
-            :disabled="qemu.type === 'qemu' ? inStatus('stopped', 'suspended') : !inLxcStatus('running')"
+            :disabled="qemu.type === 'qemu' ? inStatus('stopped', 'suspended') : inLxcStatus('stopped')"
             @on-change="handleOperate"
             v-if="!isTempalte"
           >
             <m-button
               icon="fa fa-power-off"
               slot="label"
-              style="border: none;background: tranparent"
+              style="border: none;background: tranparent;height: 28px;"
             >关机</m-button>
              <template v-if="qemu.type === 'qemu'">
                 <dropdown-item command="off" icon="fa fa-power-off" :disabled="inStatus('stopped')">关机</dropdown-item>
@@ -37,13 +41,13 @@
              </template>
              <template v-if="qemu.type === 'lxc'">
               <dropdown-item command="reboot" icon="fa fa-refresh" :disabled="!inLxcStatus('running')">重启</dropdown-item>
-              <dropdown-item command="stop" icon="fa fa-stop" :disabled="!inLxcStatus('running')">停止</dropdown-item>
+              <dropdown-item command="stop" icon="fa fa-stop" :disabled="inLxcStatus('stopped')">停止</dropdown-item>
             </template>
           </dropdown>
            <m-button
             icon="fa fa-paper-plane-o"
             @on-click="showModal('migrate')"
-            :disabled="inStatus(['running'])"
+            :disabled="nodeList.length < 1"
             v-if="nodeList.length >= 1"
           >迁移</m-button>
           <dropdown
@@ -64,7 +68,7 @@
               <dropdown-item command="clone" icon="fa fa-fw fa-clone">克隆</dropdown-item>
               <dropdown-item command="file" icon="fa fa-fw fa-file-o" :disabled="isTempalte">转换成模板</dropdown-item>
               <dropdown-item command="ha" icon="fa fa-heartbeat">管理HA</dropdown-item>
-              <dropdown-item command="delete" icon="fa fa-trash-o" :disabled="!inStatus('stopped')">删除</dropdown-item>
+              <dropdown-item command="delete" icon="fa fa-trash-o" :disabled="qemu.type === 'qemu' ? !inStatus('stopped') : !inLxcStatus('stopped')">删除</dropdown-item>
           </dropdown>
         </div>
       </div>
@@ -144,58 +148,49 @@ export default {
     */
     handleReset() {
       let _this = this;
-      _this.$confirm
-        .confirm({
-          title: "确定",
-          msg: `重启虚拟机\'${this.db.qemuObj.name && this.db.qemuObj.name}\'？`,
-          yesBtnText: "确定",
-        })
-        .then(() => {
-          if (_this.db.qemuObj.qmpstatus !== "stopped" && _this.qemu.type === 'qemu') {
-            let event = _this.createEvent(`action.qemu.resume`, _this.qemu.name);
-            this.$http
-              .post(
-                `/json/nodes/${this.qemu.node}/${this.qemu.id}/status/resume`,
-                {},
-                {
-                  headers: {
-                    "Content-Type":
-                      "application/x-www-form-urlencoded; charset=UTF-8",
-                  },
-                }
-              )
-              .then(() => {
-                this.incEventSuccess(event);
-                this.__init__();
-              })
-              .catch((res) => {
-                this.incEventFail(event);
-                this.alertConfirm(res);
-              });
-          } else if(_this.db.qemuObj.status === 'stopped'){
-            let event = this.createEvent(`action.qemu.reboot`, this.qemu.name);
-            this.$http
-              .post(
-                `/json/nodes/${this.qemu.node}/${this.qemu.id}/status/start`,
-                {},
-                {
-                  headers: {
-                    "Content-Type":
-                      "application/x-www-form-urlencoded; charset=UTF-8",
-                  },
-                }
-              )
-              .then(() => {
-                this.incEventSuccess(event);
-                 this.__init__();
-              })
-              .catch((res) => {
-                this.incEventFail(event);
-                this.alertConfirm(res);
-              });
-          }
-        })
-        .catch(() => {});
+      if (_this.db.qemuObj.qmpstatus !== "stopped" && _this.qemu.type === 'qemu') {
+        let event = _this.createEvent(`action.qemu.resume`, _this.qemu.name);
+        this.$http
+          .post(
+            `/json/nodes/${this.qemu.node}/${this.qemu.id}/status/resume`,
+            {},
+            {
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8",
+              },
+            }
+          )
+          .then(() => {
+            this.incEventSuccess(event);
+            this.__init__();
+          })
+          .catch((res) => {
+            this.incEventFail(event);
+            this.alertConfirm(res);
+          });
+      } else if(_this.db.qemuObj.status === 'stopped'){
+        let event = this.createEvent(`action.qemu.reboot`, this.qemu.name);
+        this.$http
+          .post(
+            `/json/nodes/${this.qemu.node}/${this.qemu.id}/status/start`,
+            {},
+            {
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8",
+              },
+            }
+          )
+          .then(() => {
+            this.incEventSuccess(event);
+              this.__init__();
+          })
+          .catch((res) => {
+            this.incEventFail(event);
+            this.alertConfirm(res);
+          });
+      }
     },
     /**
      * 克隆模板
@@ -204,7 +199,7 @@ export default {
       this.$confirm
         .confirm({
           title: "确定",
-          msg: `关闭虚拟机\'${this.db.qemuObj.name && this.db.qemuObj.name}\'？`,
+          msg: `关闭虚拟机\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         })
@@ -267,25 +262,13 @@ export default {
     handleOperate(command) {
       switch (command) {
         case "off":
-          this.handleClose().then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+          this.handleClose()
           break;
         case "pause":
-          this.paused().then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+          this.paused()
           break;
         case "hibernate":
-          this.paused({ todisk: 1 }).then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+          this.paused({ todisk: 1 })
           break;
         case "stop":
           let param = {};
@@ -294,26 +277,13 @@ export default {
              timeout: 30,
             }
           }
-          this.stop(param)
-              .then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+          this.stop(param);
           break;
         case "reset":
-          this.reset().then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+          this.reset()
           break;
         case 'reboot':
-           this.reboot().then(res =>{
-                this.__init__();
-              }).catch(res => {
-               this.alertConfirm(res);
-              });
+           this.reboot()
           break;
       }
     },
@@ -324,7 +294,7 @@ export default {
       this.$confirm
         .confirm({
           title: "确定",
-          msg: `重置虚拟机\'${this.db.qemuObj.name && this.db.qemuObj.name}\'？`,
+          msg: `重置虚拟机\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         })
@@ -345,7 +315,7 @@ export default {
       this.$confirm
         .confirm({
           title: "确定",
-          msg: `${params ? "挂起" : "暂停"}虚拟机\'${this.db.qemuObj.name}\'？`,
+          msg: `${params ? "挂起" : "暂停"}虚拟机\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         })
@@ -364,7 +334,7 @@ export default {
       this.$confirm
         .confirm({
           title: "确定",
-          msg: `停用虚拟机\'${this.db.qemuObj.name && this.db.qemuObj.name}\'？`,
+          msg: `停用虚拟机\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         })
@@ -386,7 +356,7 @@ export default {
        this.$confirm
         .confirm({
           title: "确定",
-          msg: `重启\'${this.db.qemuObj.name && this.db.qemuObj.name}\'？`,
+          msg: `重启\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         })
@@ -414,7 +384,7 @@ export default {
         this.$confirm
         .confirm({
           title: "确定",
-          msg: `删除虚拟机\'${this.db.qemuObj.name}\'？`,
+          msg: `删除虚拟机\'${this.qemu.name && this.qemu.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
         }).then(() => {
@@ -488,10 +458,10 @@ export default {
          break;
        case 'ha':
          this.title = `管理HA： ${this.qemu.id}`;
-         break; 
+         break;
        case 'clone':
         this.title = `克隆： ${this.qemu.id}`;
-        break; 
+        break;
      }
    },
     template() {
@@ -501,7 +471,7 @@ export default {
           msg: `删除虚拟机\'${this.db.qemuObj.name}\'？`,
           icon: "icon-question",
           yesBtnText: "确定",
-        }).then(() => 
+        }).then(() =>
            this.makeTemplate()
                .catch(res => {
                  this.alertConfirm(res);

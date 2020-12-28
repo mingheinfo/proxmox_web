@@ -246,7 +246,7 @@ export default {
 				case 'tokens':
 					this.tokens = value;
 					break;
-				default: 
+				default:
 				  this.groups = value;
 			}
 		},
@@ -278,7 +278,7 @@ export default {
 				case 'tokens':
 					props = ['tokens'];
 					break;
-				default: 
+				default:
 				  	props = [];
 			}
       props.forEach((prop) => this.validate(prop));
@@ -286,8 +286,10 @@ export default {
     },
     confirm() {
       if (this.validateAll()) return;
+      let last = window.localStorage.getItem("lastsel") || "[]",
+        _last = JSON.parse(last);
       let param = {
-				path: `/storage/${this.storage}`,
+				path: _last.type === 'pool' ? `/pool/${_last.pool}` : `/vms/${_last.vmid}`,
 				roles: this.roles,
 			}
 			switch(this.modalType) {

@@ -17,11 +17,12 @@
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
-          <m-input
+					 <m-input
             type="text"
             prop="monhost"
             label="Monitor(s)"
             labelWidth="100px"
+						:disabled="pveceph"
             validateEvent
             @validate="validate"
             :show-error="rules.monhost.error"
@@ -34,7 +35,7 @@
             prop="username"
             label="用户名"
             labelWidth="100px"
-						:disabled="!isCreate"
+						:disabled="!isCreate || pveceph"
             v-model="username"
             placeholder="请输入用户名"
           />
@@ -74,7 +75,16 @@
 						<m-checkbox  
 					    label=""
 							v-model="pveceph"
-							:disabled="db.cephMonList.length<=0"
+							:disabled="!pvecephPossible"
+							@change="(value) => {
+								if(value) {
+								   monhost = quickSort(this.db.cephMonList.map(item => item.name), 'name').join(',');
+									 username = 'admin';
+								} else {
+									monhost = '';
+									username = '';
+								}
+							}"
               labelWidth="100px">使用Proxmox VE管理的超融合cephFS</m-checkbox>
         </dd>
       </dl>
@@ -96,7 +106,7 @@
 						</el-table-column>
 						<el-table-column label="CPU使用率">
 							<template slot-scope="scope">
-								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + `% of ${scope.row.maxcpu}`}}
+								{{scope.row.cpu && scope.row.cpu && scope.row.maxcpu && percentToFixed(scope.row.cpu, 3) + ` of ${scope.row.maxcpu}`}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -107,7 +117,7 @@
 </template>
 <script>
 import DataCenterStorageHttp from "@src/views/home/dataCenter/storage/http";
-import { flotToFixed, percentToFixed} from '@libs/utils/index';
+import { flotToFixed, percentToFixed, quickSort} from '@libs/utils/index';
 export default {
 	name: 'CreateDirStorage',
 	mixins: [DataCenterStorageHttp],
@@ -126,12 +136,13 @@ export default {
       monhost: '',
       content: ['images'],
 			nodes: [],
-			username: '',
+			username: 'admin',
       shared: true,
       type: 'dir',
 			disable: false,
 			maxfiles: 1,
-			pveceph: false,
+			pveceph: true,
+			pvecephPossible: true,
 			options: [
 			  {
 					label: '磁盘映像',
@@ -184,6 +195,7 @@ export default {
 	methods: {
 		flotToFixed,
 		percentToFixed,
+		quickSort,
 		__init__() {
 			this.queryNode().then(() => {
         this.$nextTick(() => {
@@ -197,17 +209,7 @@ export default {
         });
       });
       if (this.isCreate) {
-        this.storage = "";
-        this.server = "";
-        this.content = ["images"];
-        this.nodes = [];
-        this.username = "";
-        this.monhost = "";
-        this.shared = false;
-        this.pveceph = false;
-        this.type = "dir";
-        this.disable = false;
-        this.maxfiles = 1;
+      
       } else {
         Object.keys(this.param).forEach((key) => {
           if (["disable", 'shared', 'pveceph'].includes(key)) {
@@ -222,7 +224,18 @@ export default {
 				this.disable = this.param.disable ? false : true
 			};
 			if(this.isCreate)
-			this.queryCephMon();
+			this.queryCephMon()
+			    .then(res => {
+							this.monhost = quickSort(this.db.cephMonList.map(item => item.name), 'name').join(',');
+							if (this.isCreate) {
+								this.pvecephPossible = true;
+							} else {
+								this.pveceph = false;
+							}
+			  }).catch(res => {
+					this.pvecephPossible = false;
+					this.pveceph = false;
+				});
 		},
 		//单个校验
 		validate(prop) {

@@ -134,7 +134,7 @@
         :modal-type="type"
         @close="
           visible = false;
-          queryIpSetList();
+          __init__()
         "
       ></create-ipset-modal>
     </div>

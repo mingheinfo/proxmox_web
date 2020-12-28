@@ -24,6 +24,11 @@ const dataCenterMenuList = [
     children: []
   },
   {
+    path: '/datacenter/ceph',
+    title: 'Ceph',
+    icon: 'fa fa-ceph'
+  },
+  {
     path: '/datacenter/option',
     title: 'option',
     key: 'datacenter-option',
@@ -174,7 +179,7 @@ const nodeMenuList = [
     children: []
   },
   {
-    path: '/node/shell',
+    path: '/node/console',
     title: 'shell',
     key: 'node-shell',
     icon: 'fa  fa-terminal',
@@ -286,6 +291,44 @@ const nodeMenuList = [
         name: 'node-disk-zfs',
         title: 'node-disk-zfs',
         icon: 'fa fa-th-large'
+      }
+    ]
+  },
+  {
+    path: '/node/ceph',
+    title: 'ceph',
+    key: 'node-ceph',
+    icon: 'fa fa-ceph',
+    children: [
+      {
+        path: '/node/ceph/config',
+        title: 'config',
+        key: "node-ceph-config",
+        icon: 'fa fa-gear'
+      },
+      {
+        path: '/node/ceph/monitor',
+        title: 'monitor',
+        key: "node-ceph-monitor",
+        icon: 'fa fa-tv'
+      },
+      {
+        path: '/node/ceph/osd',
+        title: 'OSD',
+        key: "node-ceph-osd",
+        icon: 'fa fa-hdd-o'
+      },
+      {
+        path: '/node/ceph/pools',
+        title: 'pool',
+        key: "node-ceph-pools",
+        icon: 'fa fa-sitemap'
+      },
+      {
+        path: '/node/ceph/log',
+        title: 'log',
+        key: "node-ceph-log",
+        icon: 'fa fa-list'
       }
     ]
   },
@@ -456,7 +499,21 @@ const poolList = [
     path: '/pool/overview',
     title: 'overview',
     key: 'pool-overview',
-    icon: 'fa ',
+    icon: 'fa fa-book',
+    children: []
+  },
+  {
+    path: '/pool/member',
+    title: 'member',
+    key: 'pool-member',
+    icon: 'fa fa-th',
+    children: []
+  },
+  {
+    path: '/pool/access',
+    title: 'access',
+    key: 'pool-access',
+    icon: 'fa fa-unlock',
     children: []
   }
 ]

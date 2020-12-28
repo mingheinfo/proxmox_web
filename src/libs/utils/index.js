@@ -203,7 +203,7 @@ function bubbleSort(arr) {
   return arr;
 }
 /**
- * 快速排序 @parma array原数组; 
+ * 快速排序 @parma array原数组;
  * prop 根据哪个字段排序
  * order 默认降序排列 -表示降序, +表示升序
  * */
@@ -447,7 +447,7 @@ function openVNCViewer(vmtype, vmid, nodename, vmname, novnc) {
     url += encodeURIComponent(it) + '=' + encodeURIComponent(options[it]) + '&';
   }
   var nw = window.open("/shell/?" + url.slice(0, url.length - 1), '_blank', "innerWidth=745,innerheight=427");
-  nw.focus();
+  nw && nw.focus();
 }
 
 function windowHostname() {
@@ -593,6 +593,7 @@ function isLeaf() {
 }
 
 function setIconCls(info, typeDefaults) {
+  if(!info) return;
   let cls = get_object_icon_class(info.type, info, typeDefaults);
   if (cls !== '') {
     info.iconCls = cls;
@@ -826,7 +827,7 @@ function getHttpXhr() {
 }
 //文件上传下载，进度，错误
 function uploadFile(url, data, callback) {
-  //或得xhr对象 
+  //或得xhr对象
   let xhr = getHttpXhr();
   return new Promise((resolve, reject) => {
     //监听readState对象
@@ -1412,10 +1413,11 @@ function parseSSHKey(key) {
 /**
  * 展示错误信息
  * **/
-function confirm(message, type, icon) {
+function confirm(message, type, icon, yesText) {
   return this.$confirm[type ? type : 'error']({
     msg: message,
-    icon: icon ? icon : 'icon-error'
+    icon: icon ? icon : 'icon-error',
+    yesBtnText: yesText ? yesText : '确定'
   })
 }
 
@@ -1440,12 +1442,46 @@ function chunkData(arr, pageSize) {
           j++;
           continue;
         }
-        if(j == k) break;      
+        if(j == k) break;
      }
      chunkArr.push(newArr);
    }
    return chunkArr;
 }
+
+const on = (function() {
+  if (document.addEventListener) {
+    return function(element, event, handler) {
+      if (element && event && handler) {
+        element.addEventListener(event, handler, false);
+      }
+    };
+  } else {
+    return function(element, event, handler) {
+      if (element && event && handler) {
+        element.attachEvent('on' + event, handler);
+      }
+    };
+  }
+})();
+
+/* istanbul ignore next */
+const off = (function() {
+  if (document.removeEventListener) {
+    return function(element, event, handler) {
+      if (element && event) {
+        element.removeEventListener(event, handler, false);
+      }
+    };
+  } else {
+    return function(element, event, handler) {
+      if (element && event) {
+        element.detachEvent('on' + event, handler);
+      }
+    };
+  }
+})();
+
 export {
   getEvent,
   stopEvent,
@@ -1516,5 +1552,7 @@ export {
   forEachMP,
   parseSSHKey,
   confirm,
-  chunkData
+  chunkData,
+  on,
+  off
 }

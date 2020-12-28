@@ -15,7 +15,7 @@
       <span :class="['icon', icon]"></span>
       <slot name="label"></slot>
     </span>
-    <div class="dropdown-menu" v-show="renderDropMenu" ref="dropdown-menu">
+    <div class="dropdown-menu animate__fadeInDown" v-show="renderDropMenu" ref="dropdown-menu">
       <div x-arrow="" class="popper__arrow el-icon-caret-top"></div>
       <div style="overflow-y: auto; max-height: 200px"><slot></slot></div>
     </div>

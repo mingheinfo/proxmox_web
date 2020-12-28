@@ -30,7 +30,7 @@
       >
 			<m-button
         type="info"
-        @on-click="handleImmidiateSchedule()"
+        @on-click="() => handleImmidiateSchedule()"
         icon="el-icon-video-play"
 				:disabled="selectedList.length !== 1"
         >立即安排</m-button
@@ -44,10 +44,15 @@
         @sort-change="handleSort"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="selection" width="55"></el-table-column>
 				 <el-table-column label="访客" prop="guest" sortable></el-table-column>
 				 <el-table-column label="作业" prop="jobnum" sortable></el-table-column>
 				 <el-table-column label="目标" prop="target" sortable></el-table-column>
+				 <el-table-column label="状态" prop="error" show-overflow-tooltip>
+					 <template slot-scope="scope">
+						 <table-info-state :content="(scope.row.failCount === 0 || !scope.row.error) ? 'OK' : scope.row.error"
+						                   :state="(scope.row.failCount === 0 || !scope.row.error) ? 'actived' : 'dead'"></table-info-state>
+					 </template>
+				 </el-table-column>
 				<el-table-column label="已启用" prop="disable">
 					<template slot-scope="scope">
 						<table-info-state :content="scope.row.disable && scope.row.disable === 1 ? '否' : '是' "
@@ -93,6 +98,7 @@ import MButton from "@src/components/button/Button";
 import Dialog from "@src/components/dialog/Dialog";
 import ReplicationCreateModal from './ReplicationCreateModal'
 import { dateFormat, byteToSize, quickSort, throttle, format_duration_short } from "@libs/utils/index";
+import { gettext } from '@src/i18n/local_zhCN.js';
 export default {
   name: "QemuBackUp",
   mixins: [ReplicationHttp],
@@ -113,6 +119,7 @@ export default {
 			search: '',
 			storage: '',
 			qemuReplicationList: [],
+			interVal: null
     };
   },
   mounted() {
@@ -127,8 +134,26 @@ export default {
 			let _this = this;
 			await _this.queryQemuReplication({guest: this.node.vmid})
 			     .then(res =>{
-						 _this.qemuReplicationList = quickSort(this.db.qemuReplicationList, "storage", '+');
+						 _this.qemuReplicationList = quickSort(this.db.qemuReplicationList, "guest", '+');
 					 })
+			_this.interVal = setInterval(() => {
+         _this.queryQemuReplication({guest: this.node.vmid}).then(res => {
+					  _this.qemuReplicationList = quickSort(this.db.qemuReplicationList, "guest", '+');
+					 let isAllOK = this.db.qemuReplicationList.every((item) => {
+							if((String(item.fail_count) && item.fail_count === 0 ) || item.error)
+								 return true;
+							else return false;
+					 })
+					 console.log('=====' + isAllOK)
+					 if(isAllOK) {
+						 if(_this.interVal) {
+							 clearInterval(_this.interVal);
+							 _this.interVal = null;
+
+						 }
+					 }
+				 })
+			}, 10000)
 		},
     //按钮是否可点击
     inStatus() {
@@ -141,7 +166,7 @@ export default {
 		/**
 		 * 删除备份任务
 		*/
-    handleDelete(type) {
+    handleDelete() {
       this.$confirm
         .confirm({
           msg: `你确定你要删除改项${this.selectedList[0].volid}吗？`,
@@ -165,7 +190,7 @@ export default {
     handleSort({colume, prop, order}) {
       let _this = this;
       if(order !== null)
-      _this.qemuTaskList = quickSort(_this.db.nodeTaskList, prop, order === 'ascending' ? '+' : '-');
+      _this.qemuReplicationList = quickSort(_this.db.qemuReplicationList, prop, order === 'ascending' ? '+' : '-');
 		},
 		/**
 		 * 弹框
@@ -196,12 +221,12 @@ export default {
 		/**
 		 * render同步
 		*/
-		renderSync(value, type, recode) {
+		renderSync(value, type, record) {
 			if (!value) {
 			    return '-';
 			}
 			if(type === 'last') {
-				if (record.data.pid) {
+				if (record.data && record.data.pid && record.data.pid) {
 			    return gettext('syncing');
 			  }
 			} else {
@@ -221,7 +246,13 @@ export default {
     	}
 	    return format_duration_short(value);
     }
-  },
+	},
+	beforeDestory() {
+		if(this.interVal) {
+			clearInterval(this.interVal);
+			this.interVal = null;
+		}
+	}
 };
 </script>
 
