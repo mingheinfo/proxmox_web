@@ -15,7 +15,7 @@
                 @validate="validate"
                 :show-error="rules['nodename'].error"
                 :error-msg="rules['nodename'].message"
-                label="存储"
+                label="主机"
                 labelWidth="100px">
         <template v-for="(item, index) in nodeList">
           <m-option :label="item.node"
@@ -29,7 +29,7 @@
             <div class="table-tr">
               <div class="table-td">{{item.node}}</div>
               <div class="table-td" style="height: 28px; line-height: 28px;">
-                <line-charts
+                <line-charts style="margin: 11px 0px;"
                     :value="
                   Number(
                     (item && item.maxmem && item.mem
@@ -40,7 +40,7 @@
                 ></line-charts>
               </div>
               <div class="table-td" style="height: 28px; line-height: 28px;">
-                <line-charts
+                <line-charts style="margin: 11px 0px;"
                     :value="
                   Number(
                     (item && item.cpu ? item.cpu : 0) *

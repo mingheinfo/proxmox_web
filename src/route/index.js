@@ -387,6 +387,14 @@ const router = new VueRoute({
               }
             },
             {
+              path: 'ceph/fs',
+              name: 'node-ceph-fs',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/cephfs/cephFs.vue"),
+              meta: {
+                title: 'CephFs'
+              }
+            },
+            {
               path: 'ceph/pools',
               name: 'node-ceph-pools',
               component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/pools/Pools.vue"),

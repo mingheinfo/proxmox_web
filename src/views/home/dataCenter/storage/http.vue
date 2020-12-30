@@ -197,7 +197,7 @@ export default {
 			let event = this.createEvent('action.storage.delete', storage);
       return this.$http.del(`/json/storage/${storage}`).then((res) => {
         this.incEventSuccess(event);
-        this.queryStorageList();
+        this.__init__();
       }).catch((res) => {
         this.incEventFail(event);
         confirm.call(this, res, 'confirm', 'icon-warning');

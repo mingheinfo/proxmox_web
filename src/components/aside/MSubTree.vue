@@ -1,6 +1,6 @@
 <template>
   <ul class="m-sub-tree">
-    <li v-for="tree of renderData" :key="tree.data.id">
+    <li v-for="tree of renderData" :key="tree.data.id" class="m-sub_li">
       <template v-if="tree.data.parentId === parentId">
         <div
           class="m-sub-item"
@@ -16,6 +16,7 @@
           >名称：{{tree.data.text}}<br/>{{tree.data.status ? `状态: ${tree.data.status}` : ''}}</div>
         </div>
       </template>
+      <div class="m-sub_li"></div>
       <template v-if="tree.childNodes && tree.childNodes.length > 0">
         <m-sub-tree :tree-data="tree.childNodes" :parent-id="tree.data.parentId" />
       </template>
@@ -135,9 +136,21 @@ export default {
       }
     }
   }
+   &_li{
+    position: relative;
+    &:after{
+      content: '';
+      position: absolute;
+      height: 1px;
+      background: #fff;
+      left: -10px;
+      right: 0;
+      bottom: 0;
+    }
+  }
 }
 .is-selected {
-  background: rgba(64, 158, 255, 0.7);
+  background-image: linear-gradient(180deg,  rgba(64, 158, 255, 0.7),  rgba(64, 158, 255));
   color: #fff;
 }
 </style>

@@ -319,6 +319,12 @@ const nodeMenuList = [
         icon: 'fa fa-hdd-o'
       },
       {
+        path: '/node/ceph/fs',
+        title: 'CephFs',
+        key: "node-ceph-fs",
+        icon: 'fa fa-folder'
+      },
+      {
         path: '/node/ceph/pools',
         title: 'pool',
         key: "node-ceph-pools",

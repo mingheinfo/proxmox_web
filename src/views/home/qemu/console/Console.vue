@@ -1,6 +1,6 @@
 <template>
   <div ref="m-shell">
-    	<iframe ref ="shell" :src="`/shell/?console=${node.type === 'qemu' ? 'kvm' : 'lxc'}&vmid=${node.vmid}&node=${node.node}&resize=off&novnc=1`" width="100%" height="100%"></iframe>
+    	<iframe ref ="shell" :src="`/shell/?console=${node.type === 'qemu' ? 'kvm' : 'lxc'}&vmid=${node.vmid}&node=${node.node}&resize=scale&novnc=1`" width="100%" height="100%"></iframe>
 	</div>
 </template>
 

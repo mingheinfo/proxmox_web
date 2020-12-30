@@ -1145,7 +1145,7 @@ export default {
 					baseParams['cpulimit'] = this.cpulimit;
 					baseParams['cpuunits'] = this.cpuunits;
 				}
-				if(this.unprivileged) {
+				if(!this.unprivileged) {
            baseParams['unprivileged'] = 1;
 				}
 				Object.keys(baseParams).forEach((key) => {

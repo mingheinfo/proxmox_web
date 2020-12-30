@@ -98,7 +98,7 @@ export default {
 									 if(res.data) {
 										 this.updateDbObject({
 											 name: 'changeLogObj',
-											 data: res.data
+											 data: res
 										 })
 									 }
 								 })

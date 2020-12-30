@@ -44,12 +44,13 @@
            prop="crush_rule"
            :show-error="rules['crush_rule'].error"
            :error-msg="rules['crush_rule'].message"
+           @on-change="(val) => crush_rule = val"
            v-model="crush_rule">
           <m-option
             v-for="item in rulesList"
-            :label="item.rule"
-            :value="item.rule"
-            :key="item.rule"
+            :label="item.name"
+            :value="item.name"
+            :key="item.name"
           ></m-option>
         </m-select>
         <m-input
@@ -166,7 +167,7 @@ export default {
         min_size: this.min_size,
         crush_rule: this.crush_rule,
         pg_num: this.pg_num,
-        add_storage: this.add_storages ? 1 : 0
+        add_storages: this.add_storages ? 1 : 0
 			}
 			this.createPools(param)
 			    .then(res => {

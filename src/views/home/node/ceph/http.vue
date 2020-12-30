@@ -68,17 +68,20 @@
         })
       },
       queryStatus(node, pid) {
-        return this.$http.get(`json/nodes/${node}/tasks/${pid}/status`, {
-          _dc: new Date().getTime(),
-        }).then((res) => {
-          if(res.status === 'stopped' && this.interVal) {
-            clearInterval(this.interVal);
-            this.interVal = null;
-          }
+        return this.$http.get(`json/nodes/${node}/tasks/${pid}/status`).then((res) => {
           this.updateDbObject({
             name: 'addClusterStatusObj',
             data: res.data
           })
+          if(res.data.status === 'stopped' && this.interVal) {
+            clearInterval(this.interVal);
+            this.$confirm.confirm({
+								msg: this.db.addClusterStatusObj.exitstatus,
+								type: 'error',
+								icon: 'icon-error'
+							})
+            this.interVal = null;
+          }
         })
       },
       stopTask(node, pid) {
@@ -170,6 +173,19 @@
             return Promise.reject();
           })
       },
+      deleteMds(id, param) {
+        let event = this.createEvent('action.delete.osd');
+        return this.$http.del(`json/nodes/${this.node}/ceph/mds/${id}`, param)
+          .then(res => {
+            this.incEventSuccess(event);
+            this.queryStatus(id, res.data);
+          })
+          .catch(res => {
+            this.incEventFail(event);
+            confirm.call(this, res,  'error', 'icon-error');
+            return Promise.reject();
+          })
+      },
       //查询osd flags
       queryFlags(param) {
         return this.$http.get(`json/cluster/ceph/flags`, param) 
@@ -196,6 +212,42 @@
             return Promise.reject();
           })
       },
+      //添加mds
+      addMds(nodename, param) {
+          let event = this.createEvent('action.add.mds');
+        return this.$http.post(`json/nodes/${this.node}/ceph/mds/${nodename}`, param, {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=utf8'
+          }
+        })
+          .then(res => {
+            this.incEventSuccess(event);
+            this.queryStatus(this.node, res.data);
+          })
+          .catch(res => {
+            this.incEventFail(event);
+            confirm.call(this, res,  'error', 'icon-error');
+            return Promise.reject();
+          })
+      },
+      //添加mds
+      addCephfs(fsname, param) {
+          let event = this.createEvent('action.add.mds');
+        return this.$http.post(`json/nodes/${this.node}/ceph/fs/${fsname}`, param, {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=utf8'
+          }
+        })
+          .then(res => {
+            this.incEventSuccess(event);
+            this.queryStatus(this.node, res.data);
+          })
+          .catch(res => {
+            this.incEventFail(event);
+            confirm.call(this, res,  'error', 'icon-error');
+            return Promise.reject();
+          })
+      },
       //查询ceph池
       queryCephPools() {
         return this.$http.get(`json/nodes/${this.node}/ceph/pools`)
@@ -208,7 +260,7 @@
       //创建ceph池
        createPools(param) {
          let event = this.createEvent('action.add.pools');
-        return this.$http.post(`json/cluster/ceph/pools`, param, {
+        return this.$http.post(`json/nodes/${this.node}/ceph/pools`, param, {
           headers: {
             'content-type': 'application/x-www-form-urlencoded; charset=utf8'
           }
@@ -229,6 +281,35 @@
                      if(res.data) {
                        return Promise.resolve(res.data);
                      } 
+                   })
+      },
+      //查询fs
+      queryFs() {
+        return this.$http.get(`json/nodes/${this.node}/ceph/fs`)
+                   .then(res => {
+                     if(res.data) {
+                       return Promise.resolve(res.data);
+                     }
+                   })
+      },
+      //查询mds
+      queryMds() {
+        return this.$http.get(`json/nodes/${this.node}/ceph/mds`)
+                   .then(res => {
+                     if(res.data) {
+                       return Promise.resolve(res.data);
+                     }
+                   })
+      },
+      //销毁存储池
+      deleteCephPool(id) {
+        return this.$http.del(`json/nodes/${this.node}/ceph/pools/${id}`, {
+          remove_storages: 1
+        })
+                   .then(res => {
+                     if(res.data) {
+                        this.queryStatus(this.node, res.data);
+                     }
                    })
       }
     }

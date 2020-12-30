@@ -89,10 +89,10 @@
 										<div class="ceph-table">
 											<el-scrollbar :no-resize="false" style="height: 100%">
 												<template  v-for="state in statecategories">
-													<div class="ceph-table-tr" v-for="item in state.states">
+													<div class="ceph-table-tr" v-for="(item, index) in state.states" :key="index">
 														<div class="ceph-table-td">
 															<span :style="{background: colorsMap[item.cls]}" class="ceph-top__pgs_label__label"></span>
-															<span>{{item.state_name}}</span>
+															<span :title="item.state_name">{{item.state_name}}</span>
 														</div>
 														<div class="ceph-table-td">{{item.count}}</div>
 													</div>
@@ -717,8 +717,9 @@ export default {
 					overflow: hidden;
 					height: 100%;
 					&__label{
-						width: 15px;
-						height: 15px;
+						width: 12px;
+						height: 12px;
+						border-radius: 50%;
 						line-height: 20px;
 						display: inline-block;
 						vertical-align: middle;

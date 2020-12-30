@@ -1,20 +1,31 @@
 <template>
-  <aside class="aside">
+  <aside class="aside" ref="aside">
     <div class="aside-select">
-      <select class="pv-form-input" v-model="view" @change="setViewFilter">
-        <option v-for="(item, key) of viewTypeList" :key="key" :value="item.value">{{item.label}}</option>
+      <select class="pv-form-input" v-model="view" @change="setViewFilter" style="padding: 4px 10px">
+        <option
+          v-for="(item, key) of viewTypeList"
+          :key="key"
+          :value="item.value"
+        >
+          {{ item.label }}
+        </option>
       </select>
     </div>
     <div class="aside-tree">
       <m-tree :treeData="rootnode" @changeExpand="handleChangeExpand"></m-tree>
     </div>
+    <div
+      class="aside_col-resize"
+      @mousedown.stop="handleMouseDown"
+      @mouseup.stop="handleMouseUp"
+    ></div>
   </aside>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import VuexMixins from "@src/mixins/VuexMixins";
-import { deepCopy, isLeaf, setIconCls } from "@libs/utils";
+import { deepCopy, isLeaf, setIconCls, stopEvent, throttle } from "@libs/utils";
 import MTree from "./MTree";
 export default {
   name: "tree",
@@ -24,16 +35,18 @@ export default {
   },
   mounted() {
     let _this = this;
-     _this.queryResource();
+    _this.queryResource();
     this.interval = setInterval(() => {
-       _this.queryResource();
-    }, 10000)
+      _this.queryResource();
+    }, 10000);
   },
   data() {
     //获取数据中心名称
-    let ticket = window.localStorage.getItem('ticket') || '{}',
-    tic = JSON.parse(ticket);
+    let ticket = window.localStorage.getItem("ticket") || "{}",
+      tic = JSON.parse(ticket);
     return {
+      initX: 0,
+      drageable: false,
       view: window.sessionStorage.getItem("lastselview") || "server",
       treeData: { dataIndex: {}, updateCount: 0 },
       defaultKey:
@@ -66,7 +79,9 @@ export default {
       rootnode: {
         id: "root",
         data: {
-          text: `数据中心 ${tic.clustername ? '('+tic.clustername+')' : ''}`,
+          text: `数据中心 ${
+            tic.clustername ? "(" + tic.clustername + ")" : ""
+          }`,
           root: true,
           index: 0,
           parentId: null,
@@ -119,17 +134,74 @@ export default {
     };
   },
   methods: {
+    handleMouseDown(event) {
+      stopEvent(event);
+      this.initX = event.clientX;
+      this.drageable = true;
+      document.addEventListener(
+        "mousemove",
+        this.handleMouseMove, 50,
+        false
+      );
+      document.addEventListener(
+        "mouseup",
+        this.handleMouseUp, 50,
+        false
+      );
+    },
+    handleMouseMove(event) {
+      stopEvent(event);
+      event.preventDefault();
+      if (!this.drageable) return;
+      let y = event.clientX - this.initX,
+          dis = this.initX + y;
+       while (dis <= 5) {
+        document.removeEventListener(
+          "mousemove",
+          this.handleMouseMove,
+          false
+        );
+        document.removeEventListener(
+          "mouseup",
+          this.handleMouseUp,
+          false
+        );
+        return;
+      }
+      this.$refs.aside.style.width = this.initX + y + "px";
+      let el = document.querySelector(".main-content");
+      el.style.width = `calc(100% - ${this.initX + y}px)`;
+      el.style.left = this.initX + y + "px";
+    },
+    handleMouseUp(event) {
+      stopEvent(event);
+      event.preventDefault();
+      document.removeEventListener(
+        "mousemove",
+        this.handleMouseMove, 50,
+        false
+      );
+      document.removeEventListener(
+        "mouseup",
+        this.handleMouseUp, 50,
+        false
+      );
+      this.initX = event.clientX;
+      this.drageable = false;
+    },
     //查询所有资源
     queryResource() {
-       this.$http.get("/json/cluster/resources").then(async (res) => {
+      this.$http.get("/json/cluster/resources").then(async (res) => {
         if (res.data) {
-           await this.updateTable({
-             tableName: 'resources',
-             list: res.data
-           }).then(() => {
-             this.updateTree();
-           })
-         }
+          await this.updateTable({
+            tableName: "resources",
+            list: res.data,
+          }).then(() => {
+            this.$nextTick(() => {
+                this.updateTree();
+            })
+          });
+        }
       });
     },
     //过滤视图
@@ -154,11 +226,11 @@ export default {
           },
           childNodes: [],
         },
-        lastsel = JSON.parse(window.localStorage.getItem("lastsel")) || {},//最后选择的节点
-        parents = [],//父节点
+        lastsel = JSON.parse(window.localStorage.getItem("lastsel")) || {}, //最后选择的节点
+        parents = [], //父节点
         p = lastsel,
-        index = this.treeData.dataIndex,//下标
-        groups = this.viewTypeList[this.view].groups || [],//组
+        index = this.treeData.dataIndex, //下标
+        groups = this.viewTypeList[this.view].groups || [], //组
         //初始化数据
         restore = Object.assign(
           [],
@@ -166,13 +238,16 @@ export default {
             item.type === "node"
               ? (item.text = item.node)
               : item.type === "qemu"
-              ? (item.text = item.vmid + `${item.name ? '('+item.name+')' : ''}`)
+              ? (item.text =
+                  item.vmid + `${item.name ? "(" + item.name + ")" : ""}`)
               : item.type === "pool"
               ? (item.text = item.pool)
               : item.type === "storage"
-              ? (item.text = item.storage + `${item.node ? '('+item.node+')' : ''}`)
+              ? (item.text =
+                  item.storage + `${item.node ? "(" + item.node + ")" : ""}`)
               : item.type === "lxc"
-              ? (item.text = item.vmid + `${item.name ? '('+item.name+')' : ''}`)
+              ? (item.text =
+                  item.vmid + `${item.name ? "(" + item.name + ")" : ""}`)
               : "";
             return {
               id: item.id,
@@ -235,15 +310,20 @@ export default {
             // fixme: also test filterfn()?
           }
           if (changed) {
-              let info = olditem.data;
-              Object.assign(info, item.data);
-              setIconCls(info, this.typeDefaults);
+            let info = olditem.data;
+            Object.assign(info, item.data);
+            setIconCls(info, this.typeDefaults);
           }
           if ((!item || moved) && olditem.data.leaf) {
             delete index[key];
-            this.handleChangeExpand(this.defaultExpandKeys)
+            this.handleChangeExpand(this.defaultExpandKeys);
+            this.refresh();
             var parentNode = olditem.parentNode;
-            if (lastsel && lastsel.data && olditem.data.id === lastsel.data.id) {
+            if (
+              lastsel &&
+              lastsel.data &&
+              olditem.data.id === lastsel.data.id
+            ) {
               reselect = true;
             }
             parentNode.childNodes && parentNode.childNodes.splice(olditem, 1);
@@ -251,8 +331,8 @@ export default {
         }
       }
       let isChange = false;
-      if(Object.keys(index).length !== restore.length) {
-          isChange = true;
+      if (Object.keys(index).length !== restore.length) {
+        isChange = true;
       } else {
         isChange = false;
       }
@@ -265,23 +345,23 @@ export default {
         if (filterfn && !filterfn(item)) {
           return;
         }
-        let info = Object.assign({}, { leaf: true, selected: false, expanded: false}, item.data),
+        let info = Object.assign(
+            {},
+            { leaf: true, selected: false, expanded: false },
+            item.data
+          ),
           child = this.groupChild(rootnode, info, groups, 0);
         if (child) {
           index[item.data.id] = child;
         }
       });
       let sel = JSON.parse(window.localStorage.getItem("lastsel"));
-      if(sel && sel.id && sel.id === 'root')  Object.assign(this.rootnode, { selected: true })
+      if (sel && sel.id && sel.id === "root")
+        Object.assign(this.rootnode, { selected: true });
       if (_this.view !== "type") {
         Object.keys(_this.treeData.dataIndex).forEach((item) => {
           _this.rootnode.childNodes.push(_this.treeData.dataIndex[item]);
         });
-      }
-      if(isChange) {
-        this.handleChangeExpand(this.defaultExpandKeys);
-        this.refresh()
-        isChange = false;
       }
       if (lastsel && !this.findChild(this.rootnode, "id", lastsel.id)) {
         lastsel = this.rootnode;
@@ -298,10 +378,13 @@ export default {
             break;
           }
         }
-        if(window.localStorage.getItem('lastsel') === '{}' && this.$route.path.indexOf('datacenter') < 0) {
-          this.$router.push('/datacenter/overview');
-        } else if(this.$route.path.indexOf('datacenter') >= 0){
-            this.selectById(lastsel.id, lastsel);
+        if (
+          window.localStorage.getItem("lastsel") === "{}" &&
+          this.$route.path.indexOf("datacenter") < 0
+        ) {
+          this.$router.push("/datacenter/overview");
+        } else if (this.$route.path.indexOf("datacenter") >= 0) {
+          this.selectById(lastsel.id, lastsel);
         }
       } else {
         this.selectById(lastsel.id, lastsel);
@@ -310,31 +393,36 @@ export default {
         //rootnode.
       }
       this.treeData.updateCount++;
+      if (isChange) {
+        this.handleChangeExpand(this.defaultExpandKeys);
+        this.refresh();
+        isChange = false;
+      }
     },
     refresh() {
       let rootnode = {
-              id: "root",
-              data: {
-                text: "数据中心 (test)",
-                root: true,
-                index: 0,
-                parentId: null,
-                expanded: true,
-                id: "root",
-                iconCls: "fa fa-server",
-                type: "",
-                vmid: 0,
-              },
-              childNodes: [],
-            },
-            index = this.treeData.dataIndex,
-            groups = this.viewTypeList[this.view].groups || [];
-      for(let key in this.treeData.dataIndex) {
+          id: "root",
+          data: {
+            text: "数据中心 (test)",
+            root: true,
+            index: 0,
+            parentId: null,
+            expanded: true,
+            id: "root",
+            iconCls: "fa fa-server",
+            type: "",
+            vmid: 0,
+          },
+          childNodes: [],
+        },
+        index = this.treeData.dataIndex,
+        groups = this.viewTypeList[this.view].groups || [];
+      for (let key in this.treeData.dataIndex) {
         let info = this.treeData.dataIndex[key].data,
-            child = this.groupChild(rootnode, info, groups, 0);
-            if (child) {
-              index[key] = child;
-           }
+          child = this.groupChild(rootnode, info, groups, 0);
+        if (child) {
+          index[key] = child;
+        }
       }
     },
     findParentId(id) {
@@ -357,12 +445,12 @@ export default {
       return parentId;
     },
     handleChangeExpand(arr) {
-       let loop = (item) => {
+      let loop = (item) => {
         item.forEach((it) => {
           if (arr.includes(it.data.id)) {
             Object.assign(it.data, { expanded: true });
-          } else if(it.data.id !== 'root'){
-             Object.assign(it.data, { expanded: false });
+          } else if (it.data.id !== "root") {
+            Object.assign(it.data, { expanded: false });
           }
           if (it.childNodes && it.childNodes.length > 0) {
             loop(it.childNodes);
@@ -373,8 +461,8 @@ export default {
     },
     selectById(id, lastSelNode) {
       let parentId = this.findParentId(id);
-      if(!lastSelNode.parentId) {
-         Object.assign(lastSelNode, { parentId});
+      if (!lastSelNode.parentId) {
+        Object.assign(lastSelNode, { parentId });
       }
       let loop = (item) => {
         item.forEach((it) => {
@@ -534,7 +622,7 @@ export default {
         var v1 = n1.type;
         var v2 = n2.type;
 
-        if ((tcmp = v1 > v2 ? 1 : (v1 < v2 ? -1 : 0)) != 0) {
+        if ((tcmp = v1 > v2 ? 1 : v1 < v2 ? -1 : 0) != 0) {
           return tcmp;
         }
 
@@ -548,12 +636,12 @@ export default {
           }
           v1 = n1.vmid;
           v2 = n2.vmid;
-          if ((tcmp = v1 > v2 ? 1 : (v1 < v2 ? -1 : 0)) != 0) {
+          if ((tcmp = v1 > v2 ? 1 : v1 < v2 ? -1 : 0) != 0) {
             return tcmp;
           }
         }
 
-        return n1.id > n2.id ? 1 : (n1.id < n2.id ? -1 : 0);
+        return n1.id > n2.id ? 1 : n1.id < n2.id ? -1 : 0;
       } else if (n1.groupbyid) {
         return -1;
       } else if (n2.groupbyid) {
@@ -562,18 +650,18 @@ export default {
     },
   },
   beforeDestroy() {
-    if(this.interval) {
+    if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
     }
   },
-   watch: {
+  watch: {
     // "$store.state.db.changeTree":  function(newVal,oldVal) {
     //     if(newVal) {
     //       this.queryResource();
     //     }
     // }
-  }
+  },
 };
 </script>
 
@@ -584,8 +672,9 @@ export default {
   padding-top: 60px;
   min-height: 100%;
   cursor: pointer;
-  background: #f7f7f7;
+  background: #2e3d50;
   border-right: 1px solid #f5f5f5;
+  color: #fff;
   &-select {
     margin: 5px 10px;
     position: relative;
@@ -602,6 +691,14 @@ export default {
       pointer-events: none;
       font-size: 11px;
     }
+  }
+  &_col-resize {
+    height: 100%;
+    border-right: 3px solid rgb(222 208 208);
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: col-resize;
   }
 }
 </style>

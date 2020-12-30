@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>menu_datacenter_h</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M7,-0.000132529907 L13,-0.000132529907 C13.5522847,-0.000132529907 14,0.44758272 14,0.99986747 L14,17.9998675 L6,17.9998675 L6,0.99986747 C6,0.44758272 6.44771525,-0.000132529907 7,-0.000132529907 Z" id="path-1"></path>
+    </defs>
+    <g id="uikit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-339.000000, -430.000000)">
+        <g id="menu_datacenter_h" transform="translate(339.000000, 430.000000)">
+            <rect id="Rectangle-2" x="0" y="0" width="30" height="30"></rect>
+            <g id="Group-6-Copy" transform="translate(5.000000, 5.000000)">
+                <g id="Group-3">
+                    <path d="M2,4.5 C1.72385763,4.5 1.5,4.72385763 1.5,5 L1.5,17 C1.5,17.2761424 1.72385763,17.5 2,17.5 L6,17.5 C6.27614237,17.5 6.5,17.2761424 6.5,17 L6.5,5 C6.5,4.72385763 6.27614237,4.5 6,4.5 L2,4.5 Z" id="Rectangle-32-Copy-3" stroke="#FFFFFF"></path>
+                    <path d="M14,6.5 C13.7238576,6.5 13.5,6.72385763 13.5,7 L13.5,17 C13.5,17.2761424 13.7238576,17.5 14,17.5 L18,17.5 C18.2761424,17.5 18.5,17.2761424 18.5,17 L18.5,7 C18.5,6.72385763 18.2761424,6.5 18,6.5 L14,6.5 Z" id="Rectangle-32-Copy-5" stroke="#FFFFFF"></path>
+                    <g id="Rectangle-32-Copy-4">
+                        <use fill="#0077D1" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <path stroke="#FFFFFF" stroke-width="1" d="M6.5,17.4998675 L13.5,17.4998675 L13.5,0.99986747 C13.5,0.723725095 13.2761424,0.49986747 13,0.49986747 L7,0.49986747 C6.72385763,0.49986747 6.5,0.723725095 6.5,0.99986747 L6.5,17.4998675 Z"></path>
+                    </g>
+                    <rect id="Rectangle-34-Copy" fill="#FFFFFF" x="0" y="17" width="20" height="1" rx="0.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

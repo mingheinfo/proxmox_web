@@ -25,6 +25,9 @@
   "volume": "硬盘",
   "storages": "存储",
   "backup": "备份",
+  "pool": "池",
+  "config": "配置",
+  "log": "日志",
   "action": {
     "node": {
       "reboot": "重启节点 {name}"

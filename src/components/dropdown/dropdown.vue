@@ -5,7 +5,7 @@
     :class="{
       show: trigger === 'hover' && isOpen,
       'is-click': isOpen,
-      'disabled': disabled,
+      disabled: disabled,
     }"
     @click.stop="!disabled ? (isOpen = !isOpen) : null"
     @blur.stop="handleBlur"
@@ -15,10 +15,12 @@
       <span :class="['icon', icon]"></span>
       <slot name="label"></slot>
     </span>
-    <div class="dropdown-menu animate__fadeInDown" v-show="renderDropMenu" ref="dropdown-menu">
-      <div x-arrow="" class="popper__arrow el-icon-caret-top"></div>
-      <div style="overflow-y: auto; max-height: 200px"><slot></slot></div>
-    </div>
+    <transition name="el-zoom-in-top">
+      <div class="dropdown-menu" v-show="renderDropMenu" ref="dropdown-menu">
+        <div x-arrow="" class="popper__arrow el-icon-caret-top"></div>
+        <div style="overflow-y: auto; max-height: 200px"><slot></slot></div>
+      </div>
+    </transition>
   </ul>
 </template>
 
@@ -172,6 +174,6 @@ export default {
   position: absolute;
   font-size: 25px;
   color: #fff;
-  text-shadow:0px -1px 2px #c4d6ec;
+  text-shadow: 0px -1px 2px #c4d6ec;
 }
 </style>

@@ -245,7 +245,6 @@
         this.queryResource();
         this.queryConfig()
             .catch(res => {
-              debugger;
               this.comment = res ? res : '';
             });
         this.handleIntervalChange(this.timeframe);

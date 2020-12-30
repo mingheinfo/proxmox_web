@@ -61,10 +61,11 @@
       <Dialog
         :visible="showLog"
         @close="closeLog"
+        @cancel="closeLog"
         :_style="{
           width: '800px',
         }"
-        title="Task Viewer: 更新软件包数据库"
+        title="变更日志"
       >
         <template slot="content" v-if="modalType === 'log'">
           <m-tab v-model="tab" @tab-click="handleTabChange">
@@ -124,6 +125,7 @@ import PageTemplate from "@src/components/page/PageTemplate";
 import Dialog from "@src/components/dialog/Dialog";
 import MButton from "@src/components/button/Button";
 import { dateFormat, openConsoleWindow } from "@libs/utils/index";
+import AceEditor from '@src/components/ace/AceEditor';
 export default {
   name: "Replication",
   mixins: [NodeAptUpdateHttp],
@@ -131,6 +133,7 @@ export default {
     PageTemplate,
     MButton,
     Dialog,
+    AceEditor
   },
   data() {
     return {
@@ -206,23 +209,17 @@ export default {
 				_dc: new Date().getTime(),
 				name: this.selectedList[0].Package,
         version: this.selectedList[0].Version,
-			 }, _this = this;
+       }, _this = this;
+       _this.showLog = true;
 			this.queryChangeLog(param)
 			    .then(res => {
-						_this.changeLogContent = _this.db.changeLogObj;
-						_this.showLog = true;
-						_this.modalType = 'changeLog'
-						_this.$refs[`ace-editor`].$el.style.height = (_this.$el.parentElement.clientHeight - 100) + 'px';
-		        window.addEventListener('resize', _this.updateAceEditorHeight, false);
+						_this.changeLogContent = _this.db.changeLogObj.data;
+            _this.modalType = 'changeLog';
 					}).catch(res  => {
 						_this.$confirm.confirm({
 							msg: res
 						})
 					})
-		},
-		updateAceEditorHeight() {
-			 let _this = this;
-				_this.$refs[`ace-editor`].$el.style.height = (_this.$el.parentElement.clientHeight - 100) + 'px';
 		},
   },
   beforeDestroy() {

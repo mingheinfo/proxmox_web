@@ -18,14 +18,14 @@
       <ul class="tab-container">
         <li
           class="tab-item"
-          :class="{ active: tab === 'in'  && current && current.type === 'osd' && current.in === 1, 'disabled': !current || current.type !== 'osd'}"
+          :class="{ active: isIn, 'disabled': !current || current.type !== 'osd'}"
           @click="handleChangeTab('in')"
         >
           <span class="circle"></span>in
         </li>
         <li
           class="tab-item"
-          :class="{ active: tab === 'out' && current && current.type === 'osd' && current.in === 0, 'disabled': !current || current.type !== 'osd'}"
+          :class="{ active: isOut, 'disabled': !current || current.type !== 'osd'}"
           @click="handleChangeTab('out')"
         >
           <span class="circle-out"></span>out
@@ -182,6 +182,23 @@ export default {
       visibleFlag: false
     };
   },
+  computed: {
+    isIn() {
+      debugger;
+      if(this.current && this.current.type === 'osd' && this.current.in === 1) {
+        return true; 
+      } else {
+        return false;
+      }
+    },
+    isOut() {
+      if(this.current && this.current.type === 'osd' && this.current.in === 0) {
+        return true; 
+      } else {
+        return false;
+      }
+    }
+  },
   mounted() {
     this.__init__();
   },
@@ -197,6 +214,7 @@ export default {
     //设置选中高亮
     setRowClassName({row, rowIndex}) {
         if(row.id === this.current.id) {
+          this.current = row;
           return 'current-row'
         }
     },
@@ -257,13 +275,18 @@ export default {
       this.tab = tab;
       switch(tab) {
         case 'in':
-          this.updateOSDInOrOut(this.current.id, 'in');
+          this.updateOSDInOrOut(this.current.id, 'in')
+              .then(res =>{
+                  this.__init__();
+              });
           break;
         case 'out':
-           this.updateOSDInOrOut(this.current.id, 'out');
+           this.updateOSDInOrOut(this.current.id, 'out')
+           .then(res =>{
+                  this.__init__();
+              });;
           break;
       }
-      this.__init__();
     },
     //渲染表格最后一列
     render_osd_latency(recode) {
