@@ -15,7 +15,7 @@
             label="类别">
           <template slot-scope="scope">
                         <span>
-                          <i 
+                          <i
                           class="fa"
                           style="width: 15px"
                           :class="{

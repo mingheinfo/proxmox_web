@@ -23,9 +23,9 @@ class Directive {
 								el.onclick = () => {
 									//如果是对象的时候触发
 									if (value instanceof Object) {
-										vm.$confirm[value.type ? value.type : 'confirm']({ 
-											msg: value.msg ? value.msg : '', 
-											icon: value.icon ? value.icon : 'icon-question', 
+										vm.$confirm[value.type ? value.type : 'confirm']({
+											msg: value.msg ? value.msg : '',
+											icon: value.icon ? value.icon : 'icon-question',
 											title: value.title ? value.title: '提示'
 										 })
 											.then(() => {
@@ -34,7 +34,7 @@ class Directive {
 												if (value.cancel)
 													value.cancel();
 											});
-										} 
+										}
 								}
 						 }
 						}

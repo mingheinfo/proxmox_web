@@ -313,11 +313,11 @@ export default {
             let info = olditem.data;
             Object.assign(info, item.data);
             setIconCls(info, this.typeDefaults);
+            this.refresh();
           }
           if ((!item || moved) && olditem.data.leaf) {
             delete index[key];
             this.handleChangeExpand(this.defaultExpandKeys);
-            this.refresh();
             var parentNode = olditem.parentNode;
             if (
               lastsel &&
@@ -327,6 +327,9 @@ export default {
               reselect = true;
             }
             parentNode.childNodes && parentNode.childNodes.splice(olditem, 1);
+          }
+          if(moved) {
+             this.refresh();
           }
         }
       }
@@ -393,11 +396,6 @@ export default {
         //rootnode.
       }
       this.treeData.updateCount++;
-      if (isChange) {
-        this.handleChangeExpand(this.defaultExpandKeys);
-        this.refresh();
-        isChange = false;
-      }
     },
     refresh() {
       let rootnode = {

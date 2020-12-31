@@ -18,6 +18,7 @@ Vue.use(Fragment.Plugin)
 import { Plugin } from 'vue-fragment'
 Vue.use(Plugin)
 Vue.directive('confirm', directives);
+Vue.directive('slldrag', directives);
 // 配置
 Vue.use(VueLazyload, {
 	preLoad: 1.3,
