@@ -3,7 +3,7 @@
     <div class="ceph-fs__top">
       <page-template>
         <div slot="toolbar-left">
-          <m-button type="primary" 
+          <m-button type="primary"
 					          :disabled="cephFsList.length !== 1"
 					          @on-click="showModal('cephfs')"
             >创建CephFs</m-button
@@ -198,7 +198,6 @@ export default {
     },
     closeLog() {
       this.showLog = false;
-      this.close();
     },
     stopTask1() {
       this.stopTask(
