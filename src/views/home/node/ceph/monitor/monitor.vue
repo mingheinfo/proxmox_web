@@ -46,7 +46,7 @@
                 icon="el-icon-document"
                 type="info"
                 :disabled="selectedList.length !== 1"
-                @on-click="showLog('mon')"
+                @on-click="showMonitorLog('mon')"
                 >系统日志</m-button
               >
               <m-button
