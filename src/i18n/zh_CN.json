@@ -30,7 +30,14 @@
   "log": "日志",
   "action": {
     "node": {
-      "reboot": "重启节点 {name}"
+      "reboot": "重启节点 {name}",
+      "delete": "删除节点 {name}",
+      "stopall": "批量停止 {name}",
+      "startall": "批量启动 {name}",
+      "migrate": "迁移节点 {name}"
+    },
+    "update": {
+      "pool": "跟新池 {name}"
     },
     "qemu": {
       "comment": "修改备注 {name}",
@@ -44,15 +51,57 @@
       "off": "关闭虚拟机 {name}"
     },
     "storage": {
-      "delete": "删除存储 {name} "
+      "delete": "删除存储 {name} ",
+      "create": "添加存储 {name}",
+      "update": "更新存储 {name}"
     },
     "backup": {
-      "delete": "删除备份 {name} "
+      "delete": "删除备份 {name} ",
+      "create": "添加备份 {name}",
+      "update": "更新备份 {name}"
     },
     "replication": {
       "create": "创建复制 {name}",
       "update": "修改复制 {name}",
       "delete": "删除复制 {name}"
+    },
+    "access": {
+      "delete": "删除权限 {name}",
+      "update": "修改权限 {name}",
+      "create": "添加权限 {name}",
+      "user": {
+        "update": "修改用户权限 {name}",
+        "create": "添加用户权限 {name}",
+        "delete": "删除用户权限 {name}",
+        "password": {
+          "update": "修改用户密码 {name}"
+        }
+      },
+      "token": {
+        "create": "添加Token {name}",
+        "update": "修改Token {name}",
+        "delete": "删除Token {name}"
+      },
+      "group": {
+        "create": "添加权限组 {name}",
+        "update": "修改权限组 {name}",
+        "delete": "删除权限组 {name}"
+      },
+      "pool": {
+        "create": "创建存储池 {name}",
+        "update": "修改存储池 {name}",
+        "delete": "删除存储池 {name}"
+      },
+      "role": {
+        "create": "添加角色 {name}",
+        "update": "更新角色 {name}",
+        "delete": "删除角色 {name}"
+      },
+      "domain": {
+        "create": "添加域 {name}",
+        "update": "更新域 {name}",
+        "delete": "删除域 {name}"
+      }
     }
   },
   "type": {

@@ -693,4 +693,10 @@ function setDocumentTitle(to) {
   if(window.vm)
   document.title = 'MHFLEX_' + window.vm.$t(`${to.meta.title}`);
 }
+
+const originalPush = VueRoute.prototype.push
+VueRoute.prototype.push = function push(location) {
+  //捕获路由重复点击时出现的异常
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router;

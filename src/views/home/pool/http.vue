@@ -58,7 +58,7 @@ export default {
       })
     },
     deleteResourceToPool() {
-      let event = this.createEvent('action.update.delete'), p, tasks= [];
+      let event = this.createEvent('action.pool.delete'), p, tasks= [];
       this.selectedList.forEach(item => {
         ((item) => {
           p = this.$http.put(`/json/pools/${this.pools.pool}`, {

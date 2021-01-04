@@ -227,6 +227,7 @@ export default {
           childNodes: [],
         },
         lastsel = JSON.parse(window.localStorage.getItem("lastsel")) || {}, //最后选择的节点
+        defaultKeys = window.localStorage.getItem('defaultExpandKeys') ? JSON.parse(window.localStorage.getItem('defaultExpandKeys')) : [],
         parents = [], //父节点
         p = lastsel,
         index = this.treeData.dataIndex, //下标
@@ -267,6 +268,7 @@ export default {
         _this = this,
         key;
       this.rootnode.childNodes = [];
+      this.defaultExpandKeys = defaultKeys;
       window.localStorage.setItem("lastselview", this.view || "");
       //遍历源数据比较节点判断是否有数据节点更改
       for (key in index) {
@@ -313,7 +315,9 @@ export default {
             let info = olditem.data;
             Object.assign(info, item.data);
             setIconCls(info, this.typeDefaults);
-            this.refresh();
+            _this.$nextTick(() => {
+              this.refresh();
+            })
           }
           if ((!item || moved) && olditem.data.leaf) {
             delete index[key];
@@ -329,7 +333,9 @@ export default {
             parentNode.childNodes && parentNode.childNodes.splice(olditem, 1);
           }
           if(moved) {
-             this.refresh();
+            _this.$nextTick(() => {
+              this.refresh();
+            })
           }
         }
       }
@@ -363,7 +369,8 @@ export default {
         Object.assign(this.rootnode, { selected: true });
       if (_this.view !== "type") {
         Object.keys(_this.treeData.dataIndex).forEach((item) => {
-          _this.rootnode.childNodes.push(_this.treeData.dataIndex[item]);
+          // _this.rootnode.childNodes.push(_this.treeData.dataIndex[item]);
+          _this.$set(_this.rootnode, 'childNodes', [..._this.rootnode.childNodes, _this.treeData.dataIndex[item]]);
         });
       }
       if (lastsel && !this.findChild(this.rootnode, "id", lastsel.id)) {
@@ -392,10 +399,9 @@ export default {
       } else {
         this.selectById(lastsel.id, lastsel);
       }
-      if (!this.treeData.updateCount) {
-        //rootnode.
-      }
+      _this.handleChangeExpand(_this.defaultExpandKeys);
       this.treeData.updateCount++;
+      this.$forceUpdate()
     },
     refresh() {
       let rootnode = {
@@ -455,6 +461,7 @@ export default {
           }
         });
       };
+      window.localStorage.setItem('defaultExpandKeys', JSON.stringify(arr));
       loop([this.rootnode]);
     },
     selectById(id, lastSelNode) {
@@ -466,13 +473,8 @@ export default {
         item.forEach((it) => {
           if (it.data.id === id) {
             Object.assign(it.data, { selected: true });
-            // if(!it.data.expanded)
-            // Object.assign(it.data, { expanded: true });
           } else {
             Object.assign(it.data, { selected: false });
-            // if(!it.data.expanded)
-            // Object.assign(it.data, { expanded: false });
-            // else Object.assign(it.data, { expanded: true });
           }
           if (it.childNodes && it.childNodes.length > 0) {
             loop(it.childNodes);
@@ -512,9 +514,6 @@ export default {
           groupinfo.selected = false;
           groupinfo.expanded = false;
           group = _this.addChildSorted(node, groupinfo);
-          // fixme: remove when EXTJS has fixed those bugs?!
-          //group.expand();
-          //group.collapse();
         }
         if (info.type === groupby) {
           return group;

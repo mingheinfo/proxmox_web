@@ -140,6 +140,7 @@ export default {
         ),
         params = deepCopy(param);
       delete params.pos;
+      delete params.ipversion;
       params.enable = params.enable === 0 ? 1 : 0;
       return this.$http
         .put(`json/nodes/${this.node.node}/${this.node.id}/firewall/rules/${param.pos}`, params, {

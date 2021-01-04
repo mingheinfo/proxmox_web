@@ -51,7 +51,7 @@
             >操作</m-button
           >
         </span>
-        <template  v-for="item in operateItems">    
+        <template  v-for="item in operateItems">
           <m-dropdown-item
             :key="item.value"
             :command="item.value"
@@ -83,7 +83,7 @@
 						 <div class="table-td" :title="item.avail ? byteToSize(item.avail) : '0'">{{item.avail ? byteToSize(item.avail) : '0'}}</div>
 						 <div class="table-td" :title="item.total ? byteToSize(item.total) : '0'">{{item.total ? byteToSize(item.total) : '0'}}</div>
 					 </div>
-				</m-option>					
+				</m-option>
 			</m-select>
       <m-input
         type="text"
@@ -282,6 +282,7 @@ export default {
 		 * 弹框
 		*/
 		showModal(type) {
+		  debugger;
       if(type !== 'delete') {
         this.modalType = type;
         this.param = type !== 'backup' ? this.selectedList[0] : {}
@@ -302,7 +303,7 @@ export default {
 					case 'config':
 						this.title = `配置`;
 						break;
-					case 'config':
+					case 'restore':
 						this.title = `恢复: ${this.node.text}`;
 						break;
 				}
