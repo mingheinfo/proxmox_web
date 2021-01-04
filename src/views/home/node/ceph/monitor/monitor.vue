@@ -132,7 +132,7 @@
                 icon="el-icon-delete"
                 type="danger"
                 :disabled="mgrSelectedList.length !== 1"
-                @on-click="handleOperate('restart')"
+                @on-click="handleOperate('delete')"
                 >销毁</m-button
               >
               <m-button
@@ -301,7 +301,7 @@ export default {
     },
     closeLog() {
       this.showLog = false;
-      this.close();
+      this.__init__();
     },
     stopTask1() {
       this.stopTask(
@@ -330,32 +330,59 @@ export default {
     },
     //删除、重启、停止等操作
     handleOperate(operate) {
-      this.$confirm
-        .confirm({
-          msg: "确认要进行以下操作吗?",
-          icon: "icon-warning",
-        })
-        .then((res) => {
-          let selectedList =
-            this.modalType === "mon"
-              ? this.selectedList[0]
-              : this.mgrSelectedList[0];
-          this.operateCeph(selectedList.host, operate, {
-            service: "mon." + selectedList.name,
-          }).then((res) => {
-            this.showLog = true;
-            this.interVal = setInterval(() => {
-              this.queryStatus(
-                this.db.addClusterStatusObj.node,
-                this.db.addClusterStatusObj.upid
-              );
-              this.queryLog(
-                this.db.addClusterStatusObj.node,
-                this.db.addClusterStatusObj.upid
-              );
-            }, 3000);
+      if(operate !== 'delete') {
+        this.$confirm
+          .confirm({
+            msg: "确认要进行以下操作吗?",
+            icon: "icon-warning",
+          })
+          .then((res) => {
+            let selectedList =
+              this.modalType === "mon"
+                ? this.selectedList[0]
+                : this.mgrSelectedList[0];
+            this.operateCeph(selectedList.host, operate, {
+              service: "mon." + selectedList.name,
+            }).then((res) => {
+              this.showLog = true;
+              this.interVal = setInterval(() => {
+                this.queryStatus(
+                  this.db.addClusterStatusObj.node,
+                  this.db.addClusterStatusObj.upid
+                );
+                this.queryLog(
+                  this.db.addClusterStatusObj.node,
+                  this.db.addClusterStatusObj.upid
+                );
+              }, 3000);
+            });
           });
-        });
+      } else {
+        this.$confirm
+          .confirm({
+            msg: "确认要进行以下操作吗?",
+            icon: "icon-warning",
+          })
+          .then((res) => {
+            let selectedList =
+              this.modalType === "mon"
+                ? this.selectedList[0]
+                : this.mgrSelectedList[0];
+            this.deleteMgr(selectedList.host).then((res) => {
+              this.showLog = true;
+              this.interVal = setInterval(() => {
+                this.queryStatus(
+                  this.db.addClusterStatusObj.node,
+                  this.db.addClusterStatusObj.upid
+                );
+                this.queryLog(
+                  this.db.addClusterStatusObj.node,
+                  this.db.addClusterStatusObj.upid
+                );
+              }, 3000);
+            });
+          })
+      }
     },
     //选择mgr
     handleMgrSelect(row) {

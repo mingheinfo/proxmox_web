@@ -75,6 +75,7 @@
           })
           if(res.data.status === 'stopped' && this.interVal) {
             clearInterval(this.interVal);
+            if(this.__init__) this.__init__();
             this.$confirm.confirm({
 								msg: this.db.addClusterStatusObj.exitstatus,
 								type: 'error',
@@ -186,9 +187,22 @@
             return Promise.reject();
           })
       },
+      deleteMgr(id, param) {
+        let event = this.createEvent('action.delete.mgr');
+        return this.$http.del(`json/nodes/${this.node}/ceph/mgr/${id}`, param)
+          .then(res => {
+            this.incEventSuccess(event);
+            this.queryStatus(id, res.data);
+          })
+          .catch(res => {
+            this.incEventFail(event);
+            confirm.call(this, res,  'error', 'icon-error');
+            return Promise.reject();
+          })
+      },
       //查询osd flags
       queryFlags(param) {
-        return this.$http.get(`json/cluster/ceph/flags`, param) 
+        return this.$http.get(`json/cluster/ceph/flags`, param)
                    .then(res => {
                      if(res.data) {
                        return Promise.resolve(res.data);
@@ -254,7 +268,7 @@
                    .then(res => {
                      if(res.data) {
                        return Promise.resolve(res.data);
-                     } 
+                     }
                    })
       },
       //创建ceph池
@@ -280,7 +294,7 @@
                    .then(res => {
                      if(res.data) {
                        return Promise.resolve(res.data);
-                     } 
+                     }
                    })
       },
       //查询fs

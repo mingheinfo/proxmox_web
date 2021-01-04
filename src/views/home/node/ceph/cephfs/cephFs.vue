@@ -198,6 +198,7 @@ export default {
     },
     closeLog() {
       this.showLog = false;
+      this.__init__();
     },
     stopTask1() {
       this.stopTask(

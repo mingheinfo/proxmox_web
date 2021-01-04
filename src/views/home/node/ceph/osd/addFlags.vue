@@ -72,7 +72,7 @@ export default {
     confirm() {
       let param = {};
       for (let i = 0; i < this.flagList.length; i++) {
-        param[this.flagList[i].name] = this.flagList[i].value;
+        param[this.flagList[i].name] = this.selectedList.some(item => item.name === this.flagList[i].name) ? 1 : 0;
       }
       this.addFlags(param).then((res) => {
         this.close();
