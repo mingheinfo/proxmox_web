@@ -413,7 +413,7 @@ export default {
       for (let arg in arguments) {
         states.push(arguments[arg]);
       }
-      return states.some(status => status === this.db.qemuObj.status);
+      return  states.some(status => status === this.db.qemuObj.status);
     },
     /**
      * 当为lxc容器时， 与虚拟机菜单略有不同分别做不同过滤

@@ -144,7 +144,7 @@ export default {
 			})
 		},
 		updateHaGroup(id, param) {
-			let event = this.createEvent('action.ha.group.lupdate');
+			let event = this.createEvent('action.update');
 			return this.$http.put('json/cluster/ha/groups/' + id, param, {
          headers: {
 					 	'content-type': 'application/x-www-form-urlencoded; charst=utf8'

@@ -52,6 +52,9 @@ export default {
                          }
                        }
                      }
+									   if(this.__init__) {
+									     this.__init__();
+                     }
 									 }
 								 })
     },
@@ -90,7 +93,7 @@ export default {
         )
         .then(() => {
           this.incEventSuccess(event);
-          this.queryResource();
+          this.__init__();
         })
         .catch((res) => {
           this.incEventFail(event);
@@ -106,10 +109,12 @@ export default {
       return this.$http
         .get(`/json/nodes/${this.qemu.node}/${this.qemu.id}/status/current`)
         .then((res) => {
-					this.updateDbObject({
-						name: 'qemuObj',
-						data: res.data
-					})
+          if(res.data) {
+            this.updateDbObject({
+              name: 'qemuObj',
+              data: res.data
+            })
+          }
         });
     },
      /**
@@ -133,7 +138,7 @@ export default {
         )
         .then(() => {
           this.incEventSuccess(event);
-          this.queryResource();
+          this.__init__();
         })
        .catch((res) => {
           this.incEventFail(event);
@@ -156,9 +161,11 @@ export default {
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           this.incEventSuccess(event);
-          this.queryResource();
+          if(res.data) {
+            this.interval = setInterval( () => this.queryStatus(res.data), 3000);
+          }
         })
         .catch((res) => {
           this.incEventFail(event);
@@ -183,7 +190,7 @@ export default {
         )
         .then(() => {
           this.incEventSuccess(event);
-          this.queryResource();
+          this.__init__();
         })
         .catch((res) => {
           this.incEventFail(event);
@@ -208,7 +215,7 @@ export default {
         )
         .then(() => {
           this.incEventSuccess(event);
-          this.queryResource();
+          this.__init__();
         })
         .catch((res) => {
           this.incEventFail(event);

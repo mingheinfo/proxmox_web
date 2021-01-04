@@ -213,10 +213,11 @@ export default {
 				    .then(res => {
 							this.vmList = res.filter(it => {
 								if(_this.param.operate === 'stopall')
-									return ['lcx','qemu'].includes(it.type) && it.node === _this.param.node && it.status === 'running';
+									return ['lxc','qemu'].includes(it.type) && it.node === _this.param.node && it.status === 'running';
 								if(_this.param.operate === 'startall')
-									return ['lcx','qemu'].includes(it.type) && it.node === _this.param.node && it.status === 'stopped';
-								return ['lcx','qemu'].includes(it.type) && it.node === _this.param.node
+									return ['lxc','qemu'].includes(it.type) && it.node === _this.param.node && it.status === 'stopped';
+								if(_this.param.operate === 'migrateall')
+								return ['lxc','qemu'].includes(it.type) && it.node === _this.param.node
 							})
 							this.$refs.dataTable.toggleAllSelection();
 							this.selectedList = this.vmList;

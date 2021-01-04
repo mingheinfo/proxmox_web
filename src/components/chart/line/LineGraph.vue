@@ -150,7 +150,6 @@
         //省拷贝options
         let _options = deepCopy(this.options);
         this.loading = true;
-        debugger;
         if(!this.data || this.data.value.length < 0 || !this.data.time || !this.data.color) {
           this.nodata = true;
           this.loading = false

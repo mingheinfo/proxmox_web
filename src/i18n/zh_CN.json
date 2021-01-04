@@ -29,15 +29,71 @@
   "config": "配置",
   "log": "日志",
   "action": {
+    "dns": {
+      "update": "更新dns"
+    },
+    "certificates": {
+      "delete": "删除证书",
+      "create": "创建证书",
+      "acme": "更新Acme"
+    },
+    "acme": {
+      "account": {
+        "create": "添加Acme账户"
+      },
+      "domains": {
+        "create": "创建域"
+      },
+      "certifices": {
+        "order": "修改顺序"
+      }
+    },
+    "timezone": {
+      "update": "更新时区"
+    },
     "node": {
       "reboot": "重启节点 {name}",
       "delete": "删除节点 {name}",
       "stopall": "批量停止 {name}",
       "startall": "批量启动 {name}",
-      "migrate": "迁移节点 {name}"
+      "migrateall": "迁移节点 {name}",
+      "replication": {
+        "create": "添加复制作业 {name}",
+        "update": "更新复制作业 {name}",
+        "delete": "删除复制作业 {name}"
+      },
+      "host": {
+        "update": "更新主机 {name}"
+      },
+      "disk": {
+        "directory": {
+          "create": "添加目录 {name}"
+        },
+        "lvm": {
+          "create": "添加Lvm存储"
+        },
+        "lvmthin": {
+          "create": "添加LvmThin 存储"
+        }
+      },
+      "network": {
+        "create": "添加网络 {name}",
+        "resume": "还原网络 {name}",
+        "update": "更新网络 {name}",
+        "delete": "删除网络 {name}"
+      }
+    },
+    "notes": {
+      "add": "添加备注"
     },
     "update": {
       "pool": "跟新池 {name}"
+    },
+    "lxc": {
+      "reboot": "重启lxc容器"
+    },
+    "template": {
+      "translate": "转换成模板 {name}"
     },
     "qemu": {
       "comment": "修改备注 {name}",
@@ -48,7 +104,25 @@
       "reset": "重置虚拟机 {name}",
       "paused": "暂停虚拟机 {name}",
       "suspend": "挂起虚拟机 {name}",
-      "off": "关闭虚拟机 {name}"
+      "off": "关闭虚拟机 {name}",
+      "snapshot": {
+        "delete": "删除虚拟机快照 {name}",
+        "add": "添加虚拟机快照 {name}",
+        "update": "更新虚拟机快照 {name}",
+        "rollback": "回滚虚拟机快照 {name}"
+      },
+      "hardware": {
+        "resume": "还原硬件 {name}",
+        "create": "添加硬件 {name}",
+        "update": "更新硬件 {name}",
+        "delete": "删除硬件 {name}",
+        "disk": {
+          "remove": "删除硬盘 {name}"
+        },
+        "size": {
+          "update": "更新硬件容量 {name}"
+        }
+      }
     },
     "storage": {
       "delete": "删除存储 {name} ",
@@ -58,12 +132,49 @@
     "backup": {
       "delete": "删除备份 {name} ",
       "create": "添加备份 {name}",
-      "update": "更新备份 {name}"
+      "update": "更新备份 {name}",
+      "run": "立即运行 {name}"
     },
     "replication": {
       "create": "创建复制 {name}",
       "update": "修改复制 {name}",
       "delete": "删除复制 {name}"
+    },
+    "firewall": {
+      "create": "添加防火墙 {name}",
+      "delete": "删除防火墙 {name}",
+      "update": "更新防火墙 {name}",
+      "group": {
+        "create": "添加安全组 {name}",
+        "update": "更新安全组 {name}",
+        "delete": "删除安全组 {name}",
+        "rule": {
+          "update": "更新安全组规则 {name}",
+          "delete": "删除安全组规则 {name}"
+        }
+      },
+      "alias": {
+        "create": "添加别名 {name}",
+        "update": "更新别名 {name}",
+        "delete": "删除别名 {name}"
+      },
+      "ipset": {
+        "update": "更新IpSet {name}",
+        "create": "添加IpSet {name}",
+        "delete": "删除IpSet {name}",
+        "cidr": {
+          "update": "更新IpSet Cidr {name}",
+          "create": "添加IpSet Cidr {name}",
+          "delete": "删除IpSet Cidr {name}"
+        }
+      }
+    },
+    "ha": {
+      "create": "创建高可用 {name}",
+      "update": "更新高可用 {name}",
+      "manage": {
+        "update": "管理HA {name}"
+      }
     },
     "access": {
       "delete": "删除权限 {name}",
@@ -76,6 +187,18 @@
         "password": {
           "update": "修改用户密码 {name}"
         }
+      },
+      "ha": {
+        "delete": "删除高可用 {name}",
+        "group": {
+          "delete": "删除组 {name}"
+        }
+      },
+      "backup": {
+        "delete": "删除备份 {name} ",
+        "create": "添加备份 {name}",
+        "update": "更新备份 {name}",
+        "run": "立即运行 {name}"
       },
       "token": {
         "create": "添加Token {name}",
@@ -101,6 +224,17 @@
         "create": "添加域 {name}",
         "update": "更新域 {name}",
         "delete": "删除域 {name}"
+      }
+    },
+    "acme": {
+      "account": {
+        "create": "添加Acme账户 {name}",
+        "delete": "删除Acme账户 {name}"
+      },
+      "plugin": {
+        "create": "添加Acme插件 {name}",
+        "update": "更新Acme插件 {name}",
+        "delete": "删除Acme插件 {name}"
       }
     }
   },

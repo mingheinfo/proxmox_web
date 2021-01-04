@@ -1,4 +1,5 @@
 import * as types from '../mutations-types';
+import { deepCopy } from '@libs/utils/index';
 import Vue from 'vue';
 const state = {
   cap: {},
@@ -30,7 +31,6 @@ const state = {
   vgList: [],
   clusterTaskList: [],
   clusterLogList: [],
-  iscsiList: [],
   poolsList: [],
   zfsList: [],
   nodeSystemList: [],
@@ -152,7 +152,8 @@ const mutations = {
   },
   [types.UPDATE_DB_OBJECT] (state, { name, data }) {
     if (!state[name]) state[name] = {}
-    Vue.set(state, name, {...data})
+    let newState = deepCopy(data);
+    Vue.set(state, name, newState)
   },
   [types.UPDATE_LAST_SELECT](state, obj) {
     Vue.set(state, "lastSelectObj", obj);
