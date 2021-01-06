@@ -3,3 +3,7 @@
 .idea
 /node_modules
 /public/dist/
+/config/bundle-config.json
+vendor-manifest.json
+yarn-error.log
+bundle-config.json
