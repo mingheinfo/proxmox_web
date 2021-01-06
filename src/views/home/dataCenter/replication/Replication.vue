@@ -1,5 +1,5 @@
 <template>
-	 <page-template>
+	 <page-template v-loading="loading"  :element-loading-text="loadingText">
 		 <div slot="toolbar-left">
         <m-button type="primary" @on-click="showModal('create')" icon="el-icon-plus">添加</m-button>
 				<m-button type="primary" @on-click="showModal('edit')" icon="el-icon-edit" :disabled="selectedList.length !== 1">编辑</m-button>
@@ -61,7 +61,9 @@ export default {
 			title: '创建：复制作业',
 			selectedList: [],
 			isCreate: true,
-			param: {}
+			param: {},
+			loading: false,
+			loadingText: ''
 		}
 	},
 	mounted() {

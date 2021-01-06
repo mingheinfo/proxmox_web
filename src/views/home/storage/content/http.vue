@@ -15,9 +15,11 @@ export default {
   },
   methods: {
     queryStorageContent() {
+      this.loading = true;
       return this.$http
         .get(`json/nodes/${this.node}/storage/${this.storage}/content`)
         .then((res) => {
+          this.loading = false;
           if (res.data) {
             this.updateTable({
               tableName: "storageContentList",
@@ -30,7 +32,6 @@ export default {
             tableName: "storageContentList",
             list: [],
           });
-          debugger;
           if(typeof (this.loading) !== 'undefined' && typeof (this.loadingText) !== 'undefined') {
              this.loading = true;
              this.loadingText = res;
@@ -202,7 +203,7 @@ export default {
              let upid = res.data;
              await this.queryLog(this.node, upid);
              await this.queryStatus(this.node, upid);
-          } 
+          }
         })
         .catch((res) => {
           this.incEventFail(event);

@@ -13,15 +13,19 @@ export default {
 	},
 	methods: {
 		queryNodeReplication() {
+      this.loading = true;
 			return this.$http.get(`json/nodes/${this.node}/replication`)
 			           .then(res => {
+			             this.loading = false;
 									  if(res.data) {
 											this.updateTable({
 												tableName: 'nodeReplicationList',
 												list: res.data
 											})
 										}
-								 })
+								 }).catch(res => {
+               this.loadingText = res;
+            })
 		},
 		queryHighIds() {
       return this.$http

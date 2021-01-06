@@ -1,5 +1,5 @@
 <template>
-  <page-template>
+  <page-template v-loading="loading" :element-loading-text="loadingText">
     <div slot="toolbar-left">
       <m-button
         type="primary"
@@ -119,7 +119,9 @@ export default {
 			search: '',
 			storage: '',
 			qemuReplicationList: [],
-			interVal: null
+			interVal: null,
+			loading: false,
+			loadingText: ''
     };
   },
   mounted() {

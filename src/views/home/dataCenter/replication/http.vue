@@ -4,12 +4,16 @@ export default {
   name: "DataCenterReplicationHttp",
   methods: {
     queryReplicationList() {
+      this.loading = true
       return this.$http.get("json/cluster/replication").then((res) => {
+        this.loading = false;
         if (res.data)
           this.updateTable({
             tableName: "dataCenterReplicationList",
             list: res.data,
           });
+      }).catch(res => {
+        this.loadingText = res;
       });
     },
     queryNodeList() {

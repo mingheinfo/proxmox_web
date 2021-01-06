@@ -17,15 +17,19 @@ export default {
 		 * @param guest 虚拟机id
 		*/
 		queryQemuReplication(param) {
+		  this.loading = true;
 			return this.$http.get(`json/nodes/${this.node.node}/replication`, param)
 			           .then(res => {
+			             this.loading = false;
 									 if(res.data) {
 										 this.updateTable({
 											 tableName: 'qemuReplicationList',
 											 list: res.data
 										 })
 									 }
-								 })
+								 }).catch((res) => {
+								   this.loadingText = res;
+                 })
 		},
 		/**
 		 * 查询node节点列表
