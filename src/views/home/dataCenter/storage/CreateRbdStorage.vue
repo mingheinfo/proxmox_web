@@ -27,7 +27,7 @@
 										:error-msg="rules.pool.message"
 										v-model="pool"
 					          label="内容">
-						<m-option v-for="item in cephPoolsList" 
+						<m-option v-for="item in cephPoolsList"
 						          :key="item.pool_name"
                       :label="item.pool_name"
                       :value="item.pool_name"></m-option>
@@ -45,7 +45,7 @@
             v-model="monhost"
             placeholder="请输入monitor"
           />
-					<m-checkbox  
+					<m-checkbox
 					    label="启用"
 							v-model="disable"
               labelWidth="100px"></m-checkbox>
@@ -68,7 +68,7 @@
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in options"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
@@ -87,11 +87,11 @@
             v-model="maxfiles"
             placeholder="请输入最大备份数"
           />
-						<m-checkbox  
+						<m-checkbox
 					    label="KRBD"
 							v-model="krbd"
               labelWidth="100px"></m-checkbox>
-						<m-checkbox  
+						<m-checkbox
 					    label=""
 							v-model="pveceph"
 							:disabled="!pvecephPossible"
@@ -110,7 +110,7 @@
 			<dl>
         <dt>节点</dt>
         <dd>
-          <el-table :data="db.nodeList" 
+          <el-table :data="db.nodeList"
 					         @selection-change="handleSelectionChange">
             <el-table-column
                 type="selection"
@@ -170,24 +170,8 @@ export default {
 					value: 'images'
 				},
 				{
-					label: 'iso镜像',
-					value: 'iso'
-				},
-				{
 					label: '容器模板',
 					value: "vztmpl"
-				},
-				{
-					label: 'VZDump备份文件',
-					value: "backup"
-				},
-				{
-					label: '容器',
-					value: 'rootdir'
-				},
-				{
-					label: '片段',
-					value: 'snippets'
 				}
 			],
 			rules: {
@@ -233,7 +217,7 @@ export default {
         });
       });
       if (this.isCreate) {
-      
+
       } else {
         Object.keys(this.param).forEach((key) => {
           if (["disable", 'shared', 'pveceph', 'krbd'].includes(key)) {

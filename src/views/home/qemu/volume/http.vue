@@ -75,7 +75,7 @@ export default {
           }
         });
 		},
-		queryNetWork(param) {		
+		queryNetWork(param) {
 			return this.$http
         .get(`/json/nodes/${this.node.node}/network`, param)
         .then((res) => {
@@ -235,7 +235,7 @@ export default {
     },
     //增加磁盘大小
     updateHardWareSize(param) {
-     let event = this.createEvent("action.qemu.hardware.size.update");
+     let event = this.createEvent("action.qemu.hardware.update.size");
       return this.$http
         .put(`json/nodes/${this.node.node}/${this.node.id}/resize`, param, {
           headers: {
@@ -253,7 +253,7 @@ export default {
     },
     //移动磁盘
     removeDisk(param, url) {
-      let event = this.createEvent("action.qemu.hardware.disk.remove");
+      let event = this.createEvent("action.qemu.hardware.remove.disk");
       return this.$http
         .post(`json/nodes/${this.node.node}/${this.node.id}/${url}`, param, {
           headers: {
@@ -268,6 +268,15 @@ export default {
 					this.incEventFail(event);
 					return Promise.reject(res);
         });
+    },
+    //查询当前虚拟机状态
+    queryCurrentStatus() {
+      return this.$http.get(`json/nodes/${this.node.node}/${this.node.id}/status/current`)
+        .then(res => {
+          if(res.data) {
+            return Promise.resolve(res.data)
+          }
+        })
     }
   },
 };

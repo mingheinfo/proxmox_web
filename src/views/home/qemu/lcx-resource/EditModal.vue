@@ -801,9 +801,6 @@ export default {
 				case 'editCores':
 					props = ['cpuunits'];
 					break;
-				case 'editDisk':
-					props = ['mp'];
-					break;
 				case 'migrate':
 					props =  ['storage'];
 					break;

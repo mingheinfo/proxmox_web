@@ -536,6 +536,14 @@ const router = new VueRoute({
               }
             },
             {
+              path: 'cloud-init',
+              name: 'cloud-init',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/cloud-init/CloudInit.vue"),
+              meta: {
+                title: 'Cloud Init'
+              }
+            },
+            {
               path: 'lxc-resource',
               name: 'lxc-resource',
               component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/lcx-resource/Resource.vue"),

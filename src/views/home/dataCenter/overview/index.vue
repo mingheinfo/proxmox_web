@@ -24,6 +24,14 @@
             :data="status && status.node"
           ></line-item>
         </div>
+        <div class="card-item" v-if="!uninstallCeph">
+          <h1 class="ceph-title">Ceph状态</h1>
+          <router-link to="/datacenter/ceph" class="ceph-icon" :class="{
+									'fa fa-exclamation-circle warning': db.cephObj && db.cephObj.health && db.cephObj.health.status === 'HEALTH_WARN',
+									'fa fa-check-circle good': db.cephObj && db.cephObj.health && db.cephObj.health.status === 'HEALTH_OK'
+								}"></router-link>
+          <div class="ceph-health">{{db.cephObj && db.cephObj.health && db.cephObj.health.status}}</div>
+        </div>
       </div>
     </overview-card>
     <overview-card>
@@ -185,6 +193,7 @@ export default {
       status: {},
       nodes: [],
       intervalId: null,
+      uninstallCeph: false,
       subs: {
         title: "未知",
         text: "未知",
@@ -197,6 +206,7 @@ export default {
     async __init__() {
       await this.getClusterStatus();
       this.getClusterResource();
+      this.queryCephStatus();
     },
     getClusterStatus() {
       this.$http.get("/json/cluster/status").then((results) => {
@@ -381,6 +391,26 @@ export default {
           return "good fa-check-circle";
       }
     },
+    queryCephStatus() {
+      return this.$http.get('json/cluster/ceph/status')
+        .then(res => {
+          if(res.data) {
+            this.uninstallCeph = false
+            this.updateDbObject({
+              name: 'cephObj',
+              data: res.data
+            })
+          }
+        }).catch(res => {
+          if(/(not installed)/.test(res)) {
+            this.uninstallCeph = true;
+          }
+          this.updateDbObject({
+            name: 'cephObj',
+            data: {}
+          })
+        })
+    }
   },
   mounted() {
     this.__init__();
@@ -399,6 +429,19 @@ export default {
 }
 .card-item{
    height: 100%;
+}
+.ceph-title{
+  margin: 20px 0 20px;
+  font-size: 12px;
+  text-align: center;
+}
+.ceph-icon{
+  font-size: 65px;
+  width: 100%;
+  text-align: center;
+}
+.ceph-health{
+  text-align: center;
 }
 /deep/.el-table td, .el-table th{
   padding: 0px;

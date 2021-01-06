@@ -236,6 +236,11 @@
         "update": "更新Acme插件 {name}",
         "delete": "删除Acme插件 {name}"
       }
+    },
+    "lxc": {
+      "create": "创建Lxc {name}",
+      "delete": "删除Lxc {name}",
+      "update": "修改Lxc {name}"
     }
   },
   "type": {

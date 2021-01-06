@@ -153,15 +153,15 @@
         this.setExpectedState(false);
         this.debounceClose();
         stopEvent(event);
+        this.destroyPopper();
       },
       handleFocus(event) {
         this.focusing = true;
-        console.log('======' +  'focusing')
+        this.destroyPopper();
         this.show(event);
       },
       handleBlur(event) {
         this.focusing = false;
-        console.log('======' +  'blur')
         this.hide(event);
       },
       removeFocusing(event) {

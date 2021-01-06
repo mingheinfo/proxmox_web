@@ -1531,6 +1531,7 @@ export default {
             this.imageStorageList.length > 0
               ? this.imageStorageList[0].storage
               : "";
+             this.storageType =  this.imageStorageList.length > 0 ? this.imageStorageList[0].type : '';
         });
       }
       if (this.step === 5) {

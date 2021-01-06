@@ -392,6 +392,13 @@ const qemuMenuList = [
     children: []
   },
   {
+    path: '/qemu/cloud-init',
+    title: 'Cloud-Init',
+    key: 'qemu-cloud-init',
+    icon:'fa fa-cloud',
+    children: []
+  },
+  {
     path: '/qemu/options',
     title:'option',
     key: 'qemu-option',

@@ -39,7 +39,7 @@
             v-model="username"
             placeholder="请输入用户名"
           />
-					<m-checkbox  
+					<m-checkbox
 					    label="启用"
 							v-model="disable"
               labelWidth="100px"></m-checkbox>
@@ -53,7 +53,7 @@
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in options"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
@@ -72,7 +72,7 @@
             v-model="maxfiles"
             placeholder="请输入最大备份数"
           />
-						<m-checkbox  
+						<m-checkbox
 					    label=""
 							v-model="pveceph"
 							:disabled="!pvecephPossible"
@@ -91,7 +91,7 @@
 			<dl>
         <dt>节点</dt>
         <dd>
-          <el-table :data="db.nodeList" 
+          <el-table :data="db.nodeList"
 					           ref="dataTable"
 						        @selection-change="handleSelectionChange">
             <el-table-column
@@ -144,17 +144,9 @@ export default {
 			pveceph: true,
 			pvecephPossible: true,
 			options: [
-			  {
-					label: '磁盘映像',
-					value: 'images'
-				},
 				{
 					label: 'iso镜像',
 					value: 'iso'
-				},
-				{
-					label: '容器模板',
-					value: "vztmpl"
 				},
 				{
 					label: 'VZDump备份文件',
@@ -209,7 +201,7 @@ export default {
         });
       });
       if (this.isCreate) {
-      
+
       } else {
         Object.keys(this.param).forEach((key) => {
           if (["disable", 'shared', 'pveceph'].includes(key)) {

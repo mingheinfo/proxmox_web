@@ -58,11 +58,9 @@
     margin-top: -20px;
     &-left{
       flex: 1 1 auto;
-      width: 0;
     }
     &-right{
       flex: 1 1 auto;
-      width: 0;
     }
   }
  .page-template{

@@ -421,7 +421,7 @@ export default {
     setMenu(type) {
       if(type === 'lxc') {
         this.menuData = qemuMenuList.filter(item => {
-          return !/(monitor|volume)/.test(item.path)
+          return !/(monitor|volume|cloud-init)/.test(item.path)
         })
       } else {
         this.menuData = qemuMenuList.filter(item => {

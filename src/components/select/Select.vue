@@ -6,7 +6,7 @@
     <span class="m-select__input">
       <span
         class="select prefix-icon"
-        tabindex="-1"
+        tabindex="0"
         :class="{
           show: trigger === 'hover' && isOpen,
           'is-click': isOpen,
@@ -77,13 +77,8 @@
         <div
           style="overflow-y: auto; max-height: 200px"
           ref="select-option"
-          tabindex="-1"
+          tabindex="0"
           @mouseleave.stop="isOpen = false"
-          @blur.stop="
-            () => {
-              if (type === 'multiple') handleOptionBlur();
-            }
-          "
         >
           <slot></slot>
         </div>
@@ -93,6 +88,7 @@
 </template>
 
 <script>
+import { stopEvent } from '@libs/utils/index';
 export default {
   name: "select",
   provide() {
@@ -238,7 +234,8 @@ export default {
       this.selected = this.setSelected();
     },
     //处理多选隐藏
-    handleOptionBlur() {
+    handleOptionBlur(event) {
+      stopEvent(event);
       this.isOpen = false;
     },
     handleClick() {
@@ -252,9 +249,6 @@ export default {
         : (event.cancelBubble = true);
       this.isOpen = false;
       this.$emit("validate", this.prop);
-    },
-    handleOptionBlur() {
-      this.isOpen = false;
     },
   },
   destroyed() {

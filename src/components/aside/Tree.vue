@@ -134,6 +134,7 @@ export default {
     };
   },
   methods: {
+    //计算左侧菜单栏的宽度
     handleMouseDown(event) {
       stopEvent(event);
       this.initX = event.clientX;
@@ -149,6 +150,7 @@ export default {
         false
       );
     },
+    //移动左侧菜单栏
     handleMouseMove(event) {
       stopEvent(event);
       event.preventDefault();
@@ -173,6 +175,7 @@ export default {
       el.style.width = `calc(100% - ${this.initX + y}px)`;
       el.style.left = this.initX + y + "px";
     },
+    //取消移动
     handleMouseUp(event) {
       stopEvent(event);
       event.preventDefault();
@@ -691,7 +694,7 @@ export default {
   }
   &_col-resize {
     height: 100%;
-    border-right: 3px solid rgb(222 208 208);
+    border-right: 3px solid #ded0d0;
     position: absolute;
     right: 0;
     top: 0;

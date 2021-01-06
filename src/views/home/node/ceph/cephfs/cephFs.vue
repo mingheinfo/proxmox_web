@@ -4,7 +4,7 @@
       <page-template>
         <div slot="toolbar-left">
           <m-button type="primary"
-					          :disabled="cephFsList.length !== 1"
+					          :disabled="cephFsList.length > 0 && cephFsList.length !== 1"
 					          @on-click="showModal('cephfs')"
             >创建CephFs</m-button
           >
