@@ -12,7 +12,7 @@
           type="danger"
           @on-click="handleDelete()"
           icon="el-icon-delete"
-          :disabled="!current || currentObj.type !== 'cipassword'"
+          :disabled="!current || (currentObj.type !== 'cipassword' && !/ciDriveId/.test(currentObj.type))"
       >{{'删除'}}</m-button
       >
       <m-button
@@ -70,6 +70,7 @@
     render_qemu_bios,
     render_kvm_vga_driver,
     forEachBus,
+    parseQemuDrive
   } from "@libs/utils/index";
   import { gettext } from "@src/i18n/local_zhCN.js";
   import BaseIcon from '@src/components/icon/BaseIcon.vue';
@@ -98,7 +99,9 @@
         param: {},
         statusObj: {},
         title: '',
-        isCi: false
+        isCi: false,
+        ciDriveId: '',
+        ciDrive: ''
       };
     },
     mounted() {
@@ -186,14 +189,59 @@
               },
             }
           ];
+          if(this.ciDriveId) {
+            this.hardwareList.push({
+              name: `IP配置(${this.ciDriveId.replace(/ide/, 'net')})`,
+              type: "ciDriveId",
+              icon: "fa fa-exchange",
+              itemId: 'editDriveId',
+              render: function (pending) {
+                var id = _this.ciDriveId.replace(/ide/, 'net');
+                var match = id.match(/^net(\d+)$/);
+                var val = '';
+                if (match) {
+                  val = _this.getObjectValue('ipconfig'+match[1], '', pending);
+                }
+                return val;
+              },
+            })
+          }
         })
+      },
+      getObjectValue(type, defaultValue, pending) {
+        debugger;
+        let _this = this;
+        let rec = _this.store[type];
+        if (rec) {
+          let value = rec.data.value;
+          if (pending) {
+            if (!isEmpty(rec.data.pending)) {
+              value = rec.data.pending;
+            } else if (rec.data["delete"] === 1) {
+              value = defaultValue;
+            }else {
+              value = value;
+            }
+            return value;
+          } else {
+            if (!isEmpty(value)) {
+              return value;
+            } else {
+              return defaultValue;
+            }
+          }
+        }
+        return defaultValue;
       },
       handleDelete() {
         this.$confirm.confirm({
           msg: `你确定你要删除该项${this.currentObj.name}?`,
           icon: 'icon-question'
         }).then(res => {
-          this.deleteHareWare({delete: this.current}).catch(res => {
+          if(this.current === 'ciDriveId') this.current =  this.ciDriveId.replace(/ide/, 'ipconfig');
+          this.deleteHareWare({delete: this.current}).then(res => {
+            this.__init__()
+          }).catch(res => {
             this.$confirm.info({
               msg: res
             }).then(res => this.__init__()).catch(res => this.__init__())
@@ -277,13 +325,25 @@
       },
       //改变磁盘大小
       getCdRom() {
-        let param = {
-          ide0: `none,media=cdrom`,
-        };
-        this.updateHardWare(param)
+        let disk = parseQemuDrive(this.ciDriveId, this.ciDrive),
+           storage = '',
+           eject_params = {},
+           insert_params = {},
+           stormatch = disk.file.match(/^([^\:]+)\:/);
+          if (stormatch) {
+            storage = stormatch[1];
+          }
+        eject_params[this.ciDriveId] = 'none,media=cdrom';
+        insert_params[this.ciDriveId] = storage + ':cloudinit';
+        this.updateHardWare(eject_params)
           .then((res) => {
-            this.__init__();
-          })
+            this.updateHardWare(insert_params)
+              .then(res => {
+                this.__init__();
+              })
+          }).then(res => {
+          this.__init__();
+        })
           .catch((res) => {
             this.$confirm.confirm({
               msg: res,
@@ -296,8 +356,12 @@
       },
       isCloudInit(confid) {
         let _this = this;
-        return _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.pending) &&  /vm-.*-cloudinit/.test(_this.store[confid].data.pending)
-          ||  _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) &&  /vm-.*-cloudinit/.test(_this.store[confid].data.value)
+        if (confid.match(/^(ide|scsi|sata)\d+$/) && _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) &&  /vm-.*-cloudinit/.test(_this.store[confid].data.value)) {
+          this.ciDriveId = confid;
+          this.ciDrive = this.store[confid].data.value;
+        }
+        return confid.match(/^(ide|scsi|sata)\d+$/) &&
+          _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) &&  /vm-.*-cloudinit/.test(_this.store[confid].data.value)
       }
     }
   };

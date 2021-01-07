@@ -75,7 +75,7 @@
       >
     </div>
     <div slot="page-content">
-        <hardware-add-modal 
+        <hardware-add-modal
                         :visible="visible"
                         :type="type"
                         v-if="visible"
@@ -113,7 +113,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <job-press-modal v-if="jobVisible" 
+      <job-press-modal v-if="jobVisible"
                        :visible="jobVisible"
                        :title="jobTitle"
                        @close="jobVisible = false; __init__()"
@@ -241,7 +241,7 @@ export default {
   },
   methods: {
     //初始化请求
-    __init__() {   
+    __init__() {
       let _this = this;
       _this.queryResource().then((res) => {
         //装配数据得到格式为{key: value}的数据以便后期数据处理
@@ -332,7 +332,7 @@ export default {
             render: function (pending) {
               if(pending)
                return _this.store.bios && _this.store.bios.data &&  _this.store.bios.data.pending ? render_qemu_bios(_this.store.bios.data && _this.store.bios.data.pending) : '';
-              else 
+              else
                 return _this.store.bios ? render_qemu_bios(_this.store.bios.data && _this.store.bios.data.value) : '默认 (SeaBIOS)';
             },
           },
@@ -423,7 +423,7 @@ export default {
                     ? _this.store[confid].data.pending
                     : "";
                 } else {
-                  return _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) && _this.store[confid].data.delete ? 
+                  return _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) && _this.store[confid].data.delete ?
                      _this.store[confid].data.value + "delete:true"
                     : _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) ? _this.store[confid].data.value
                     : '';
@@ -447,7 +447,7 @@ export default {
                     ? _this.store[confid].data.pending
                     : "";
                 } else {
-                 return _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) && _this.store[confid].data.delete ? 
+                 return _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) && _this.store[confid].data.delete ?
                      _this.store[confid].data.value + "delete:true"
                     : _this.store[confid] && _this.store[confid].data && !isEmpty(_this.store[confid].data.value) ? _this.store[confid].data.value
                     : '';
@@ -613,9 +613,9 @@ export default {
           })
       },
       setDisabled() {
-         let _this = this, 
-         noSysConsolePerm = _this.db && _this.db.cap && this.db.cap.nodes && !this.db.cap.nodes['Sys.Console'], 
-         noVMConfigHWTypePerm = _this.db && _this.db.cap && this.db.cap.vms && !this.db.cap.vms['VM.Config.HWType'], 
+         let _this = this,
+         noSysConsolePerm = _this.db && _this.db.cap && this.db.cap.nodes && !this.db.cap.nodes['Sys.Console'],
+         noVMConfigHWTypePerm = _this.db && _this.db.cap && this.db.cap.vms && !this.db.cap.vms['VM.Config.HWType'],
          noVMConfigNetPerm = _this.db && _this.db.cap && this.db.cap.vms && !this.db.cap.vms['VM.Config.Network'],
          hasCloudInit = false;
 	       _this.db.volumeList.forEach(function(item){
@@ -633,31 +633,31 @@ export default {
            }
            if(it.itemId ==='addaudio') {
              it.disabled = (noSysConsolePerm || _this.isAtLimit('audio'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addserial') {
              it.disabled = (noSysConsolePerm || _this.isAtLimit('serial'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addnet') {
              it.disabled = (noVMConfigNetPerm || _this.isAtLimit('net'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addrng') {
              it.disabled = (noSysConsolePerm || _this.isAtLimit('rng'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addefidisk') {
              it.disabled = (noSysConsolePerm || _this.isAtLimit('efidisk'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addci') {
              it.disabled = (noSysConsolePerm || hasCloudInit)
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
            if(it.itemId ==='addusb') {
              it.disabled = (noSysConsolePerm || _this.isAtLimit('usb'))
-             _this.$set(this.menu_items, index, it); 
+             _this.$set(this.menu_items, index, it);
            }
          })
       },
@@ -666,7 +666,9 @@ export default {
           msg: `你确定你要删除该项${this.currentObj.name}?`,
           icon: 'icon-question'
         }).then(res => {
-          this.deleteHareWare({delete: this.current}).catch(res => {
+          this.deleteHareWare({delete: this.current}).then(res => {
+            this.__init__();
+          }).catch(res => {
           this.$confirm.info({
             msg: res
           }).then(res => this.__init__()).catch(res => this.__init__())
@@ -730,7 +732,7 @@ export default {
 						value = value;
 					}
 					return value;
-        } else {	
+        } else {
         if (!isEmpty(value)) {
           return value;
         } else {
@@ -783,9 +785,9 @@ export default {
       })
     },
     canResume() {
-      return ( (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.pending) 
+      return ( (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.pending)
              ||  (this.store[this.current] && this.store[this.current].data && this.store[this.current].data.delete) )
-             ? true 
+             ? true
              : false;
     },
     handleResume() {
@@ -823,7 +825,7 @@ export default {
   background-size: 16px;
 }
 /deep/.el-table td, .el-table th{
-  padding: 0px 
+  padding: 0px
 }
 /deep/.base-icon{
   background-size: 16px;

@@ -1482,6 +1482,60 @@ const off = (function() {
   }
 })();
 
+function parseQemuDrive(key, value) {
+  if (!(key && value)) {
+    return;
+  }
+
+  var res = {};
+
+  var match_res = key.match(/^([a-z]+)(\d+)$/);
+  if (!match_res) {
+    return;
+  }
+  res['interface'] = match_res[1];
+  res.index = match_res[2];
+
+  var errors = false;
+  value.split(',').forEach(function(p) {
+    if (!p || p.match(/^\s*$/)) {
+      return; // continue
+    }
+    var match_res = p.match(/^([a-z_]+)=(\S+)$/);
+    if (!match_res) {
+      if (!p.match(/\=/)) {
+        res.file = p;
+        return; // continue
+      }
+      errors = true;
+      return false; // break
+    }
+    var k = match_res[1];
+    if (k === 'volume') {
+      k = 'file';
+    }
+
+    if (typeof res[k] !== 'undefined') {
+      errors = true;
+      return false; // break
+    }
+
+    var v = match_res[2];
+
+    if (k === 'cache' && v === 'off') {
+      v = 'none';
+    }
+
+    res[k] = v;
+  });
+
+  if (errors || !res.file) {
+    return;
+  }
+
+  return res;
+}
+
 export {
   getEvent,
   stopEvent,
@@ -1554,5 +1608,6 @@ export {
   confirm,
   chunkData,
   on,
-  off
+  off,
+  parseQemuDrive
 }
