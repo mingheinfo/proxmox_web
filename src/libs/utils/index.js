@@ -1609,5 +1609,6 @@ export {
   chunkData,
   on,
   off,
-  parseQemuDrive
+  parseQemuDrive,
+  parsePropertyString
 }

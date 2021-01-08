@@ -1,5 +1,5 @@
 <template>
-	<m-dialog :title="title" 
+	<m-dialog :title="title"
 	          :visible="visible"
 						@confirm="confirm"
 						:_style="{
@@ -14,7 +14,7 @@
 						<dd>
 						<!--名称-->
 						 <template v-if="modalType === 'editname'">
-							 	<m-input type="text" 
+							 	<m-input type="text"
 							         prop="name"
 											 v-model="name"
 											 labelWidth="100px"
@@ -28,13 +28,13 @@
              <!--开机自启动-->
 						  <template  v-if="modalType === 'editboot'">
 								<m-checkbox v-model="onboot"
-								            labelWidth="100px" 
+								            labelWidth="100px"
 							              label="开机自启动">
 							  </m-checkbox>
 							</template>
               <!--启动/关机顺序-->
 							<template  v-if="modalType === 'editstartup'">
-								<m-input type="text" 
+								<m-input type="text"
 							           prop="order"
 											   v-model="order"
 												 labelWidth="100px"
@@ -42,7 +42,7 @@
 											   placeholer="any"
 											   label="启动/关机顺序"/>
 
-							<m-input type="text" 
+							<m-input type="text"
 							         prop="up"
 											 v-model="up"
 											 labelWidth="100px"
@@ -50,7 +50,7 @@
 											 placeholder="any"
 											 label="启动延时"/>
 
-							<m-input type="text" 
+							<m-input type="text"
 							         prop="down"
 											 labelWidth="100px"
 											 v-model="down"
@@ -66,7 +66,7 @@
 													v-model="ostype">
 							  <m-option v-for="item in osTypeItems"
 								          :key="item.key"
-													:label="item.label" 
+													:label="item.label"
 								          :value="item.value">
 								</m-option>
 							</m-select>
@@ -78,53 +78,67 @@
 							          v-model="version">
 							  <m-option v-for="item in versionItems"
 								          :key="item.key"
-													:label="item.label" 
+													:label="item.label"
 								          :value="item.value">
 								</m-option>
 							</m-select>
 							</template>
                <!--引导顺序-->
 							<template  v-if="modalType === 'editorder'">
-									<m-select prop="bd1"
-													label="引导设备1"
-													labelWidth="100px"
-													@on-change="(value) => { bd1 = value}"
-													v-model="bd1">
-									<m-option v-for="item in dbItems"
-														:key="item.value"
-														:label="item.label" 
-														:value="item.value">
-									</m-option>
-								</m-select>
+									<!--<m-select prop="bd1"-->
+													<!--label="引导设备1"-->
+													<!--labelWidth="100px"-->
+													<!--@on-change="(value) => { bd1 = value}"-->
+													<!--v-model="bd1">-->
+									<!--<m-option v-for="item in dbItems"-->
+														<!--:key="item.value"-->
+														<!--:label="item.label"-->
+														<!--:value="item.value">-->
+									<!--</m-option>-->
+								<!--</m-select>-->
 
-								<m-select prop="bd2"
-													label="引导设备2"
-													labelWidth="100px"
-													@on-change="(value) => { bd2 = value}"
-													v-model="bd2">
-									<m-option v-for="item in dbItems"
-														:key="item.value"
-														:label="item.label" 
-														:value="item.value">
-									</m-option>
-								</m-select>
+								<!--<m-select prop="bd2"-->
+													<!--label="引导设备2"-->
+													<!--labelWidth="100px"-->
+													<!--@on-change="(value) => { bd2 = value}"-->
+													<!--v-model="bd2">-->
+									<!--<m-option v-for="item in dbItems"-->
+														<!--:key="item.value"-->
+														<!--:label="item.label"-->
+														<!--:value="item.value">-->
+									<!--</m-option>-->
+								<!--</m-select>-->
 
-								<m-select prop="bd3"
-													label="引导设备3"
-													labelWidth="100px"
-													@on-change="(value) => { bd3 = value}"
-													v-model="bd3">
-									<m-option v-for="item in dbItems"
-														:key="item.value"
-														:label="item.label" 
-														:value="item.value">
-									</m-option>
-								</m-select>
+								<!--<m-select prop="bd3"-->
+													<!--label="引导设备3"-->
+													<!--labelWidth="100px"-->
+													<!--@on-change="(value) => { bd3 = value}"-->
+													<!--v-model="bd3">-->
+									<!--<m-option v-for="item in dbItems"-->
+														<!--:key="item.value"-->
+														<!--:label="item.label"-->
+														<!--:value="item.value">-->
+									<!--</m-option>-->
+								<!--</m-select>-->
+								<el-table :data="orderList">
+									<el-table-column width="55">
+										<template>
+											<i class="fa fa-fw fa-reorder cursor-move"></i>
+										</template>
+									</el-table-column>
+									<el-table-column label="已启用" prop="enabled">
+										<template slot-scope="scope">
+											<m-checkbox v-model="scope.row.enabled"></m-checkbox>
+										</template>
+									</el-table-column>
+									<el-table-column label="设备" prop="name"></el-table-column>
+									<el-table-column label="描述" prop="desc" show-overflow-tooltip></el-table-column>
+								</el-table>
 							</template>
               <!--使用平板指针-->
 						  <template  v-if="modalType === 'edittablet'">
 								<m-checkbox v-model="tablet"
-														labelWidth="100px" 
+														labelWidth="100px"
 														label="已启用">
 						   	</m-checkbox>
 							</template>
@@ -139,7 +153,7 @@
 								            labelWidth="100px">
 														网络
 								</m-checkbox>
-							  
+
 								<m-checkbox v-model="usb"
 							            	labelWidth="100px">
 														usb
@@ -185,7 +199,7 @@
 							</template>
 							<!--RTC开始时间-->
 							<template  v-if="modalType === 'editstartdate'">
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="startdate"
 											 v-model="startdate"
 											 validateEvent
@@ -199,7 +213,7 @@
 							</template>
 							<!--SIMBOS-->
 							<template  v-if="modalType === 'editsmbios1'">
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="uuid"
 											 v-model="uuid"
 											 labelWidth="100px"
@@ -209,37 +223,37 @@
 											 :error-msg="rules['uuid'].message"
 											 @on-change="(value) => uuid = value"
 											 label="UUID"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="manufacturer"
 											 labelWidth="100px"
 											 v-model="manufacturer"
 											 @on-change="(value) => manufacturer = value"
 											 label="生产厂商"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="product"
 											 labelWidth="100px"
 											 v-model="product"
 											 @on-change="(value) => product = value"
 											 label="产品"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="sversion"
 											 labelWidth="100px"
 											 v-model="sversion"
 											 @on-change="(value) => sversion = value"
 											 label="版本"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="serial"
 											 labelWidth="100px"
 											 v-model="serial"
 											 @on-change="(value) => serial = value"
 											 label="串行"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="sku"
 											 labelWidth="100px"
 											 v-model="sku"
 											 @on-change="(value) => sku = value"
 											 label="SKU"/>
-								<m-input type="text" 
+								<m-input type="text"
 							         prop="family"
 											 labelWidth="100px"
 											 v-model="family"
@@ -279,7 +293,7 @@
 												labelWidth="100px">
 							  <m-option v-for="item in videostreamingItems"
 								          :key="item.key"
-													:label="item.label" 
+													:label="item.label"
 								          :value="item.value">
 								</m-option>
 							 </m-select>
@@ -294,7 +308,7 @@
 							          v-model="vmstatestorage">
 							  <m-option v-for="(item, index) in storageList"
 								          :key="item.storage"
-													:label="item.storage" 
+													:label="item.storage"
 								          :value="item.storage">
 										<div class="table-tr" v-if="index === 0">
 											<div class="table-td">名称</div>
@@ -320,7 +334,7 @@
 							</template>
 								<!--tty-->
 							<template v-if="modalType === 'edittty'">
-									<m-input type="number" 
+									<m-input type="number"
 							         prop="tty"
 											 labelWidth="100px"
 											 v-model="tty"
@@ -336,7 +350,7 @@
 							          v-model="cmode">
 									<m-option v-for="item in cmodeItems"
 														:key="item.value"
-														:label="item.label" 
+														:label="item.label"
 														:value="item.value">
 									</m-option>
 						  </m-select>
@@ -387,7 +401,7 @@
 							          v-model="type">
 							  <m-option v-for="item in typeItems"
 								          :key="item.value"
-													:label="item.label" 
+													:label="item.label"
 								          :value="item.value">
 								</m-option>
 							</m-select>
@@ -412,11 +426,15 @@
 <script>
 import QemuEditHttp from '@src/views/home/qemu/options/http';
 import { gettext } from "@src/i18n/local_zhCN.js";
-import { isEmpty, byteToSize } from '@libs/utils/index';
+import { isEmpty, byteToSize, parsePropertyString } from '@libs/utils/index';
 import Base64 from '@libs/utils/base64';
+import Sortable from 'sortablejs';
 export default {
 	name: 'QemuEditOption',
 	mixins: [QemuEditHttp],
+	components: {
+    Sortable
+	},
 	props: {
 		title: {//弹框标题
 			type: String,
@@ -492,6 +510,7 @@ export default {
 			cifs: false,
 			fuse: false,
 			mknod: false,
+      orderList: [],
 			cmodeItems: [
 				{
 					label: '默认 (tty)',
@@ -514,7 +533,7 @@ export default {
 				{
 					label: '默认 (VirtIO)',
 					value: 'none'
-				}, 
+				},
 				{
 					label: 'VirtIO',
 					value:'virtio'
@@ -528,7 +547,7 @@ export default {
 				{
 					label: 'off',
 					value: 'off'
-				}, 
+				},
 				{
 					label: 'all',
 					value:'all'
@@ -599,7 +618,6 @@ export default {
 		      .then((data) => {
 						_this.storageList = data;
 					})
-					debugger;
 			this.unprivileged = _this.db.qemuObj.unprivileged && _this.db.qemuObj.unprivileged === 1 ? true : false;
 		  switch(_this.modalType) {
 				case 'editname':
@@ -663,9 +681,81 @@ export default {
 					break;
 				case 'editfeatures':
 					_this.parseValue('features');
+				case 'editorder':
+          let boot = parsePropertyString(_this.db.qemuObj.boot, "legacy");
+          let bootorder = [];
+          if (boot.order) {
+            _this.orderList = boot.order.split(';').map(dev => ({ name: dev, enabled: true }));
+          } else if (!(/^\s*$/).test(_this.db.qemuObj.boot)) {
+            // legacy style, transform to new bootorder
+            let order = boot.legacy || 'cdn';
+            let bootdisk = _this.db.qemuObj.bootdisk || undefined;
+
+            // get the first 4 characters (acdn)
+            // ignore the rest (there should never be more than 4)
+            let orderList = order.split('').slice(0, 4);
+
+            // build bootdev list
+            for (let i = 0; i < orderList.length; i++) {
+              let list = [];
+              if (orderList[i] === 'c') {
+                if (bootdisk !== undefined && _this.db.qemuObj[bootdisk]) {
+                  list.push(bootdisk);
+                }
+              } else if (orderList[i] === 'd') {
+								 for(let key in _this.db.qemuObj) {
+                  if (_this.isDisk(key) && _this.db.qemuObj[key].match(/media=cdrom/) && !_this.isCloudinit(_this.db.qemuObj[key])) {
+                    list.push(key);
+                  }
+								}
+              } else if (orderList[i] === 'n') {
+                for(let key in _this.db.qemuObj) {
+                  if ((/^net\d+/).test(key)) {
+                    list.push(key);
+                  }
+                }
+              }
+              // Object.each iterates in random order, sort alphabetically
+              list.sort();
+              list.forEach(dev => bootorder.push({ name: dev, enabled: true }));
+              _this.orderList = list;
+            }
+          }
+          let disabled = [];
+          for(let key in _this.db.qemuObj) {
+            if (_this.isBootdev(key, _this.db.qemuObj[key]) &&
+              !_this.orderList.some( x => x.name === key)) {
+              disabled.push(key);
+            }
+					}
+          disabled.sort();
+          disabled.forEach(dev =>  _this.orderList.push({ name: dev, enabled: false }));
+          _this.orderList.forEach(item => {
+            item.desc = _this.db.qemuObj[item.name]
+					})
+          const table = document.querySelector('.m-form__section .el-table__body-wrapper tbody')
+          const self = this;
+          Sortable.create(table, {
+            onEnd({ newIndex, oldIndex }) {
+              console.log(newIndex, oldIndex)
+              const targetRow = self.orderList.splice(oldIndex, 1)[0]
+              self.orderList.splice(newIndex, 0, targetRow)
+            }
+          })
 					break;
 			}
-		}, 
+		},
+    isCloudinit: (v) => v.match(/media=cdrom/) && v.match(/[:/]vm-\d+-cloudinit/),
+    isDisk (value) {
+      return  /^(ide|sata|virtio|scsi)\d+$/.test(value);
+    },
+
+    isBootdev(dev, value) {
+      return (this.isDisk(dev) && !this.isCloudinit(value)) ||
+        (/^net\d+/).test(dev) ||
+        (/^hostpci\d+/).test(dev) ||
+        ((/^usb\d+/).test(dev) && !(/spice/).test(value));
+    },
 		//通过os版本得到ostype
 		getOsTypeByVersion(version) {
 			let _this = this;
@@ -707,7 +797,7 @@ export default {
 						_this[item.split('=')[0]] = item.split('=')[1];
 					} else if(/([\s\S]*)\=([\s\S]*)[=]$/.test(item)){
 						let values = item.match(/([a-zA-Z0-9]+)(=)([\s\S]*)/);
-						if(item.indexOf('version') >= 0) 
+						if(item.indexOf('version') >= 0)
 						  _this.sversion = values && values[3] && Base64.decode(values[3]);
             else _this[values[1]] = values && values[3] && Base64.decode(values[3]);
 					} else {
@@ -915,6 +1005,15 @@ export default {
 						if(this.nfs) features+=`nfs=1,`;
 					param['features'] = features.replace(/\,$/, '');
 					break;
+				case 'editorder':
+				  let order = '';
+				  for(let i = 0; i < this.orderList.length; i++) {
+				    if(this.orderList[i].enabled) {
+				      order +=`${this.orderList[i].name};`
+						}
+					}
+				  param['boot'] = `order=${order.replace(/\;$/, '')}`;
+				  break;
 			}
 			param['digest'] = _this.db.qemuObj.digest;
 			_this.updateOptions(param)

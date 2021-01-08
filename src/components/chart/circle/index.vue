@@ -90,7 +90,7 @@
 
 </script>
 
-<style scoped="less">
+<style scoped lang="less">
   .title{
     padding: 20px 0px 0px;
     text-align: center;

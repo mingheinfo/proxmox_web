@@ -29,7 +29,7 @@
         "
       ></option-edit-modal>
       <template v-if="node.type === 'qemu'">
-        <el-table 
+        <el-table
             :data="hardwareList"
             :show-header="false"
             highlight-current-row
@@ -62,7 +62,7 @@
           </el-table>
       </template>
       <template v-if="node.type === 'lxc'">
-        <el-table 
+        <el-table
           :data="lxcOptionList"
           :show-header="false"
           highlight-current-row
@@ -112,6 +112,7 @@ import {
   render_hotplug_features,
   render_spice_enhancements,
   render_qga_features,
+  parsePropertyString
 } from "@libs/utils/index";
 import { gettext } from "@src/i18n/local_zhCN.js";
 import BaseIcon from "@src/components/icon/BaseIcon.vue";
@@ -268,12 +269,32 @@ export default {
                 undefined,
                 pending
               );
-              let order =
+              let order = pending ? (_this.store &&
+                _this.store.boot &&
+                _this.store.boot.data &&
+                _this.store.boot.data.pending) || 'cdn'
+                :
                 (_this.store &&
                   _this.store.boot &&
                   _this.store.boot.data &&
                   _this.store.boot.data.value) ||
                 "cdn";
+              if (/^\s*$/.test(order)) {
+                return gettext('(No boot device selected)');
+              }
+              let boot = parsePropertyString(order, "legacy");
+              if (boot.order) {
+                let list = boot.order.split(';');
+                let ret = '';
+                let i = 1;
+                list.forEach(dev => {
+                  if (ret) {
+                    ret += ', ';
+                  }
+                  ret += dev;
+                });
+                return ret;
+              }
               for (i = 0; i < order.length; i++) {
                 var sel = order.substring(i, i + 1);
                 if (text) {
@@ -296,6 +317,10 @@ export default {
                 }
               }
               if (pending) if (text === `Disk 'scsi0', CD-ROM, Network`) return;
+              if(pending) return _this.store &&
+                _this.store.boot &&
+                _this.store.boot.data &&
+                _this.store.boot.data.pending &&  this.store.boot.data.pending;
               return text;
             },
           },
@@ -627,7 +652,6 @@ export default {
             type: 'tty',
             itemId: 'edittty',
             render: function (pending) {
-              debugger;
               if(!pending)
                return _this.store.tty && _this.store.tty && _this.store.tty.data.value || 2;
               else return _this.store.tty && _this.store.tty && _this.store.tty.data.pending && _this.store.tty.data.pending || '';
@@ -900,7 +924,7 @@ export default {
     canDisabled() {
       if(this.node.type === 'qemu')
        return !this.inType('serial', 'efidisk') || !this.current;
-      else 
+      else
       return !/^(edit)/.test(this.currentObj.itemId) || !this.current;
     }
   },

@@ -175,6 +175,9 @@
               this.incEventSuccess(event);
               if (res.data) {
                 this.queryStatus(res.data)
+                this.interval = setInterval(() => {
+                  this.queryStatus(res.data)
+                }, 3000)
               }
             })
             .catch((res) => {
@@ -198,6 +201,9 @@
               this.incEventSuccess(event);
               if (res.data) {
                 this.queryStatus(res.data)
+                this.interval = setInterval(() => {
+                  this.queryStatus(res.data)
+                }, 3000)
               }
             })
             .catch((res) => {
@@ -318,6 +324,9 @@
             this.resetQemu().then(res => {
               if (res.data) {
                 this.queryStatus(res.data)
+                this.interval = setInterval(() => {
+                  this.queryStatus(res.data)
+                }, 3000)
               }
             }).catch(res => {
               this.alertConfirm(res);
@@ -341,6 +350,9 @@
             this.pausedQemu().then(res => {
               if (res.data) {
                 this.queryStatus(res.data)
+                this.interval = setInterval(() => {
+                  this.queryStatus(res.data)
+                }, 3000)
               }
             }).catch(res => {
               this.alertConfirm(res);

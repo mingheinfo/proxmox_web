@@ -26,7 +26,8 @@
 										:show-error="rules.pool.error"
 										:error-msg="rules.pool.message"
 										v-model="pool"
-					          label="内容">
+										:disabled="!isCreate"
+					          label="资源池">
 						<m-option v-for="item in cephPoolsList"
 						          :key="item.pool_name"
                       :label="item.pool_name"
@@ -111,6 +112,7 @@
         <dt>节点</dt>
         <dd>
           <el-table :data="db.nodeList"
+										ref="dataTable"
 					         @selection-change="handleSelectionChange">
             <el-table-column
                 type="selection"
@@ -204,34 +206,36 @@ export default {
 	methods: {
 		flotToFixed,
 		percentToFixed,
-		__init__() {
-			this.queryNode().then(() => {
-        this.$nextTick(() => {
-          this.db.nodeList.forEach((item) => {
-            this.nodes.forEach((node) => {
-              if (item.node === node) {
-                this.$refs.dataTable.toggleRowSelection(item, true);
-              }
-            });
-          });
-        });
-      });
-      if (this.isCreate) {
+		async __init__() {
+		  let _this = this;
+			await  _this.queryNode();
+      if (_this.isCreate) {
 
       } else {
         Object.keys(this.param).forEach((key) => {
           if (["disable", 'shared', 'pveceph', 'krbd'].includes(key)) {
-            this[key] = this.param[key] === 1 ? true : false;
+            _this[key] = this.param[key] === 1 ? true : false;
           } else if (key === "nodes" || key === "content") {
-            this[key] = this.param[key].split(",");
+            _this[key] = this.param[key].split(",");
           } else {
-            this[key] = this.param[key];
+            _this[key] = this.param[key];
           }
 				});
 				this.disable = this.param.disable ? false : true;
-				this.queryCephPools()
+				this.queryCephPoolsObj()
 				    .then(res => {
-							this.cephPoolsList = quickSort(this.db.cephPoolsList, 'pool_name');
+              _this.pool = _this.db.cephPoolsObj.pool;
+              _this.nodes = _this.db.cephPoolsObj.nodes;
+              let nodes = _this.nodes.split(',');
+              this.$nextTick(() => {
+                _this.db.nodeList.forEach((item) => {
+                  nodes.forEach((node) => {
+                    if (item.node === node) {
+                      _this.$refs.dataTable.toggleRowSelection(item, true);
+                    }
+                  });
+                });
+              });
 						});
 			};
 			if(this.isCreate) {
@@ -251,6 +255,15 @@ export default {
 							this.cephPoolsList = quickSort(this.db.cephPoolsList, 'pool_name');
 							this.pool = this.cephPoolsList[0].pool_name;
 						});
+			} else {
+        this.queryCephMon({_dc: new Date().getTime()}).then(res => {
+          this.monhost = quickSort(this.db.cephMonList.map(item => item.name), 'name').join(',');
+          if (this.isCreate) {
+            this.pvecephPossible = true;
+          } else {
+            this.pveceph = true;
+          }
+        })
 			}
 		},
 		//单个校验

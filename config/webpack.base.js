@@ -167,6 +167,6 @@ module.exports = {
     }),
     new AddAssetHtmlPlugin({
       filepath: path.resolve(__dirname, '../public/dist/static/dll.vendor_*.js'),
-    }),
+    })
   ]
 }

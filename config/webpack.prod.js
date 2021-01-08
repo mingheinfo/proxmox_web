@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin  } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 function resolve(dirname) {
   console.log(path.resolve(__dirname,  dirname));
   return path.resolve(__dirname,  dirname);
@@ -12,7 +13,18 @@ module.exports = merge(baseWebpack, {
   devtool: "cheap-module-source-map",
   mode: 'production',
   optimization:{
-    minimize: true,
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              warnings: false,
+              drop_console: true,
+              drop_debugger: true,
+            },
+          },
+        }),
+      ],
     splitChunks: {
       cacheGroups: {
             commons: {
@@ -24,7 +36,9 @@ module.exports = merge(baseWebpack, {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!static-files*'],
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')

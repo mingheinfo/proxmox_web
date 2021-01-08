@@ -11,7 +11,7 @@
     <div slot="content" style="max-height: 500px;">
       <component :is="type" :ref="type" :isCreate="isCreate" :param="param" :isAdvice="isAdvice"></component>
     </div>
-   <template slot="footer" v-if="type === 'nfs'">
+   <template slot="footer" v-if="type === 'nfs' || type === 'cifs'">
      <div class="label_box">
           <label>
             <input type="checkbox" v-model="isAdvice" />
@@ -154,6 +154,10 @@ export default {
           type: "cifs",
           disable: this.$refs.cifs.$data.disable ? 0 : 1,
 				};
+        if(this.isAdvice && this.$refs.cifs.$data.option !== '__default__') {
+          param['smbversion'] = this.$refs.cifs.$data.option;
+        }
+        if(!param.password) delete param.password;
 				if(!this.isCreate) delete param.share;
       }
       if (this.type === "glusterfs") {
@@ -261,7 +265,7 @@ export default {
 				this.createStorage(param).then(() => {
 					this.cancel();
 				});
-			else 
+			else
 			 this.updateStorage(param).then(() => {
 					this.cancel();
 				});

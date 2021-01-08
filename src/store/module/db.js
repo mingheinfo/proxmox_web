@@ -99,6 +99,7 @@ const state = {
   qemuFireWallOptionsObj: {},
   nodeFireWallRuleObj: {},
   nodeFireWallOptionObj: {},
+  cephPoolsObj: {},
   dnsObj: {},
   job: {},
   changeLogObj: {},

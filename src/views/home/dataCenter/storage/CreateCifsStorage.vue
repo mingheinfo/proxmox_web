@@ -48,7 +48,7 @@
             v-model="username"
             placeholder="请输入访客用户"
           />
-          <m-input
+          <m-input v-if="isCreate"
             type="password"
             prop="password"
             label="密码"
@@ -60,6 +60,14 @@
             :disabled="!username || !isCreate"
             v-model="password"
             placeholder="请输入密码"
+          />
+          <m-input v-if="!isCreate"
+                   type="password"
+                   prop="password"
+                   label="密码"
+                   labelWidth="100px"
+                   :disabled="!username || !isCreate"
+                   value="******"
           />
           <m-select
             labelWidth="100px"
@@ -131,6 +139,20 @@
           />
         </dd>
       </dl>
+      <dl v-if="isAdvice">
+        <dt>高级</dt>
+        <dd>
+          <m-select v-model="option"
+                    :read-only="true"
+                    @on-change="(value) => option = value"
+                    label="版本">
+            <m-option v-for="item in optionsItems"
+                      :value="item.value"
+                      :label="item.label"
+                      :key="item.value"></m-option>
+          </m-select>
+        </dd>
+      </dl>
       <dl>
         <dt>节点</dt>
         <dd>
@@ -184,6 +206,10 @@ export default {
     param: {
       type: Object,
     },
+    isAdvice: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -198,6 +224,24 @@ export default {
       type: "dir",
       disable: false,
       maxfiles: 1,
+      option: '2.0',
+      optionsItems: [{
+        label: '默认',
+        value: '__default__'
+      },
+        {
+          label: '2.0',
+          value: '2.0'
+        },
+        {
+          label: '2.1',
+          value: '2.1'
+        },
+        {
+          label: '3.0',
+          value: '3.0'
+        }
+      ],
       options: [
         {
           label: "磁盘映像",
@@ -296,7 +340,9 @@ export default {
             this[key] = this.param[key] === 0 ? true : false;
           } else if (key === "nodes" || key === "content") {
             this[key] = this.param[key].split(",");
-          } else {
+          } else if(key === 'options'){
+            this.options = this.param.options.replace(/(vers=)/, '');
+          }  else {
             this[key] = this.param[key];
           }
 				});
@@ -353,5 +399,12 @@ export default {
       this.share = value;
     },
   },
+  watch: {
+    isAdvice: function(newVal, oldVal) {
+      if(newVal !== oldVal) {
+        return newVal;
+      }
+    }
+  }
 };
 </script>

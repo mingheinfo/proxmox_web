@@ -180,6 +180,17 @@ export default {
                   return Promise.reject(res);
                 });
     },
+    queryCephPoolsObj (param) {
+      return this.$http.get(`json/storage/ceph-pools`,  param)
+        .then(res => {
+          if(res.data) {
+            this.updateDbObject({
+              name: "cephPoolsObj",
+              data: res.data,
+            });
+          }
+        })
+    },
     queryZfs(nodename, server) {
       if (!nodename) nodename = "localhost";
       return this.$http
