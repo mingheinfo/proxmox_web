@@ -77,7 +77,7 @@
     </template>
     <div class="header-container-right">
       <ul class="header-container-content">
-        <a class="header-container-content-item" target="_blank" href="/api2/pve-docs/index.html"><i class="fa fa-book"></i>文档</a>
+        <a class="header-container-content-item" target="_blank" href="/shell/pve-docs/index.html"><i class="fa fa-book"></i>文档</a>
         <li class="header-container-content-item" @click="showCreateVm = true"><i class="fa fa-desktop"></i>创建虚拟机</li>
         <li class="header-container-content-item" @click="() => visibleLxc = true"><i class="fa fa-cube"></i>创建CT</li>
         <li class="header-container-content-item" style="padding: 0 10px;" @click="() => visible = true"><i class="fa fa-list"></i><span>日志</span></li>
