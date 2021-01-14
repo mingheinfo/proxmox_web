@@ -64,9 +64,9 @@
           >
             <m-option
               v-for="item in db.glusterfsList"
-              :key="item.share"
-              :label="item.share"
-              :value="item.share"
+              :key="item.volname"
+              :label="item.volname"
+              :value="item.volname"
             ></m-option>
           </m-select>
           <m-select

@@ -108,13 +108,14 @@
           Object.assign(node, {expanded: true});
         }
         if (node.expanded) {
+          //当node 为expanded true 的话证明已展开
+          if(this.expandedArr.indexOf(node.id) === -1)
           this.expandedArr.push(node.id);
           this.$emit("changeExpand", this.expandedArr);
-          this.$parent.$data.defaultExpandKeys = this.expandedArr;
         } else {
+          //收起
           this.expandedArr.splice(this.expandedArr.indexOf(node.id), 1);
           this.$emit("changeExpand", this.expandedArr);
-          this.$parent.$data.defaultExpandKeys = this.expandedArr;
         }
       },
       //选择树

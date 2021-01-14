@@ -13,7 +13,7 @@
 			</div>
 		 </template>
     </div>
-    <div v-if="Select.type === 'multiple'"  @click="handleClick">
+    <div v-if="Select.type === 'multiple'"  @click="handleClick" style="display: inline-flex;align-items: center;">
       <span v-if="icon" :class="['icon', icon]"></span>
       <base-icon v-if="name" :class="['icon']" :name="name" :_style="{width: '16px', 'height': '16px'}"></base-icon>
       <template>
@@ -116,14 +116,14 @@
 			color: #3973ff;
 		}
 		&__content{
-			display: inline-block;
+			display: block;
 			vertical-align: middle;
 			min-height: 28px;
       line-height: 28px;
       margin: 5px 10px;
 		}
 		&__checkbox{
-			padding-right: 10px;
+      padding-right: 10px;
     input[type="checkbox"] {
       display: none;
     }

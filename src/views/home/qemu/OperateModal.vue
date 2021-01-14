@@ -77,6 +77,7 @@
 									@on-change="(value) => (storage = value)"
 									v-model="storage"
 									placeholder="请选择存储"
+									v-if="qemu.type === 'qemu'"
 									v-show="running"
 								>
 									<m-option
@@ -166,6 +167,7 @@
 									labelWidth="100px"
 									:readonly="true"
 									@on-change="(value) => {clonemode = value; storage = ''}"
+									v-if="isTemplate"
 									v-model="clonemode"
 									placeholder="请选择克隆模式"
 								>
@@ -189,6 +191,7 @@
 									@validate="validate"
 									:show-error="rules['snapshotname'].error"
 									:error-msg="rules['snapshotname'].message"
+									v-if="!isTemplate && hasSnapshots"
 									placeholder="请选择快照"
 								>
 									<m-option
@@ -543,7 +546,7 @@ export default {
 			poolList: [],
 			snapshotList: [],
 			name: '',
-			clonemode: 'clone',
+			clonemode: 'copy',
 			isTemplate: false,
 			modeList: [{value: 'copy', label: gettext('Full Clone')}],
 			formatList: [
@@ -569,6 +572,7 @@ export default {
 			group: '',
 			haResource: {},
 			comment: '',
+			hasSnapshots: false,
 			comboItems: [
 		    { value: 'started', label:'started' },
 		    { value: 'stopped', label:'stopped' },
@@ -691,6 +695,7 @@ export default {
 				}
 					_this.clone(params)
 							.then(res => {
+								_this.extraTitle = '克隆进度';
 								_this.showLog = true;
 								_this.interval = window.setInterval(() => {
 									_this.queryStatus(this.db.addClusterStatusObj.upid);
@@ -770,14 +775,17 @@ export default {
 				this.checkMigratePreconditions();
 			}
 			if(this.modalType === 'clone') {
-				if(this.qemu.template) {
-					this.isTemplate = true;
-					this.modeList.push({value: 'clone', label: gettext('Linked Clone')}) 
-					this.clonemode = 'clone';
+				if(this.qemu.template || false) {
+					_this.isTemplate = true;
+					_this.modeList.push({value: 'clone', label: gettext('Linked Clone')}) 
+					_this.$nextTick(() => {
+            _this.clonemode = 'clone';
+					})
 				}
 				this.querySnapShot({_dc: new Date().getTime()})
 				    .then(res => {
 							if(this.snapshotList) this.snapshotname = this.snapshotList[0].name;
+							_this.hasSnapshots = this.snapshotList.length === 1 && this.snapshotList[0].name === 'current' ? false : true;
 						});
 				this.queryNextVmid({_dc: new Date().getTime()});
 				this.queryPool();
@@ -823,7 +831,13 @@ export default {
 		*/
 		async queryTargetStorage() {
 			this.storageList = [];
-		  this.queryStorageList(this.qemu.node, {format: 1, content: 'images', target: this.nodename});
+			let _this = this;
+			this.queryStorageList(_this.qemu.node, {format: 1, content: 'images', target: _this.nodename})
+			    .then(res => {
+						_this.storageList = _this.storageList.filter(item => {
+							return  item.content.indexOf(_this.qemu.type === 'qemu' ? 'images' : 'rootdir') > -1;
+						})
+					});
 		},
 		/**
 		 * 整体校验
@@ -951,7 +965,7 @@ export default {
     checkLxcPreconditions(resetMigrationPossible) {
 			 let _this = this;
 				if (_this.running) {
-				  this.migration.mode = restart;
+				  this.migration.mode = 'restart';
 				}
 			},
 			/**

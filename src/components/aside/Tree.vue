@@ -320,11 +320,12 @@ export default {
             setIconCls(info, this.typeDefaults);
             _this.$nextTick(() => {
               this.refresh();
+              this.selectById(lastsel.id, lastsel);
+              _this.handleChangeExpand(_this.defaultExpandKeys);
             })
           }
           if ((!item || moved) && olditem.data.leaf) {
             delete index[key];
-            this.handleChangeExpand(this.defaultExpandKeys);
             var parentNode = olditem.parentNode;
             if (
               lastsel &&
@@ -338,6 +339,8 @@ export default {
           if(moved) {
             _this.$nextTick(() => {
               this.refresh();
+              this.selectById(lastsel.id, lastsel);
+              _this.handleChangeExpand(_this.defaultExpandKeys);
             })
           }
         }
@@ -404,7 +407,6 @@ export default {
       }
       _this.handleChangeExpand(_this.defaultExpandKeys);
       this.treeData.updateCount++;
-      this.$forceUpdate()
     },
     refresh() {
       let rootnode = {
@@ -454,7 +456,7 @@ export default {
     handleChangeExpand(arr) {
       let loop = (item) => {
         item.forEach((it) => {
-          if (arr.includes(it.data.id)) {
+          if (arr.includes(it.data.id) || this.defaultExpandKeys.includes(it.data.id)) {
             Object.assign(it.data, { expanded: true });
           } else if (it.data.id !== "root") {
             Object.assign(it.data, { expanded: false });

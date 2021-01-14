@@ -71,16 +71,30 @@
       </span>
       <div class="error-message" v-show="showError">{{ errorMsg }}</div>
     </span>
-    <transition name="el-zoom-in-top">
+    <transition>
       <div class="m-select-menu" v-show="renderDropMenu" ref="select-menu">
         <div x-arrow="" class="popper__arrow"></div>
         <div
           style="overflow-y: auto; max-height: 200px"
           ref="select-option"
           tabindex="0"
+          v-if="!isEmpty"
           @mouseleave.stop="isOpen = false"
         >
           <slot></slot>
+        </div>
+         <div
+          style="overflow-y: auto; max-height: 200px;
+          height: 28px;
+          line-height: 28px;
+          text-align: center;
+          padding: 0px 10px;"
+          ref="select-option"
+          tabindex="0"
+          v-else
+          @mouseleave.stop="isOpen = false"
+        >
+          暂无数据
         </div>
       </div>
     </transition>
@@ -119,6 +133,7 @@ export default {
         }, 10);
         return true;
       } else {
+        debugger;
         if (
           this.$refs &&
           this.$refs["select-menu"] &&
@@ -185,6 +200,7 @@ export default {
       selectValues: [],
       selected: [],
       cachedOptions: [],
+      isEmpty: false
     };
   },
   mounted() {
@@ -240,6 +256,7 @@ export default {
     },
     handleClick() {
       this.isOpen = !this.isOpen;
+      this.isEmpty =  this.$refs['select-option'] && this.$refs['select-option'].childNodes.length <= 0;
       this.$emit("visible-change");
     },
     //点击下拉选择框之外的区域隐藏选择框
@@ -249,7 +266,7 @@ export default {
         : (event.cancelBubble = true);
       this.isOpen = false;
       this.$emit("validate", this.prop);
-    },
+    }
   },
   destroyed() {
     //移除resize监听事件
@@ -263,7 +280,7 @@ export default {
         this.selectValues = newVal;
         return newVal;
       }
-    },
+    }
   },
 };
 </script>
