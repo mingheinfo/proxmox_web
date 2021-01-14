@@ -61,6 +61,7 @@
 
 ![首页](https://github.com/mingheinfo/proxmox_web/blob/master/public/home.png)
   
+![节点](https://github.com/mingheinfo/proxmox_web/blob/master/public/node.png)
    
 
 
