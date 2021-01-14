@@ -407,7 +407,7 @@
 
 			<m-dialog
         :visible="showLog"
-        @close="closeLog"
+        @close="showLog = false; close()"
         :_style="{
           width: '800px',
         }"
@@ -977,18 +977,22 @@ export default {
 		/**
 		 * 关闭任务窗口
 		*/
-    async closeLog() {
+   closeLog() {
+			debugger;
 			 if (this.interval) {
          clearInterval(this.interval);
 				 this.interval = null;
 				 /**
 					* 防止异步操作出现的错误
 				 */
-				 await (() => {
-					 this.showLog = false
-					})();
-         this.close();
-      }
+				this.showLog = false;
+				setTimeout(() => {
+          this.close();
+				}, 500)
+			} else {
+				this.showLog = false
+			  this.close();
+			}
 		},
 		/**
 		 * 取消运行中的任务

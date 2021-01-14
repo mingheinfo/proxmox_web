@@ -13,6 +13,7 @@ export default {
         .then((res) => {
           if(res.data) {
             this.queryStatus(res.data);
+            this.queryLog(this.qemu.node, res.data);
           }
           this.incEventSuccess(event);
           this.commitUpdateChangeTree(true);
@@ -266,6 +267,7 @@ export default {
       }).then(res => {
         if(res.data) {
           this.queryStatus(res.data);
+          this.queryLog(this.qemu.node, res.data)
         }
       }).catch(res => {
         return Promise.reject(res);
@@ -315,6 +317,7 @@ export default {
       }).then(res => {
         if(res.data) {
           this.queryStatus(res.data);
+          this.queryLog(this.qemu.node, res.data);
         }
       }).catch(res => {
         return Promise.reject(res);
