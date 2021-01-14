@@ -54,6 +54,12 @@
 	打开链接 https://ip:3000/login 就可以测试相关业务了
 
 ##截图：
+
+![登录](https://github.com/mingheinfo/proxmox_web/blob/master/public/login.png)
+
+![监控](https://github.com/mingheinfo/proxmox_web/blob/master/public/chart.png)
+
+![首页](https://github.com/mingheinfo/proxmox_web/blob/master/public/home.png)
   
    
 
