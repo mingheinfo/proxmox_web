@@ -87,6 +87,12 @@ const webpackConfigDev = {
         ws: true,
         pathRewrite: {'wss://localhost:3333/' : 'wss://10.10.10.220:8006/'},
         changeOrigin: true
+      },
+      '/pve-docs/*': {
+        target: 'https://10.10.10.220:8006/',//代理服务端路径
+        secure: false,
+        ws: true,
+        changeOrigin: true
       }
     }
   },
