@@ -27,7 +27,7 @@ export default {
 		queryStatus(upid) {
       let _this = this;
 			return this.$http.get(`json/nodes/${_this.qemu.node}/tasks/${upid}/status`)
-			           .then(async res => {
+			           .then(res => {
 									 if(res.data) {
                      _this.statusObj = res.data;
                      	_this.updateDbObject({
@@ -40,7 +40,7 @@ export default {
                         */
                        if(res.data.exitstatus && res.data.exitstatus === 'OK' && res.data.type && res.data.type.indexOf('destroy') >=0){
                          if(_this.closeLog) {
-                           await _this.closeLog();
+                          _this.closeLog();
                            setTimeout(() => {
                               _this.$router.push('/datacenter/overview');
                               window.localStorage.removeItem('lastsel');
@@ -391,7 +391,10 @@ export default {
         this.incEventFail(event);
         return Promise.reject(res);
       })
-   }
+   },
+    stopTask(node, pid) {
+      return this.$http.del(`json/nodes/${node}/tasks/${pid}`);
+		},
   },
 };
 </script>

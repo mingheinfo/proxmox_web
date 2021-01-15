@@ -407,7 +407,8 @@
 
 			<m-dialog
         :visible="showLog"
-        @close="showLog = false;"
+        @close="closeLog"
+				v-if="showLog"
         :_style="{
           width: '800px',
         }"
@@ -668,8 +669,8 @@ export default {
 			}
 			if(this.modalType === 'clone') {
 			  let params = { newid: _this.vmid };
-				if (_this.snapname && _this.snapname !== 'current') {
-						params.snapname = _this.snapname;
+				if (_this.snapshotname && _this.snapshotname !== 'current') {
+						params.snapname = _this.snapshotname;
 				}
 				if (_this.pool) {
 						params.pool = _this.pool;
@@ -986,6 +987,7 @@ export default {
 		 * 关闭任务窗口
 		*/
    closeLog() {
+		 debugger;
 			 if (this.interval) {
          clearInterval(this.interval);
 				 this.interval = null;
@@ -993,9 +995,9 @@ export default {
 					* 防止异步操作出现的错误
 				 */
 				this.showLog = false;
-				setTimeout(() => {
+				this.$nextTick(() => {
           this.close();
-				}, 500)
+				})
 			} else {
 				this.showLog = false
 			  this.close();
