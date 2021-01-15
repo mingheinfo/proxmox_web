@@ -230,7 +230,7 @@
 									>
 										<m-option
 											v-for="(item, index) in storageList"
-											:key="item.storage"
+											:key="index"
 											:label="item.storage"
 											:value="item.storage"
 										>
@@ -407,7 +407,7 @@
 
 			<m-dialog
         :visible="showLog"
-        @close="showLog = false; close()"
+        @close="showLog = false;"
         :_style="{
           width: '800px',
         }"
@@ -825,12 +825,20 @@ export default {
 			 this.rules[prop].error = true;
 			 return;
 			}
+			if(this.modalType === 'clone' && prop === 'nodename') {
+				if(this.qemu.type === 'qemu' && this.nodename !== this.qemu.node) {
+          this.rules[prop].message = `${this.nodename}不允许此操作!`;
+			    this.rules[prop].error = true;
+			    return;
+				}
+			}
 		},
 		/**
 		 * 
 		*/
 		async queryTargetStorage() {
 			this.storageList = [];
+			this.storage = '';
 			let _this = this;
 			this.queryStorageList(_this.qemu.node, {format: 1, content: 'images', target: _this.nodename})
 			    .then(res => {
@@ -978,7 +986,6 @@ export default {
 		 * 关闭任务窗口
 		*/
    closeLog() {
-			debugger;
 			 if (this.interval) {
          clearInterval(this.interval);
 				 this.interval = null;
@@ -1004,12 +1011,15 @@ export default {
 		 * 选择存储
 		*/
 		handleTargetStorageSel(val) {
-			this.storage = val;
 			this.storageType = this.storageList.filter(
         (it) => it.storage === val
       )[0].type;
-      if (this.storageType === "dir") this.format = "qcow2";
-      else this.format = "raw";
+      if (this.storageType === "dir") {
+				this.format = "qcow2";
+			} else {
+				this.format = "raw";
+			}
+			this.storage = val;
 		}
 	 },
 	 beforeDestoryed() {

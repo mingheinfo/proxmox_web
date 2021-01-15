@@ -133,7 +133,6 @@ export default {
         }, 10);
         return true;
       } else {
-        debugger;
         if (
           this.$refs &&
           this.$refs["select-menu"] &&
@@ -194,6 +193,10 @@ export default {
       default: "请选择",
     },
   },
+  model: {
+    event: 'on-change',
+    prop: 'value',
+  },
   data() {
     return {
       isOpen: false,
@@ -212,7 +215,8 @@ export default {
   },
   methods: {
     setSelected() {
-      let selected = [];
+      let selected = [];//清空上次选择，设置重新选择
+      console.log(this.cachedOptions);
       for (let i = 0; i < this.cachedOptions.length; i++) {
         if (this.type === "multiple") {
           if (this.value.includes(this.cachedOptions[i].value)) {
@@ -278,7 +282,6 @@ export default {
       if (newVal !== oldVal) {
         this.selected = this.setSelected();
         this.selectValues = newVal;
-        return newVal;
       }
     }
   },

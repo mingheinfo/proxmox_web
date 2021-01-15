@@ -1536,6 +1536,21 @@ function parseQemuDrive(key, value) {
   return res;
 }
 
+//数组对象去重
+function getUniqueObj(arrays) {
+  let newArr = [],
+      str = '',
+      strArr = [];
+  for(let i = 0; i < arrays.length; i++) {
+    str = JSON.stringify(arrays[i]);
+    if(strArr.indexOf(str) < 0) {
+      newArr.push(arrays[i]);
+      strArr.push(str);
+    }
+  }
+  return newArr;
+}
+
 export {
   getEvent,
   stopEvent,
@@ -1610,5 +1625,6 @@ export {
   on,
   off,
   parseQemuDrive,
-  parsePropertyString
+  parsePropertyString,
+  getUniqueObj
 }
