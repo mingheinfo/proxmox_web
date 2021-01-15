@@ -53,9 +53,6 @@ export default {
                          }
                        }
                      }
-									   if(this.__init__) {
-									     this.__init__();
-                     }
 									 }
 								 })
     },
