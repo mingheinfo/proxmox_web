@@ -23,7 +23,7 @@
           <m-step title="一般"></m-step>
           <m-step title="操作系统"></m-step>
           <m-step title="系统"></m-step>
-          <m-step title="银盘">银盘</m-step>
+          <m-step title="硬盘">硬盘</m-step>
           <m-step title="CPU">CPU</m-step>
           <m-step title="内存">内存</m-step>
           <m-step title="网络">网络</m-step>

@@ -265,7 +265,7 @@ export default {
 				param['vcpus'] = this.vcpus;
 				param['cpulimit'] =this.cpulimit;
 				param['numa'] = this.numa ? 1 : 0;
-				param['cpu'] = `${this.cpu},flags=${cpu}`.replace(/(\,|\;)$/, '')
+				param['cpu'] = `${this.cpu},${cpu ? `flags=${cpu}` : ''}`.replace(/(\,|\;)$/, '')
 			}
       Object.keys(param).forEach((key) => {
         if (!param[key]) delete param[key];

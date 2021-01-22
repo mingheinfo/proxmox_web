@@ -210,7 +210,6 @@ export default {
   watch: {
     visible: function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        if (newVal) setTimeout(() => this.__init__(), 0);
         return newVal;
       }
     },

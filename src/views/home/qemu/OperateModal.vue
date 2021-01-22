@@ -5,6 +5,7 @@
     @close="close"
     :_style="{
       width: '946px',
+      'height': '600px',
     }"
     @confirm="confirm"
   >
@@ -238,7 +239,6 @@
                     storage = '';
                   }
                 "
-                v-if="isTemplate"
                 v-model="clonemode"
                 placeholder="请选择克隆模式"
               >
@@ -250,37 +250,64 @@
                 >
                 </m-option>
               </m-select>
-
-              <m-select
-                prop="snapshotname"
-                label="快照"
-                labelWidth="100px"
-                :readonly="true"
-                @on-change="(value) => (snapshotname = value)"
-                v-model="snapshotname"
-                validateEvent
-                @validate="validate"
-                :show-error="rules['snapshotname'].error"
-                :error-msg="rules['snapshotname'].message"
-                v-if="!isTemplate && hasSnapshots"
-                placeholder="请选择快照"
+              <div v-if="!isTemplate && hasSnapshots" style="margin: 0px 0px 10px 10px; display: flex;justify-content: space-between;">
+                <div>快照</div>
+                <div>
+                  <m-input placeholder="请输入快照名称" @input="debounce(searchSnapshot(), 1000);" v-model="snaphot"/>
+                </div>
+              </div>
+              <el-table
+                 v-if="!isTemplate && hasSnapshots"
+                 highlight-current-row
+                  @current-change="(value) => {
+                    if(value && value.name) {
+                       snapshotname = value.name
+                    }
+                  }"
+                  :show-error="rules['snapshotname'].error"
+                  :error-msg="rules['snapshotname'].message"
+                :data="chunkData(snapdbshotList, pageSize)[currentPage - 1]"
               >
-                <m-option
-                  v-for="(item, index) in snapshotList"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item.name"
-                >
-                  <div v-if="index === 0" class="table-tr">
-                    <div class="table-td" :title="`快照`">快照</div>
-                  </div>
-                  <div class="table-tr">
-                    <span class="table-td" :title="item.name">{{
-                      item.name
-                    }}</span>
-                  </div>
-                </m-option>
-              </m-select>
+                <el-table-column type="index" width="55px;">
+                  <template slot-scope="scope">
+                    <el-radio :label="scope.row.name" v-model="snapshotname">&nbsp;</el-radio>
+                  </template>
+                </el-table-column>
+                <el-table-column label="快照" prop="name" width="300px"></el-table-column>
+                <el-table-column label="是否包括内存">
+                  <template slot-scope="scope">
+                    	<table-info-state :state="scope.row.vmstate === 1 ? 'actived' : 'unActived'" :content="scope.row.vmstate === 1 ? '是' : '否'"></table-info-state>
+                  </template>
+                </el-table-column>
+                <el-table-column label="日期" width="175px" fixed="right" sortable prop="snaptime">
+                  <template slot-scope="scope">
+                    	{{scope.row.snaptime && dateFormat(new Date(scope.row.snaptime*1000), 'yyyy-MM-dd hh:mm:ss')}}
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-pagination
+                class="page-table-pagination"
+                @size-change="
+                  (val) => {
+                    currentPage = 1;
+                    pageSize = val;
+                  }
+                "
+                @current-change="
+                  (val) => {
+                    currentPage = val;
+                  }
+                "
+                :current-page="currentPage"
+                :page-sizes="[5,10,50]"
+                :page-size="pageSize"
+                v-if="!isTemplate && hasSnapshots"
+                :total="snapdbshotList && snapdbshotList.length || 0"
+                :pager-count="5"
+                small
+                layout="total, sizes, prev, pager, next, jumper"
+              >
+              </el-pagination>
 
               <m-input
                 label="VM ID"
@@ -301,7 +328,7 @@
                 @on-change="handleTargetStorageSel"
                 v-model="storage"
                 placeholder="与来源相同"
-                :disabled="clonemode && clonemode === 'clone'"
+                :disabled="clonemode && clonemode === 'clone' && !isTemplate"
               >
                 <m-option
                   v-for="(item, index) in storageList"
@@ -596,6 +623,8 @@ import {
   stringFormat,
   browserLocalStorageGetItem,
   dateFormat,
+  chunkData,
+  debounce
 } from "@libs/utils/index";
 import QemuOrLcxIndexHttp from "@src/views/home/qemu/http";
 import { gettext } from "@src/i18n/local_zhCN.js";
@@ -666,6 +695,9 @@ export default {
       interval: null,
       tab: "log",
       extraTitle: "",
+      pageSize: 5,
+      currentPage: 1,
+      snapdbshotList: [],
       //--------克隆
       storageType: "",
       format: "qcow2",
@@ -677,6 +709,7 @@ export default {
       name: "",
       clonemode: "copy",
       isTemplate: false,
+      snaphot:'',
       modeList: [{ value: "copy", label: gettext("Full Clone") }],
       formatList: [
         {
@@ -750,14 +783,25 @@ export default {
     this.__init__();
   },
   methods: {
+    chunkData,
     byteToSize,
     percentToFixed,
     dateFormat,
+    debounce,
     /**
      * 关闭弹框
      */
     close() {
       this.$emit("close");
+    },
+    searchSnapshot() {
+      let _this = this;
+      _this.snapdbshotList = _this.snapshotList.filter(item => {
+        return item.name === _this.snaphot;
+      })
+      if(!_this.snaphot) {
+        _this.snapdbshotList = _this.snapshotList;
+      }
     },
     confirm() {
       //整体校验
@@ -837,13 +881,15 @@ export default {
               params.format = _this.format;
             }
           }
+        } else {
+          params.full = 0;
         }
         _this
           .clone(params)
           .then((res) => {
             _this.extraTitle = "克隆进度";
-						_this.showLog = true;
-						this.updateTable({
+            _this.showLog = true;
+            this.updateTable({
               tableName: "addClusterLogList",
               list: [],
             });
@@ -907,8 +953,8 @@ export default {
           };
         this.deleteQemu(params)
           .then((res) => {
-						this.showLog = true;
-						this.updateTable({
+            this.showLog = true;
+            this.updateTable({
               tableName: "addClusterLogList",
               list: [],
             });
@@ -941,16 +987,17 @@ export default {
       if (this.modalType === "clone") {
         if (this.qemu.template || false) {
           _this.isTemplate = true;
-          _this.modeList.push({
-            value: "clone",
-            label: gettext("Linked Clone"),
-          });
-          _this.$nextTick(() => {
-            _this.clonemode = "clone";
-          });
         }
+        _this.modeList.push({
+          value: "clone",
+          label: gettext("Linked Clone"),
+        });
+        _this.$nextTick(() => {
+          _this.clonemode = "clone";
+        });
         this.querySnapShot({ _dc: new Date().getTime() }).then((res) => {
           if (this.snapshotList) this.snapshotname = this.snapshotList[0].name;
+          this.snapdbshotList = this.snapshotList;
           _this.hasSnapshots =
             this.snapshotList.length === 1 &&
             this.snapshotList[0].name === "current"
@@ -1238,5 +1285,15 @@ export default {
       padding-left: 0px;
     }
   }
+}
+/deep/.el-input {
+    width: 50px!important;
+}
+/deep/.el-input{
+ width: 80px!important;
+}
+
+.el-table__body{
+  font-size: 12px;
 }
 </style>

@@ -48,6 +48,7 @@ function stopEvent(ev) {
 function debounce(fn, delay) {
   let timer = null;
   return function () {
+    debugger;
     let context = this;
     let args = arguments;
     if (timer) {
