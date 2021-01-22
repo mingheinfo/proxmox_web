@@ -797,7 +797,7 @@ export default {
     searchSnapshot() {
       let _this = this;
       _this.snapdbshotList = _this.snapshotList.filter(item => {
-        return item.name === _this.snaphot;
+        return window.encodeURIComponent(item.name).indexOf(window.encodeURIComponent(_this.snaphot)) > -1;
       })
       if(!_this.snaphot) {
         _this.snapdbshotList = _this.snapshotList;
