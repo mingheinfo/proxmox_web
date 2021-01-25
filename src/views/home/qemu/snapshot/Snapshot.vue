@@ -54,12 +54,12 @@
             <span id="common-createDate" class="date">日期</span>
 						<span id="common-createDate" class="description">描述</span>
           </div>
-          <label class="row" v-for="it in snapshotList" :key="it.data.inventory.name"
-					   :class="{'is-active': it.data.inventory && current === it.data.inventory.name, 'hidden': it.data.fakeLeaf && it.data.fakeLeaf}">
-            <template v-if="!it.data.fakeLeaf">
+          <label class="row" v-for="it in snapshotList" :key="it.data && !it.data.root && it.data.inventory && it.data.inventory.name && it.data.inventory.name"
+					   :class="{'is-active': it.data && it.data.inventory && current === it.data.inventory.name, 'hidden': it.data && it.data.fakeLeaf && it.data.fakeLeaf}">
+            <template v-if="it.data && !it.data.fakeLeaf">
 							<input name="snapshot" :id="it.data.inventory.name" type="radio" style="display: none;width:0px"  @change="handleSelect"/>
-              <span id="vm-snapshot-root" class="root-name" v-if="!it.data.root">{{it.data.inventory.name}}</span>
-							<span id="vm-snapshot-root" class="root-name" v-if="it.data.root">起始</span>
+              <span id="vm-snapshot-root" class="root-name" v-if="it.data && !it.data.root">{{it.data && it.data.inventory && it.data.inventory.name && it.data.inventory.name}}</span>
+							<span id="vm-snapshot-root" class="root-name" v-if="it.data.root && it.data.root">起始</span>
               <span class="name">
 									<table-info-state :state="it.data.inventory.vmstate === 1 ? 'actived' : 'unActived'" :content="it.data.inventory.vmstate === 1 ? '是' : '否'"></table-info-state>
 							</span>
@@ -180,8 +180,11 @@ export default {
           });
         };
 				let fakeRoot = this.getTree(_this.db.snapshotList)
-				console.log(fakeRoot);
-         if (_this.snapshotList.length > 0) this.draw(fakeRoot)
+         if (_this.snapshotList.length > 0) {
+           this.$nextTick(() => {
+             this.draw(fakeRoot);
+           })
+         }
       });
     },
     getTree(arr) {
@@ -214,7 +217,7 @@ export default {
 					latest:  root[0].name === 'current' ? true : false
 				},
         root: true,
-        children: arr.length > 0 ? getChildren(arr[0].parent, arr) : [],
+        children: arr.length > 0 ? getChildren(root[0].parent, arr) : [],
       };
       return tree;
     },
@@ -263,8 +266,8 @@ export default {
         if (a.data.inventory.fakeNode) return Number.MIN_SAFE_INTEGER;
         if (b.data.inventory.fakeNode) return Number.MAX_SAFE_INTEGER;
         return (
-          new b.data.inventory.snaptime -
-          new a.data.inventory.snaptime
+           b.data.inventory.snaptime -
+           a.data.inventory.snaptime
         );
       });
 
@@ -272,7 +275,7 @@ export default {
       self.yMax = -1;
 
       function visitNode(node, root, yIndex) {
-        if (node.children && node.children.length > 0) {
+        if (node && node.children && node.children.length > 0) {
           let leaves = node.leaves();
           leaves.sort(function (a, b) {
             return (

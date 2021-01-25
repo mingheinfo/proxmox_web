@@ -111,6 +111,16 @@
         "update": "更新虚拟机快照 {name}",
         "rollback": "回滚虚拟机快照 {name}"
       },
+      "action": {
+        "reboot": "启动虚拟机 {name}",
+        "create": "创建虚拟机 {name}",
+        "resume": "重启虚拟机 {name} ",
+        "stop": "停用虚拟机 {name}",
+        "reset": "重置虚拟机 {name}",
+        "paused": "暂停虚拟机 {name}",
+        "suspend": "挂起虚拟机 {name}",
+        "off": "关闭虚拟机 {name}"
+      },
       "hardware": {
         "resume": "还原硬件 {name}",
         "create": "添加硬件 {name}",
@@ -255,13 +265,13 @@
   },
   "clusters": {
     "action": {
-      "create":"创建集群 {name}",
+      "create": "创建集群 {name}",
       "join": "加入集群"
     }
   },
   "options": {
     "action": {
-      "modify":"修改选项 {name}"
+      "modify": "修改选项 {name}"
     }
   },
   "day": {
@@ -283,7 +293,7 @@
     "user": "用户名"
   },
   "replication": "复制",
-  "access":"权限",
+  "access": "权限",
   "user": "用户",
   "apitoken": "Api Tokens",
   "groups": "群组",
@@ -319,7 +329,7 @@
   "times": {
     "timezone": "时区",
     "localtime": "本地时间",
-    "time":"服务器时间"
+    "time": "服务器时间"
   },
   "node-firewall-option": "选项",
   "node-firewall-log": "日志",
@@ -333,6 +343,6 @@
   "snapshot": "快照",
   "resource": "资源",
   "disk": "磁盘",
-  "apt-update":"更新",
+  "apt-update": "更新",
   "member": "成员"
 }

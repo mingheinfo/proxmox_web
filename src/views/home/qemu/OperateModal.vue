@@ -5,7 +5,7 @@
     @close="close"
     :_style="{
       width: '946px',
-      'height': '600px',
+      'height': modalType === 'clone' ? '600px' : 'auto',
     }"
     @confirm="confirm"
   >
@@ -796,6 +796,7 @@ export default {
     },
     searchSnapshot() {
       let _this = this;
+      _this.currentPage = 1;
       _this.snapdbshotList = _this.snapshotList.filter(item => {
         return window.encodeURIComponent(item.name).indexOf(window.encodeURIComponent(_this.snaphot)) > -1;
       })
@@ -988,6 +989,7 @@ export default {
         if (this.qemu.template || false) {
           _this.isTemplate = true;
         }
+        if(JSON.stringify(_this.modeList).indexOf('clone') < 0)
         _this.modeList.push({
           value: "clone",
           label: gettext("Linked Clone"),
