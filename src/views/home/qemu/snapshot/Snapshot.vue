@@ -26,13 +26,12 @@
         >回滚</m-button
       >
     </div>
-    <div slot="page-content" style="overflow: auto;
-    position: absolute;
+    <div slot="page-content" style="
+    position: relative;
     top: 0;
     bottom: 0;
     left: 0;
-    right: -20px;
-    overflow-y: auto;">
+    right: -20px;">
         <div
           class="snapshot tree"
           :style="{ width: (yMax + 1) * ySpace + 'px' }"

@@ -910,7 +910,6 @@ function leftPad(string, size, character) {
 }
 
 function render_storage_content(value, metaData, record) {
-  debugger;
   var data = record;
   if (isNumber(data.channel) &&
     isNumber(data.id) &&

@@ -37,19 +37,22 @@
         >显示配置</m-button
       >
     </div>
+    <div slot="toolbar-right" style="text-align: right">
+      <m-input placeholder="请输入名称" @input="debounce(handleSearch(), 1000);" v-model="search"/>
+    </div>
     <div slot="page-content">
       <el-table
-        :data="storageContentList"
+        :data="contentList"
         @selection-change="handleSelect"
         ref="dataTable"
       >
         <el-table-column type="selection" width="55px"></el-table-column>
-        <el-table-column label="名称" prop="volid" width="300px" show-overflow-tooltip>
+        <el-table-column label="名称" prop="volid" width="300px" show-overflow-tooltip sortable>
 					<template slot-scope="scope">
 						{{render_storage_content(null, null, scope.row)}}
 					</template>
 				</el-table-column>
-        <el-table-column label="日期" prop="ctime">
+        <el-table-column label="日期" prop="ctime" sortable>
 						<template slot-scope="scope">
 						{{scope.row.ctime ? dateFormat(new Date(scope.row.ctime * 1000), 'yyyy-MM-dd hh:mm') : ''}}
 					</template>
@@ -66,6 +69,30 @@
 					</template>
 				</el-table-column>
       </el-table>
+      <el-pagination
+          class="page-table-pagination"
+          @size-change="
+                  (val) => {
+                    currentPage = 1;
+                    pageSize = val;
+                    setData();
+                  }
+                "
+          @current-change="
+                  (val) => {
+                    currentPage = val;
+                    setData();
+                  }
+                "
+          :current-page="currentPage"
+          :page-sizes="[10,20,50, 100]"
+          :page-size="pageSize"
+          :total="storageContentList && storageContentList.length || 0"
+          :pager-count="5"
+          small
+          layout="total, sizes, prev, pager, next, jumper"
+      >
+      </el-pagination>
       <upload-image-modal
         :title="title"
         :visible="visible"
@@ -101,7 +128,7 @@ import LinePercentChart from '@src/components/chart/line/LineCharts';
 import StorageContentHttp from "@src/views/home/storage/content/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { percentToFixed, byteToSize,render_storage_content, dateFormat, format_content_types, quickSort } from '@libs/utils/index';
+import { percentToFixed, byteToSize,render_storage_content, dateFormat, format_content_types, quickSort, debounce, chunkData } from '@libs/utils/index';
 import UploadImageModal from './UploadImageModal';
 import TemplateModal from './TemplateModal';
 import ConfigModal from './ConfigModal';
@@ -134,7 +161,11 @@ export default {
       loadingText: '',
       contents: [],
       templ: false,
-      upload: false
+      upload: false,
+      search: '',
+      pageSize: 10,
+      currentPage: 1,
+      contentList: []
     };
   },
   mounted() {
@@ -146,11 +177,14 @@ export default {
 		byteToSize,
 		dateFormat,
 		format_content_types,
+    debounce,
+    chunkData,
     //初始化查找
     __init__() {
       this.queryStorageContent()
           .then(res => {
             this.storageContentList = quickSort(this.db.storageContentList, 'content', '+');
+            this.setData();
           });
       this.queryStroageStatus()
           .then(res => {
@@ -176,6 +210,9 @@ export default {
             }
           });
     },
+    setData() {
+      this.contentList = chunkData(this.storageContentList, this.pageSize)[this.currentPage - 1];
+    },
     //是否展示弹框
     showModal() {
       this.title = "上传镜像";
@@ -192,6 +229,20 @@ export default {
 				return stat !== status;
 			}))
 		},
+    /**
+     * 按名称搜索
+     * */
+    handleSearch() {
+      let _this = this;
+      _this.currentPage = 1;
+      _this.storageContentList = quickSort(_this.db.storageContentList.filter(item => {
+        return window.encodeURIComponent(item.volid.replace(/^.*?:(.*?\/)?/, '')).indexOf(window.encodeURIComponent(_this.search)) > -1;
+      }), 'content', '+');
+      if(!_this.search) {
+        _this.storageContentList = quickSort(_this.db.storageContentList, 'content', '+');
+      }
+      this.setData();
+    },
 		//是否可以配置
 		canConfig() {
 			if(this.selectedList.length !== 1) return true;
@@ -216,6 +267,7 @@ export default {
     },
     //选择镜像
     handleSelect(rows) {
+      if(rows)
        this.selectedList = rows;
     },
     //展示config
