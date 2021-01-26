@@ -16,7 +16,7 @@ export default {
      * @param {_dc: 时间戳}
      */
     querySnapShotList(param) {
-      return this.$http
+      return  this.$http
         .get(`json/nodes/${this.node.node}/${this.node.id}/snapshot`, param)
         .then((res) => {
           if (res.data) {

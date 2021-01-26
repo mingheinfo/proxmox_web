@@ -33,19 +33,7 @@
     left: 0;
     right: -20px;">
         <div
-          class="snapshot tree"
-          :style="{ width: (yMax + 1) * ySpace + 'px' }"
-        >
-          <div
-            class="fake-node"
-            @click="openCreateSnapshot()"
-            title="创建快照"
-          ></div>
-        </div>
-        <div
           class="list"
-          :style="{ 'margin-left': (yMax + 1) * ySpace + 'px' }"
-          :class="{ 'list-left': snapshotList.length === 0 }"
         >
           <div class="row-title">
             <span id="common-name" class="name">名称</span>
@@ -53,17 +41,17 @@
             <span id="common-createDate" class="date">日期</span>
 						<span id="common-createDate" class="description">描述</span>
           </div>
-          <label class="row" v-for="it in snapshotList" :key="it.data && !it.data.root && it.data.inventory && it.data.inventory.name && it.data.inventory.name"
-					   :class="{'is-active': it.data && it.data.inventory && current === it.data.inventory.name, 'hidden': it.data && it.data.fakeLeaf && it.data.fakeLeaf}">
-            <template v-if="it.data && !it.data.fakeLeaf">
-							<input name="snapshot" :id="it.data.inventory.name" type="radio" style="display: none;width:0px"  @change="handleSelect"/>
-              <span id="vm-snapshot-root" class="root-name" v-if="it.data && !it.data.root">{{it.data && it.data.inventory && it.data.inventory.name && it.data.inventory.name}}</span>
-							<span id="vm-snapshot-root" class="root-name" v-if="it.data.root && it.data.root">起始</span>
+          <label class="row" v-for="(it) in snapshotList" :key="it.name"
+					   :class="{'is-active': current === it.name}">
+            <template>
+							<input name="snapshot" :id="it.name" type="radio" style="display: none;width:0px"  @change="handleSelect"/>
+              <span class="root-name" v-if="it.parent">{{ it.name && it.name}}</span>
+							<span class="root-name" v-if="!it.parent">起始</span>
               <span class="name">
-									<table-info-state :state="it.data.inventory.vmstate === 1 ? 'actived' : 'unActived'" :content="it.data.inventory.vmstate === 1 ? '是' : '否'"></table-info-state>
+									<table-info-state :state="it.vmstate === 1 ? 'actived' : 'unActived'" :content="it.vmstate === 1 ? '是' : '否'"></table-info-state>
 							</span>
-              <span class="date">{{it.data.inventory.snaptime ? dateFormat(new Date(it.data.inventory.snaptime*1000), 'yyyy-MM-dd hh:mm:ss') : ''}}</span>
-					    <span class="description">{{it.data.inventory.description && it.data.inventory.description}}</span>
+              <span class="date">{{it.snaptime ? dateFormat(new Date(it.snaptime*1000), 'yyyy-MM-dd hh:mm:ss') : ''}}</span>
+					    <span class="description">{{it.description && it.description}}</span>
 					</template>
           </label>
         </div>
@@ -138,11 +126,7 @@ export default {
   },
   mounted() {
     let _this = this;
-    _this.yMax = -1;
-    _this.fakeNewNode = {};
-    let oldSvg = d3.select(_this.$el).select(".tree svg");
-    if (oldSvg) oldSvg.remove();
-    this.__init__();
+    _this.__init__();
   },
   methods: {
     dateFormat,
@@ -151,74 +135,8 @@ export default {
     __init__() {
       let _this = this;
       _this.querySnapShotList({ _dc: new Date().getTime() }).then((res) => {
-        _this.snapshotList = quickSort(
-          _this.db.snapshotList.filter((item) => item.name !== "current"),
-          "snaptime",
-          "+"
-        );
-        let current = _this.db.snapshotList.filter(
-          (item) => item.name === "current"
-        );
-        if (current.length > 0) {
-          _this.currentTreeUuid = current[0].name;
-        }
-        _this.snapshotList.push(
-          _this.db.snapshotList.filter((item) => item.name === "current")[0]
-        );
-        let treeData = (tree, parent) => {
-          tree.forEach((item) => {
-            if (!item.children) {
-              item.children = [];
-            }
-            if (item.parent && item.parent === parent) {
-              item.children.push(item);
-            }
-            if (item.children && item.children.length > 0) {
-              treeData(item.children, item.name);
-            }
-          });
-        };
-				let fakeRoot = this.getTree(_this.db.snapshotList)
-         if (_this.snapshotList.length > 0) {
-           this.$nextTick(() => {
-             this.draw(fakeRoot);
-           })
-         }
+          _this.snapshotList = quickSort(_this.db.snapshotList.filter((item) => item.name !== 'current'), 'snaptime', '-');
       });
-    },
-    getTree(arr) {
-      let getChildren = (id) => {
-        let children = [];
-        for (let i = 0; i < arr.length; i++) {
-          if (id === arr[i].parent) {
-             children.push({
-								inventory: {
-					       name: arr[i].name,
-					       description: arr[i].description,
-                 snaptime: arr[i].snaptime,
-								 vmstate: arr[i].vmstate,
-								 latest: arr[i].name === 'current' ? true : false
-			      	 },
-              children: getChildren(arr[i].name),
-            });
-          }
-        }
-        return children;
-			};
-			let root =  this.db.snapshotList.filter((item) => !item.parent);
-			console.log(root);
-      let tree = {
-				inventory: {
-					name: root[0].name,
-					description: root[0].description,
-          snaptime: root[0].snaptime,
-					vmstate: root[0].vmstate,
-					latest:  root[0].name === 'current' ? true : false
-				},
-        root: true,
-        children: arr.length > 0 ? getChildren(root[0].parent, arr) : [],
-      };
-      return tree;
     },
     //按钮是否可点击
     inStatus() {
@@ -227,155 +145,6 @@ export default {
     //选择
     handleSelect(event) {
       this.current = event.target.id;
-    },
-    draw: function (treeData) {
-      let self = this;
-      this.snapshotList = [];
-      let margin = { top: 20, right: 0, bottom: 50, left: 30 };
-      var nodes = d3.hierarchy(treeData);
-      let latestNode;
-      nodes.each(function (d) {
-        if (
-          d.data.inventory &&
-          d.data.inventory.name &&
-          d.data.inventory.name === self.currentTreeUuid
-        ) {
-          latestNode = d;
-        }
-      });
-      if (!latestNode) {
-        latestNode = nodes;
-      }
-      self.fakeNewNode = {
-        data: {
-          inventory: {
-            fakeNode: true,
-          },
-          fakeLeaf: true,
-        },
-        parent: latestNode,
-        ...self.fakeNewNode,
-      };
-
-      if (!latestNode.children) latestNode.children = [];
-      latestNode.children.push(self.fakeNewNode);
-
-      let leaves = nodes.leaves();
-      leaves.sort(function (a, b) {
-        if (a.data.inventory.fakeNode) return Number.MIN_SAFE_INTEGER;
-        if (b.data.inventory.fakeNode) return Number.MAX_SAFE_INTEGER;
-        return (
-           b.data.inventory.snaptime -
-           a.data.inventory.snaptime
-        );
-      });
-
-      self.xIndex = 0;
-      self.yMax = -1;
-
-      function visitNode(node, root, yIndex) {
-        if (node && node.children && node.children.length > 0) {
-          let leaves = node.leaves();
-          leaves.sort(function (a, b) {
-            return (
-              b.data.inventory.snaptime -
-              a.data.inventory.snaptime
-            );
-          });
-          leaves.forEach(function (leaf) {
-            if (!leaf.accessed) {
-              visitNode(leaf, node, yIndex + 1);
-            }
-          });
-        }
-        node.x = self.xIndex * self.xSpace;
-        node.y = yIndex * self.ySpace;
-        if (self.yMax < yIndex) self.yMax = yIndex;
-        node.accessed = true;
-        if (node === root) return;
-        self.snapshotList.push(node);
-        self.xIndex++;
-        visitNode(node.parent, root, yIndex);
-      }
-
-      visitNode(self.fakeNewNode, nodes, 0);
-
-      self.snapshotList.push(nodes);
-
-      var svg = d3
-        .select(this.$el.querySelector(".tree"))
-        .append("svg")
-        .attr(
-          "width",
-          (self.yMax + 1) * self.ySpace + margin.left + margin.right
-        )
-        .attr("height", self.xIndex * self.xSpace + margin.top + margin.bottom);
-      let g = svg
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-      g.selectAll(".link")
-        .data(nodes.descendants().slice(1))
-        .enter()
-        .append("path")
-        .attr("stroke-dasharray", function (d) {
-          if (d.data.inventory.fakeNode) return "5, 5";
-          return "";
-        })
-        .attr("class", "link")
-        .attr("d", function (d) {
-          return (
-            "M" +
-            d.y +
-            "," +
-            d.x +
-            " L" +
-            d.y +
-            "," +
-            (d.x + d.parent.x) / 2 +
-            // ' l' + d.parent.y + ',' + (d.x + d.parent.x) / 2 +
-            " L" +
-            d.parent.y +
-            "," +
-            d.parent.x
-          );
-        });
-
-      // adds each node as a group
-      var node = g
-        .selectAll(".node")
-        .data(nodes.descendants())
-        .enter()
-        .append("g")
-        .attr("class", function (d) {
-          return "node" + (d.children ? " node--internal" : " node--leaf");
-        })
-        .attr("transform", function (d) {
-          return "translate(" + d.y + "," + d.x + ")";
-        });
-      // return 'translate(' + (width - d.x) + ',' + (height - d.y) + ')' })
-
-      // adds the circle to the node
-      node
-        .append("circle")
-        .attr("r", 7)
-        .attr("fill", (d) =>
-          d.data.inventory.latest &&
-          d.data.inventory.name === this.currentTreeUuid
-            ? "#90D9FF"
-            : "#fff"
-        );
-
-      // svg.append('div')
-      //   .attr('class', 'fake-node')
-      //   .style('left', this.fakeNewNode.x)
-      //   .style('top', this.fakeNewNode.y)
-
-      // // adds the text to the node
-      // node.append('text')
-      //   .attr('dy', '.35em')
-      //   .attr('y', function (d) { return d.children ? -20 : 20 })
-      //   .style('text-anchor', 'middle')
-      //   .text(function (d) { return d.data.inventory.name + ' ' + d.data.inventory.latest })
     },
     /**
      * 删除备份任务
