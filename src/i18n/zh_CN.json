@@ -28,6 +28,19 @@
   "pool": "池",
   "config": "配置",
   "log": "日志",
+  "qemu": {
+    "action": {
+      "reboot": "启动虚拟机 {name}",
+      "create": "创建虚拟机 {name}",
+      "resume": "重启虚拟机 {name} ",
+      "stop": "停用虚拟机 {name}",
+      "reset": "重置虚拟机 {name}",
+      "paused": "暂停虚拟机 {name}",
+      "suspend": "挂起虚拟机 {name}",
+      "off": "关闭虚拟机 {name}",
+      "delete": "删除虚拟机 {name}"
+    }
+  },
   "action": {
     "dns": {
       "update": "更新dns"
@@ -110,16 +123,6 @@
         "add": "添加虚拟机快照 {name}",
         "update": "更新虚拟机快照 {name}",
         "rollback": "回滚虚拟机快照 {name}"
-      },
-      "action": {
-        "reboot": "启动虚拟机 {name}",
-        "create": "创建虚拟机 {name}",
-        "resume": "重启虚拟机 {name} ",
-        "stop": "停用虚拟机 {name}",
-        "reset": "重置虚拟机 {name}",
-        "paused": "暂停虚拟机 {name}",
-        "suspend": "挂起虚拟机 {name}",
-        "off": "关闭虚拟机 {name}"
       },
       "hardware": {
         "resume": "还原硬件 {name}",

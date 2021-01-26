@@ -19,10 +19,332 @@
   "search": "Search",
   "overview": "Overview",
   "cluster": "Cluster",
+  "console": "Console",
+  "option": "Options",
+  "volume": "Hardware",
+  "storages": "Storage",
+  "backup": "Backup",
+  "pool": "Pools",
+  "config": "Configuration",
+  "log": "Log",
+  "qemu": {
+    "action": {
+      "reboot": "Start  virtual machine {name}",
+      "create": "Create virtual machine {name}",
+      "resume": "Resume virtual machine {name} ",
+      "stop": "Stop virtual machine {name}",
+      "reset": "Reset virtual machine {name}",
+      "paused": "Pause virtual machine {name}",
+      "suspend": "Suspend virtual machine {name}",
+      "off": "Off virtual machine {name}",
+      "delete": "Delete virtual machine {name}"
+    }
+  },
+  "action": {
+    "dns": {
+      "update": "Update DNS"
+    },
+    "certificates": {
+      "delete": "Delete Certificates",
+      "create": "Create Certificates",
+      "acme": "Update Acme"
+    },
+    "acme": {
+      "account": {
+        "create": "Add Acme account"
+      },
+      "domains": {
+        "create": "Create Domain"
+      },
+      "certifices": {
+        "order": "Update Order"
+      }
+    },
+    "timezone": {
+      "update": "Update Time Zone"
+    },
+    "node": {
+      "reboot": "Reboot Node virtual machine {name}",
+      "delete": "Delete Node virtual machine {name}",
+      "stopall": "Batch Stop virtual machine {name}",
+      "startall": "Batch Start virtual machine {name}",
+      "migrateall": "Migrate virtual machine {name}",
+      "replication": {
+        "create": "Add replication job {name}",
+        "update": "Update replication job {name}",
+        "delete": "Delete replication job {name}"
+      },
+      "host": {
+        "update": "Update host {name}"
+      },
+      "disk": {
+        "directory": {
+          "create": "Add directory {name}"
+        },
+        "lvm": {
+          "create": "Add Lvm"
+        },
+        "lvmthin": {
+          "create": "Add LvmThin"
+        }
+      },
+      "network": {
+        "create": "Add network {name}",
+        "resume": "Resume network {name}",
+        "update": "Update network {name}",
+        "delete": "Delete network {name}"
+      }
+    },
+    "notes": {
+      "add": "Add Notes"
+    },
+    "update": {
+      "pool": "Update Pools {name}"
+    },
+    "lxc": {
+      "reboot": "Reboot Lxc"
+    },
+    "template": {
+      "translate": "Translate template {name}"
+    },
+    "qemu": {
+      "comment": "Update comment {name}",
+      "reboot": "Reboot virtual machine {name}",
+      "create": "Create virtual machine {name}",
+      "resume": "Resume virtual machine {name} ",
+      "stop": "Stop virtual machine {name}",
+      "reset": "Reset virtual machine {name}",
+      "paused": "Paused virtual machine {name}",
+      "suspend": "Suspend virtual machine {name}",
+      "off": "Off virtual machine {name}",
+      "snapshot": {
+        "delete": "Delete snapshot {name}",
+        "add": "Add snapshot {name}",
+        "update": "Update snapshot {name}",
+        "rollback": "Roll Back snapshot {name}"
+      },
+      "hardware": {
+        "resume": "Resume hardware {name}",
+        "create": "Create hardware {name}",
+        "update": "Update hardware {name}",
+        "delete": "Delete hardware {name}",
+        "disk": {
+          "remove": "Delete Disk {name}"
+        },
+        "size": {
+          "update": "Update Size {name}"
+        }
+      }
+    },
+    "storage": {
+      "delete": "Delete storage {name} ",
+      "create": "Add storage {name}",
+      "update": "Update storage {name}"
+    },
+    "backup": {
+      "delete": "Delete backup {name} ",
+      "create": "Add backup {name}",
+      "update": "Update backup {name}",
+      "run": "Schedule now {name}"
+    },
+    "replication": {
+      "create": "Add replication {name}",
+      "update": "Update replication {name}",
+      "delete": "Delete replication {name}"
+    },
+    "firewall": {
+      "create": "Add Firewall {name}",
+      "delete": "Delete Firewall {name}",
+      "update": "Update Firewall {name}",
+      "group": {
+        "create": "Add security group {name}",
+        "update": "Update security group {name}",
+        "delete": "Delete security group {name}",
+        "rule": {
+          "update": "Update security group rules {name}",
+          "delete": "Delete security group rules {name}"
+        }
+      },
+      "alias": {
+        "create": "Add alias {name}",
+        "update": "Update alias {name}",
+        "delete": "Delete alias {name}"
+      },
+      "ipset": {
+        "update": "Update IpSet {name}",
+        "create": "Create IpSet {name}",
+        "delete": "Delete IpSet {name}",
+        "cidr": {
+          "update": "Update IpSet Cidr {name}",
+          "create": "Add IpSet Cidr {name}",
+          "delete": "Delete IpSet Cidr {name}"
+        }
+      }
+    },
+    "ha": {
+      "create": "Create HA {name}",
+      "update": "Update HA {name}",
+      "manage": {
+        "update": "Manage HA {name}"
+      }
+    },
+    "access": {
+      "delete": "Delete access {name}",
+      "update": "Update access {name}",
+      "create": "Create access {name}",
+      "user": {
+        "update": "Update user access {name}",
+        "create": "Add user access {name}",
+        "delete": "Delete user access {name}",
+        "password": {
+          "update": "Update user password {name}"
+        }
+      },
+      "ha": {
+        "delete": "Delete Ha {name}",
+        "group": {
+          "delete": "Delete group {name}"
+        }
+      },
+      "backup": {
+        "delete": "Delete backup {name} ",
+        "create": "Create backup {name}",
+        "update": "Update backup {name}",
+        "run": "Schedule now {name}"
+      },
+      "token": {
+        "create": "Create token {name}",
+        "update": "Update token {name}",
+        "delete": "Delete token {name}"
+      },
+      "group": {
+        "create": "Create permission group {name}",
+        "update": "Update permission group {name}",
+        "delete": "Delete permission group {name}"
+      },
+      "pool": {
+        "create": "Create pools {name}",
+        "update": "Update pools {name}",
+        "delete": "Delete pools {name}"
+      },
+      "role": {
+        "create": "Create role {name}",
+        "update": "Update role {name}",
+        "delete": "Delete role {name}"
+      },
+      "domain": {
+        "create": "Create domain {name}",
+        "update": "Update domain {name}",
+        "delete": "Delete domain {name}"
+      }
+    },
+    "acme": {
+      "account": {
+        "create": "Add Acme account {name}",
+        "delete": "Delete Acme account {name}"
+      },
+      "plugin": {
+        "create": "Add Acme plugin {name}",
+        "update": "Update Acme plugin {name}",
+        "delete": "Delete Acme plugin {name}"
+      }
+    },
+    "lxc": {
+      "create": "Create Lxc {name}",
+      "delete": "Delete Lxc {name}",
+      "update": "Update Lxc {name}"
+    }
+  },
   "type": {
     "pool": "pool",
     "node": "node",
     "qemu": "qemu",
     "storage": "storage"
-  }
+  },
+  "storage": {
+    "dir": "Directory",
+    "lvmthin": "Lvm-Thin"
+  },
+  "clusters": {
+    "action": {
+      "create": "Create Cluster {name}",
+      "join": "Join Cluster"
+    }
+  },
+  "options": {
+    "action": {
+      "modify": "Edit Option {name}"
+    }
+  },
+  "day": {
+    "sat": "Saturday",
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sun": "Sunday"
+  },
+  "clusterStatus": {
+    "type": "Task type",
+    "node": "Node",
+    "pid": "Process ID",
+    "status": "Status",
+    "upid": "Unique task ID",
+    "starttime": "Start Time",
+    "user": "User name"
+  },
+  "replication": "Replication",
+  "access": "Permissions",
+  "user": "Users",
+  "apitoken": "Api Tokens",
+  "groups": "Groups",
+  "pools": "Pools",
+  "roles": "Roles",
+  "domains": "Authentication",
+  "ha-group": "HA Groups",
+  "acme": "ACME",
+  "firewall": "Firewall",
+  "datacenter-firewall-option": "Options",
+  "datacenter-firewall-group": "Security Group",
+  "datacenter-firewall-alias": "Alias",
+  "datacenter-firewall-ipset": "IPSet",
+  "certificates": {
+    "filename": "Name",
+    "notafter": "Expires",
+    "issuer": "Issuer",
+    "fingerprint": "Fingerprint",
+    "public-key-bits": "Public Key Size",
+    "pem": "Certificate",
+    "public-key-type": "Public Key Type",
+    "notbefore": "Valid Since",
+    "subject": "Subject",
+    "san": "Subject Alternative Names"
+  },
+  "certificate": "Certificates",
+  "network": "Network",
+  "shell": "Shell",
+  "notes": "Notes",
+  "system": "System",
+  "dns": "DNS",
+  "time": "Time",
+  "times": {
+    "timezone": "Time zone",
+    "localtime": "Local time",
+    "time": "Server time"
+  },
+  "node-firewall-option": "Options",
+  "node-firewall-log": "Log",
+  "node-disk-lvm": "Lvm",
+  "node-disk-lvmthin": "Lvm Thin",
+  "node-disk-directory": "Directory",
+  "node-disk-zfs": "ZFS",
+  "content": "Content",
+  "task": "Task History",
+  "monitor": "Monitor",
+  "snapshot": "Snapshots",
+  "resource": "Resources",
+  "disk": "Disks",
+  "apt-update": "Updates",
+  "member": "Members"
 }

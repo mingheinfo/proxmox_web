@@ -41,9 +41,6 @@ export default {
           if (res.data) {
             this.done = false;
             this.showDeleteLog = true;
-            if(this.__init__) {
-              this.__init__();
-            }
             //查询删除进度
             this.queryStatus(res.data);
             this.interVal = setInterval(() => this.queryStatus(res.data), 1000);
@@ -64,6 +61,9 @@ export default {
           if (res.data.status !== "running") {
             this.done = true;
             //this.showDeleteLog = false;
+            if(this.__init__) {
+              this.__init__();
+            }
             if (this.interVal) {
               clearInterval(this.interVal);
               this.interVal = null;
