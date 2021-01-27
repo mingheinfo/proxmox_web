@@ -28,9 +28,9 @@
         <el-table-column label="使用率" prop="used">
           <template slot-scope="scope">
 						<LinePercentChart :value="scope.row.lv_size && scope.row.used
-                ? ((scope.row.lv_size - scope.row.used) / scope.row.lv_size) * 100
+                ? (1 - (scope.row.lv_size - scope.row.used) / scope.row.lv_size) * 100
                 : 0" :title="scope.row.lv_size && scope.row.used
-                ? percentToFixed(((scope.row.lv_size - scope.row.used) / scope.row.size), 3)
+                ? percentToFixed((1 - (scope.row.lv_size - scope.row.used) / scope.row.lv_size), 3)
                 : 0"></LinePercentChart>
           </template>
         </el-table-column>
@@ -82,7 +82,7 @@ import NodeDiskLvmThinHttp from "@src/views/home/node/disk/lvmthin/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import { percentToFixed, byteToSize } from '@libs/utils/index';
-import CreateThinPoolModal from './CreateThinPoolModal'; 
+import CreateThinPoolModal from './CreateThinPoolModal';
 export default {
   name: "Lvm",
   mixins: [NodeDiskLvmThinHttp],

@@ -266,7 +266,8 @@
                   }"
                   :show-error="rules['snapshotname'].error"
                   :error-msg="rules['snapshotname'].message"
-                :data="chunkData(snapdbshotList, pageSize)[currentPage - 1]"
+                  :data="chunkData(snapdbshotList, pageSize)[currentPage - 1]"
+                  @sort-change="handleSort"
               >
                 <el-table-column type="index" width="55px;">
                   <template slot-scope="scope">
@@ -279,7 +280,7 @@
                     	<table-info-state :state="scope.row.vmstate === 1 ? 'actived' : 'unActived'" :content="scope.row.vmstate === 1 ? '是' : '否'"></table-info-state>
                   </template>
                 </el-table-column>
-                <el-table-column label="日期" width="175px" fixed="right" sortable prop="snaptime">
+                <el-table-column label="日期" width="175px" fixed="right" sortable="column" prop="snaptime">
                   <template slot-scope="scope">
                     	{{scope.row.snaptime && dateFormat(new Date(scope.row.snaptime*1000), 'yyyy-MM-dd hh:mm:ss')}}
                   </template>
@@ -624,7 +625,8 @@ import {
   browserLocalStorageGetItem,
   dateFormat,
   chunkData,
-  debounce
+  debounce,
+  quickSort
 } from "@libs/utils/index";
 import QemuOrLcxIndexHttp from "@src/views/home/qemu/http";
 import { gettext } from "@src/i18n/local_zhCN.js";
@@ -797,11 +799,13 @@ export default {
     searchSnapshot() {
       let _this = this;
       _this.currentPage = 1;
-      _this.snapdbshotList = _this.snapshotList.filter(item => {
-        return window.encodeURIComponent(item.name).indexOf(window.encodeURIComponent(_this.snaphot)) > -1;
-      })
+      _this.snapdbshotList = quickSort(_this.snapshotList.filter(item => {
+        return window.encodeURIComponent(item.name).indexOf(window.encodeURIComponent(_this.snaphot)) > -1 && item.name !== 'current';
+      }), 'snaptime', '-');
       if(!_this.snaphot) {
-        _this.snapdbshotList = _this.snapshotList;
+        _this.snapdbshotList = quickSort(_this.snapshotList.filter(item => {
+          return item.name !== 'current';
+        }), 'snaptime', '-');
       }
     },
     confirm() {
@@ -999,7 +1003,9 @@ export default {
         });
         this.querySnapShot({ _dc: new Date().getTime() }).then((res) => {
           if (this.snapshotList) this.snapshotname = this.snapshotList[0].name;
-          this.snapdbshotList = this.snapshotList;
+          this.snapdbshotList = quickSort(this.snapshotList.filter(item => {
+            return item.name !== 'current'
+          }), 'snaptime', '-');
           _this.hasSnapshots =
             this.snapshotList.length === 1 &&
             this.snapshotList[0].name === "current"
@@ -1262,6 +1268,14 @@ export default {
       }
       this.storage = val;
     },
+    /**
+     * 排序@param {prop} string 数据属性值， {order} string 排序方向
+     * **/
+    handleSort({prop, order}) {
+       if(!order) return;
+       this.currentPage = 1;
+       this.snapdbshotList = quickSort(this.snapshotList.filter(item => item.name !== 'current'), 'snaptime', order === 'ascending' ? '-' : '+');
+    }
   },
   beforeDestoryed() {
     if (this.interval) {

@@ -141,7 +141,7 @@
                         <div class="table-td">大小</div>
                       </div>
                       <div class="table-tr">
-                        <div class="table-td">
+                        <div class="table-td" :title="render_storage_content(null, null, item) || ''">
                           {{ render_storage_content(null, null, item) }}
                         </div>
                         <div class="table-td" :title="item.format">{{ item.format }}</div>
@@ -172,7 +172,7 @@
           </dt>
         </dl>
       </div>
-			
+
       <div class="m-form__section">
         <dl>
           <dt style="width: 100%">
