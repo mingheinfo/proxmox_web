@@ -4,8 +4,7 @@
     :title="title"
     @close="close"
     :_style="{
-      width: '946px',
-      'height': modalType === 'clone' ? '600px' : 'auto',
+      width: '946px'
     }"
     @confirm="confirm"
   >
@@ -176,8 +175,7 @@
       <template v-if="modalType === 'clone'">
         <div class="m-form__section">
           <dl>
-            <dt></dt>
-            <dd>
+            <dd  style="width: 100%;">
               <m-select
                 prop="nodename"
                 label="目标节点"
@@ -268,6 +266,8 @@
                   :error-msg="rules['snapshotname'].message"
                   :data="chunkData(snapdbshotList, pageSize)[currentPage - 1]"
                   @sort-change="handleSort"
+                 style="width: 100%"
+                  max-height="250"
               >
                 <el-table-column type="index" width="55px;">
                   <template slot-scope="scope">
@@ -280,7 +280,7 @@
                     	<table-info-state :state="scope.row.vmstate === 1 ? 'actived' : 'unActived'" :content="scope.row.vmstate === 1 ? '是' : '否'"></table-info-state>
                   </template>
                 </el-table-column>
-                <el-table-column label="日期" width="175px" fixed="right" sortable="column" prop="snaptime">
+                <el-table-column label="日期" width="170px" sortable="column" prop="snaptime">
                   <template slot-scope="scope">
                     	{{scope.row.snaptime && dateFormat(new Date(scope.row.snaptime*1000), 'yyyy-MM-dd hh:mm:ss')}}
                   </template>
