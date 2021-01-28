@@ -120,6 +120,7 @@ export default {
     this.__init__();
   },
   methods: {
+    byteToSize,
     //请求磁盘
     async __init__() {
       let _this = this;
@@ -158,7 +159,7 @@ export default {
 				add_storage: this.add_storage ? 1 : 0,
 				device: this.device
       };
-     
+
          this.createThin(param)
           .then((res) => {
             this.close();

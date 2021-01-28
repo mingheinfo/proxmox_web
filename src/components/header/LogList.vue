@@ -89,8 +89,8 @@
               :disabled="db.addClusterStatusObj.status !== 'running'"
           >停止</m-button
           >
-          <el-scrollbar style="height:100%">
-            <div class="taskmodal-content">
+          <el-scrollbar style="height:100%" id="log-taskModal">
+            <div class="taskmodal-content" ref="taskmodal-content">
               <div class="table" v-if="tab === 'log'">
                 <div
                     class="table-tr"
@@ -263,6 +263,18 @@ export default {
       //组件离开后动画
       el.style.webkitTransform= `translate3d(0, 100%, 0) scale3d(0, 0, 0)`;
       el.style.transform = `translate3d(0, 100%, 0) scale3d(0, 0, 0)`
+    }
+  },
+  updated() {
+    let _this = this;
+    if(_this.showLog) {
+      this.$nextTick(() => {
+        if(this.tab === 'log') {
+          document.querySelector('#log-taskModal >.el-scrollbar__wrap').scrollTop = this.$refs['taskmodal-content'].scrollHeight;
+        } else {
+          document.querySelector('#log-taskModal >.el-scrollbar__wrap').scrollTop = 0;
+        }
+      })
     }
   },
   watch: {

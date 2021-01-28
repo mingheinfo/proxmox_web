@@ -561,8 +561,8 @@
             :disabled="db.addClusterStatusObj.status !== 'running'"
             >停止</m-button
           >
-          <el-scrollbar style="height: 100%">
-            <div class="taskmodal-content">
+          <el-scrollbar style="height: 100%" id="taskModal">
+            <div class="taskmodal-content" ref="taskmodal-content">
               <div class="table" v-if="tab === 'log'">
                 <div
                   class="table-tr"
@@ -851,6 +851,13 @@ export default {
                 this.db.addClusterStatusObj.node,
                 this.db.addClusterStatusObj.upid
               );
+              this.$nextTick(() => {
+                if(this.tab === 'log') {
+                  document.querySelector('.el-scrollbar__view').scrollTop = this.$refs['taskmodal-content'].scrollHeight;
+                } else {
+                  document.querySelector('.el-scrollbar__view').scrollTop = 0;
+                }
+              })
             }, 3000);
           })
           .catch((res) => {
@@ -899,11 +906,11 @@ export default {
               list: [],
             });
             _this.interval = window.setInterval(() => {
-              _this.queryStatus(this.db.addClusterStatusObj.upid);
+              _this.queryStatus(_this.db.addClusterStatusObj.upid);
               _this.queryLog(
-                this.db.addClusterStatusObj.node,
-                this.db.addClusterStatusObj.upid
-              );
+                _this.db.addClusterStatusObj.node,
+                _this.db.addClusterStatusObj.upid
+              )
             }, 3000);
           })
           .catch((res) => {
@@ -1275,6 +1282,18 @@ export default {
        if(!order) return;
        this.currentPage = 1;
        this.snapdbshotList = quickSort(this.snapshotList.filter(item => item.name !== 'current'), 'snaptime', order === 'ascending' ? '-' : '+');
+    }
+  },
+  updated() {
+    let _this = this;
+    if(_this.showLog) {
+      this.$nextTick(() => {
+        if(this.tab === 'log') {
+          document.querySelector('#taskModal >.el-scrollbar__wrap').scrollTop = this.$refs['taskmodal-content'].scrollHeight;
+        } else {
+          document.querySelector('#taskModal >.el-scrollbar__wrap').scrollTop = 0;
+        }
+      })
     }
   },
   beforeDestoryed() {

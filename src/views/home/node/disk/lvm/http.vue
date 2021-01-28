@@ -35,7 +35,7 @@ export default {
 		},
 		createVolumeGroup(param) {
 			let event = this.createEvent(`action.node.disk.lvm.create`);
-			return this.$http.post(`json/nodes/${this.node}/disks/lvm"`, param, {
+			return this.$http.post(`json/nodes/${this.node}/disks/lvm`, param, {
 				headers: {
 					'content-type': 'application/x-www-form-urlencoded; charset=utf8'
 				}

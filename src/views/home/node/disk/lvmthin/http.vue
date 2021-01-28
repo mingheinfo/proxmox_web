@@ -35,7 +35,7 @@ export default {
 		},
 		createThin(param) {
 			let event = this.createEvent(`action.node.disk.lvmthin.create`);
-			return this.$http.post(`json/nodes/${this.node}/disks/lvmthin"`, param, {
+			return this.$http.post(`json/nodes/${this.node}/disks/lvmthin`, param, {
 				headers: {
 					'content-type': 'application/x-www-form-urlencoded; charset=utf8'
 				}

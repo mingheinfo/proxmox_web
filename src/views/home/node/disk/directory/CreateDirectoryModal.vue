@@ -150,6 +150,7 @@ export default {
     this.__init__();
   },
   methods: {
+    byteToSize,
     //请求磁盘
     async __init__() {
       let _this = this;
@@ -193,7 +194,7 @@ export default {
 				device: this.device,
 				filesystem: this.filesystem
       };
-     
+
          this.createDirectory(param)
           .then((res) => {
             this.close();
