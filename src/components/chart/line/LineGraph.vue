@@ -16,6 +16,7 @@
 
 <script>
   import { deepCopy, dateFormat, getEvent, throttle } from "@libs/utils";
+  import "@libs/utils/domResize";
   import Loading from '@src/components/loading/loading';
   import echart from 'echarts/lib/echarts';
   import echartsConfig from 'echarts/lib/config';
@@ -38,6 +39,7 @@
         temp: {},
         nodata: true,
         loading: false,
+        _el: null,
         options: {
           title: {
             textStyle: {
@@ -140,7 +142,8 @@
       el.style.height = el.parentNode.parentNode.clientHeight + 'px';
       _this.chartsDom = echart.init(el);
       _this.setOption();
-      window.addEventListener('resize',throttle(()=> {
+      _this._el = document.querySelector('.overview');
+      _this._el.addEventListener('resize',throttle(()=> {
         el.style.width = el.parentNode.parentNode.clientWidth + 'px';
         el.style.height = el.parentNode.parentNode.clientHeight + 'px';
         _this.chartsDom = echart.init(el);
@@ -260,7 +263,8 @@
       }
     },
     beforeDestroy() {
-      window.removeEventListener('resize', this.setOption, false)
+      let _this = this;
+      _this._el.removeEventListener('resize', this.setOption, false)
     },
     watch: {
       data: {
