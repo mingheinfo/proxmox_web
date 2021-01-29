@@ -114,6 +114,7 @@ export default {
     renderDropMenu() {
       if (this.disabled) return;
       if (this.isOpen && this.$refs["select-menu"]) {
+        const el = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
         const { left, top } =
           this.$refs &&
           this.$refs["select"] &&
@@ -121,7 +122,7 @@ export default {
         this.$refs["select-menu"].style.top = `${
           top + this.$refs["select"].clientHeight + 10
         }px`;
-        this.$refs["select-menu"].style.left = `${left}px`;
+        this.$refs["select-menu"].style.left = `${el + left}px`;
         this.$refs["select-menu"].style.minWidth = `${
           1.2 * this.$refs["select"].clientWidth
         }px`;
@@ -220,7 +221,6 @@ export default {
   methods: {
     setSelected() {
       let selected = [];//清空上次选择，设置重新选择
-      console.log(this.cachedOptions);
       for (let i = 0; i < this.cachedOptions.length; i++) {
         if (this.type === "multiple") {
           if (this.value.includes(this.cachedOptions[i].value)) {

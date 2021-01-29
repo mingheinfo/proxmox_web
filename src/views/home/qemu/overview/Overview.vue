@@ -12,7 +12,7 @@
       </m-select>
     </div>
     <div style="display: inline;">
-      <overview-card style="width: calc(calc(100% / 4) - 23px)">
+      <overview-card :style="{width: !isTempalte ? `calc(calc(100% / 4) - 23px)` : 'calc(calc(100% / 2) - 22px)'}">
         <div slot="title">状态</div>
         <div slot="content" class="card-content" v-loading="loading"  :element-loading-text="loadingText">
           <div class="card-item">
@@ -44,7 +44,7 @@
           </div>
         </div>
       </overview-card>
-      <overview-card style="width: calc(calc(100% / 4) - 23px)">
+      <overview-card :style="{width: !isTempalte ? `calc(calc(100% / 4) - 23px)` : 'calc(calc(100% / 2) - 22px)'}">
         <div slot="title">备注</div>
         <div slot="operate" class="m-tool-img" @click.stop="handleComment"></div>
         <div slot="content" class="card-content" ref="comment-content">
@@ -55,25 +55,25 @@
         </div>
       </overview-card>
     </div>
-    <overview-card>
+    <overview-card v-if="!isTempalte">
       <div slot="title">CPU利用率</div>
       <template slot="content">
         <line-graph :data="cpu"></line-graph>
       </template>
     </overview-card>
-    <overview-card>
+    <overview-card v-if="!isTempalte">
       <div slot="title">内存利用率</div>
       <template slot="content">
         <line-graph :data="memory"></line-graph>
       </template>
     </overview-card>
-    <overview-card>
+    <overview-card v-if="!isTempalte">
       <div slot="title">网络流量</div>
       <template slot="content">
         <line-graph :data="network"></line-graph>
       </template>
     </overview-card>
-    <overview-card>
+    <overview-card v-if="!isTempalte">
       <div slot="title">磁盘IO</div>
       <template slot="content">
         <line-graph :data="disk"></line-graph>
@@ -125,6 +125,7 @@
         timeframe: 'hour(AVERAGE)',
         loading: false,
         loadingText: '',
+        isTempalte: false,
         intervalList: [
           {
             label: '小时（平均）',
@@ -242,7 +243,9 @@
       __init__() {
         let last = window.localStorage.getItem("lastsel") || '[]';
         this.node = (JSON.parse(last) && JSON.parse(last)) || '';
-        this.queryResource();
+        this.queryResource().then(res => {
+          this.isTempalte = this.db.qemuObj && this.db.qemuObj.template && this.db.qemuObj.template === 1 ? true : false;
+        });
         this.queryConfig()
             .catch(res => {
               this.comment = res ? res : '';

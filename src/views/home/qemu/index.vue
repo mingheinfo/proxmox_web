@@ -138,8 +138,8 @@
         viewType: (state) => state.db.selectView,
       }),
     },
-    mounted() {
-      this.__init__();
+    async mounted() {
+      await this.__init__();
       this.setMenu(this.qemu.type);
     },
     methods: {
@@ -456,6 +456,10 @@
         if (type === 'lxc') {
           this.menuData = qemuMenuList.filter(item => {
             return !/(monitor|volume|cloud-init)/.test(item.path)
+          })
+        } else if(this.isTempalte) {
+          this.menuData = qemuMenuList.filter(item => {
+            return !/(console|monitor|snapshot|resource|network)/.test(item.path)
           })
         } else {
           this.menuData = qemuMenuList.filter(item => {

@@ -1026,7 +1026,7 @@ export default {
         this.queryNextVmid({ _dc: new Date().getTime() });
         this.queryPool();
         if (this.nodeList) {
-          this.nodename = this.nodeList[0].node;
+          this.nodename = this.nodeList && this.nodeList.length > 0 && this.nodeList[0].node || '';
           this.queryTargetStorage();
         }
       }
@@ -1219,7 +1219,7 @@ export default {
       _this.nodeList = _this.nodeList.filter(
         (item) => _this.qemu.node !== item.node
       );
-      if (_this.nodeList) _this.nodename = _this.nodeList[0].node;
+      if (_this.nodeList) _this.nodename = _this.nodeList && _this.nodeList.length > 0 && _this.nodeList[0].node || '';
       //离线状态下只允许本地存储迁移
     },
     /**

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { deepCopy, dateFormat, getEvent } from "@libs/utils";
+  import { deepCopy, dateFormat, getEvent, throttle } from "@libs/utils";
   import Loading from '@src/components/loading/loading';
   import echart from 'echarts/lib/echarts';
   import echartsConfig from 'echarts/lib/config';
@@ -138,11 +138,14 @@
       let _this = this, el = document.querySelector(`.m-chart-instance-${_this._uid}`);
       el.style.width = el.parentNode.parentNode.clientWidth + 'px';
       el.style.height = el.parentNode.parentNode.clientHeight + 'px';
-      this.chartsDom = echart.init(el);
-      this.setOption();
-      window.addEventListener('resize',() => {
-        this.chartsDom.resize();
-      }, true)
+      _this.chartsDom = echart.init(el);
+      _this.setOption();
+      window.addEventListener('resize',throttle(()=> {
+        el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+        el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+        _this.chartsDom = echart.init(el);
+        _this.chartsDom.resize();
+      }, 100), false)
     },
     methods: {
       //设置折线图的配置项
@@ -248,7 +251,7 @@
           }
 
         });
-          this.chartsDom.setOption(_options, true);
+          this.chartsDom.setOption(_options, false);
           this.$forceUpdate();
       },
       toggleMode() {
@@ -257,7 +260,7 @@
       }
     },
     beforeDestroy() {
-      window.removeEventListener('resize', this.setOption, true)
+      window.removeEventListener('resize', this.setOption, false)
     },
     watch: {
       data: {
