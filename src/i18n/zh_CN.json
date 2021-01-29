@@ -140,7 +140,11 @@
     "storage": {
       "delete": "删除存储 {name} ",
       "create": "添加存储 {name}",
-      "update": "更新存储 {name}"
+      "update": "更新存储 {name}",
+      "content": {
+        "delete": "删除存储镜像 {name} ",
+        "restore": "还原镜像 {name} "
+      }
     },
     "backup": {
       "delete": "删除备份 {name} ",

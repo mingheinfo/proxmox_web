@@ -35,6 +35,7 @@ export default {
   computed: {
     renderDropMenu() {
       if (this.isOpen && this.$refs["dropdown-menu"]) {
+        const el = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
         const { left, top } =
           this.$refs &&
           this.$refs["dropdown"] &&
@@ -42,7 +43,7 @@ export default {
         this.$refs["dropdown-menu"].style.top = `${
           top + this.$refs["dropdown"].clientHeight + 10
         }px`;
-        this.$refs["dropdown-menu"].style.left = `${left}px`;
+        this.$refs["dropdown-menu"].style.left = `${el + left}px`;
         this.$refs["dropdown-menu"].style.minWidth = `${
           1.2 * this.$refs["dropdown"].clientWidth
         }px`;
