@@ -39,6 +39,7 @@
                 @on-change="handleGroupSelect"
                 v-model="action"
                 @validate="validate('action')"
+                required
                 :show-error="rules['action'].error"
                 :error-msg="rules['action'].message"
                  v-show="modalType === 'rule' || isGroup"

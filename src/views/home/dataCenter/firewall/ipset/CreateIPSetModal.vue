@@ -19,8 +19,10 @@
                 labelWidth="100px"
                 label="名称"
                 v-model="name"
+                required
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.name.error"
                 :error-msg="rules.name.message"
                 placeholder="请输入名称"

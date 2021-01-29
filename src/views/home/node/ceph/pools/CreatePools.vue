@@ -13,6 +13,7 @@
           v-model="name"
           validateEvent
           @validate="validate"
+          required
           :show-error="rules['name'].error"
           :error-msg="rules['name'].message"
         />
@@ -23,6 +24,7 @@
           v-model="size"
           validateEvent
           @validate="validate"
+          required
           :show-error="rules['size'].error"
           :error-msg="rules['size'].message"
         />
@@ -33,15 +35,17 @@
           v-model="min_size"
           validateEvent
           @validate="validate"
+          required
           :show-error="rules['min_size'].error"
           :error-msg="rules['min_size'].message"
         />
-        <m-select 
+        <m-select
            label="Crush Rule"
            labelWidth="100px"
            validateEvent
            @validate="validate"
            prop="crush_rule"
+           required
            :show-error="rules['crush_rule'].error"
            :error-msg="rules['crush_rule'].message"
            @on-change="(val) => crush_rule = val"
@@ -60,6 +64,7 @@
           v-model="pg_num"
           validateEvent
           @validate="validate"
+          required
           :show-error="rules['pg_num'].error"
           :error-msg="rules['pg_num'].message"
         />

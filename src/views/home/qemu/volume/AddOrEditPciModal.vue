@@ -23,6 +23,7 @@
                 v-model="host"
 								validateEvent
                 @validate="validate"
+								required
 								:show-error="rules['host'].error"
 								:error-msg="rules['host'].message"
                 :readonly="true"
@@ -86,10 +87,10 @@
                 	</m-option>
 								</div>
               </m-select>
-              	<m-checkbox label="所有功能" 
+              	<m-checkbox label="所有功能"
 						            v-model="multifunction"
 												labelWidth="100px"></m-checkbox>
-							<m-checkbox label="主CPU" 
+							<m-checkbox label="主CPU"
 						            v-model="xvga"
 												labelWidth="100px"></m-checkbox>
 							 <div class="m-form__section">
@@ -100,14 +101,14 @@
         <div class="m-form__section" v-if="isAdvice">
           <dl>
             <dt>高级</dt>
-            <dd>  
-             	<m-checkbox label="ROM-Bar" 
+            <dd>
+             	<m-checkbox label="ROM-Bar"
 						            v-model="rombar"
 												labelWidth="100px"></m-checkbox>
-								<m-checkbox label="PCI-Express" 
+								<m-checkbox label="PCI-Express"
 						            v-model="pcie"
 												:disabled="!mdev"
-												labelWidth="100px">仅Q35</m-checkbox> 
+												labelWidth="100px">仅Q35</m-checkbox>
             </dd>
           </dl>
         </div>
@@ -129,7 +130,7 @@
 </template>
 
 <script>
-import { 
+import {
 	DEVICELIST,
 	CACHELIST,
 	MODELLIST
@@ -232,7 +233,7 @@ export default {
         let id = netId && netId.length > 0 ? Math.max(...netId) + 1 : 0;
 				let param = {
 					[`hostpci${id}`]: hostpci.replace(/\,$/, ""),
-          digest: this.db.qemuConfigObj.digest 
+          digest: this.db.qemuConfigObj.digest
 				}
 				this.createHardWare(param)
 				    .then(res =>{
@@ -246,7 +247,7 @@ export default {
 				} else {
 						let param = {
 					[this.param.type]: hostpci.replace(/\,$/, ""),
-          digest: this.db.qemuConfigObj.digest 
+          digest: this.db.qemuConfigObj.digest
 				}
 				this.updateHardWare(param)
 				    .then(res =>{

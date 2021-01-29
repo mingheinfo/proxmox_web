@@ -20,6 +20,7 @@
                 prop="memory"
                 validateEvent
                 :min="0"
+                required
                 @validate="validate"
                 :show-error="rules['memory'].error"
                 :error-msg="rules['memory'].message"
@@ -34,6 +35,7 @@
                 validateEvent
                 @validate="validate"
                 :min="0"
+                required
                 :show-error="rules['swap'].error"
                 :error-msg="rules['swap'].message"
                 placeholder="请输入交换分区"
@@ -50,6 +52,7 @@
                 :min="0"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['cores'].error"
                 :error-msg="rules['cores'].message"
                 placeholder="请输入核数"
@@ -65,6 +68,7 @@
                 prop="disk"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['disk'].error"
                 :error-msg="rules['disk'].message"
                 placeholder="请输入磁盘映像"
@@ -79,6 +83,7 @@
                 v-show="!isRoot"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['mp'].error"
                 :error-msg="rules['mp'].message"
                 placeholder="请输入路径"
@@ -112,6 +117,7 @@
                 validateEvent
                 v-show="modalType !== 'edit'"
                 @validate="validate"
+                required
                 :error-msg="rules['storage'].message"
                 :show-error="rules['storage'].error"
                 :readonly="false"
@@ -188,6 +194,7 @@
                 @validate="validate"
                 prop="size"
                 :min="1"
+                required
                 :error-msg="rules['size'].message"
                 :show-error="rules['size'].error"
               />
@@ -200,6 +207,7 @@
                 prop="storageId"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['storageId'].error"
                 :error-msg="rules['storageId'].message"
                 placeholder="请输入挂载点id"
@@ -213,6 +221,7 @@
                 v-show="!isRoot"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['mp'].error"
                 :error-msg="rules['mp'].message"
                 placeholder="/some/path"
@@ -231,6 +240,7 @@
                 :error-msg="rules['storage'].message"
                 :show-error="rules['storage'].error"
                 :readonly="false"
+                required
                 placeholder="请选存储"
               >
                 <div class="table">
@@ -265,6 +275,7 @@
                 @validate="validate"
                 prop="size"
                 :min="1"
+                required
                 :error-msg="rules['size'].message"
                 :show-error="rules['size'].error"
               />
@@ -292,6 +303,7 @@
                 :error-msg="rules['cpulimit'].message"
                 placeholder="请输入CPU限制"
                 label="CPU限制"
+                required
                 labelWidth="100px"
               />
               <m-input
@@ -303,6 +315,7 @@
                 @validate="validate"
                 :show-error="rules['cpuunits'].error"
                 :error-msg="rules['cpuunits'].message"
+                required
                 placeholder="请输入CPU权重"
                 label="CPU权重"
                 labelWidth="100px"

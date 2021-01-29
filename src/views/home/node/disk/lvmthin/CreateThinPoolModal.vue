@@ -21,6 +21,7 @@
                 v-model="device"
 								validateEvent
 								@validate="validate"
+                required
 								:error-msg="rules['device'].message"
 								:show-error="rules['device'].error"
                 :readonly="false"
@@ -56,6 +57,7 @@
 								v-model="name"
                 validateEvent
 								@validate="validate"
+                required
 								:error-msg="rules['name'].message"
 								:show-error="rules['name'].error"
                 :placeholder="'请输入名称'"

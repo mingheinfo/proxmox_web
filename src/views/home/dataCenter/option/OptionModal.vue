@@ -27,6 +27,7 @@
 					          prop="http_proxy"
 										validateEvent
 										@validate="validate"
+										required
 										:error-msg="rules.http_proxy.message"
 										:show-error="rules.http_proxy.error"
 					          v-model="http_proxy"/>
@@ -82,8 +83,8 @@
 			  <div class="option-tr">
 				 <label>网络</label>
 				 <div class="option-item">
-					<el-table :data="netWorkList" 
-						            @current-change="handleLink1Change" 
+					<el-table :data="netWorkList"
+						            @current-change="handleLink1Change"
 						            highlight-current-row>
 							 <el-table-column type="index" width="50">
                   <template slot-scope="scope">
@@ -94,7 +95,7 @@
 							 <el-table-column label="接口" prop="iface" sortable></el-table-column>
 							 <el-table-column label="活动" prop="active">
 								 <template slot-scope="scope">
-									 <table-info-state :content="scope.row.active === 1 ? '是' : '否'" 
+									 <table-info-state :content="scope.row.active === 1 ? '是' : '否'"
 									                   :state="scope.row.active === 1 ? 'actived' : 'unactived'"></table-info-state>
 								 </template>
 							 </el-table-column>
@@ -272,7 +273,7 @@ export default {
 					mac_prefix: this.mac_prefix
 				}
 				break;
-				case 'migration': 
+				case 'migration':
 				 param = {
 					migration: this.link1Radio ? `network=${this.link1Radio},type=secure` : `type=secure`
 				}
@@ -330,7 +331,7 @@ export default {
 					return true;
 				} else {
 					return false;
-				} 
+				}
 		  }
 		}
 	}

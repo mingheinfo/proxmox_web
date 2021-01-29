@@ -23,6 +23,7 @@
                 :error-msg="rules.vmid.message"
                 :readonly="false"
                 @on-change="handleVmidSelect"
+                required
                 v-model="vmid"
 								:disabled="!isCreate"
                 placeholder="请选择VM"
@@ -108,6 +109,7 @@
                 v-model="max_restart"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.max_restart.error"
                 :error-msg="rules.max_restart.message"
                 placeholder="请输入最大重启"
@@ -138,6 +140,7 @@
                 v-model="max_relocate"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.max_relocate.error"
                 :error-msg="rules.max_relocate.message"
                 placeholder="请输入最大重定位"

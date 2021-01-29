@@ -20,6 +20,7 @@
 									label="存储"
 									labelWidth="100px"
 									prop="storage"
+									required
 									:show-error="rules['storage'].error"
 									:error-msg="rules['storage'].message">
 									<m-option v-for="(item, index) in qemuStorageList"
@@ -89,6 +90,7 @@
 									label="存储"
 									labelWidth="100px"
 									prop="storage"
+								  required
 									:show-error="rules['storage'].error"
 									placeholder="From backup configuration"
 									:error-msg="rules['storage'].message">
@@ -138,7 +140,7 @@
 				 </template>
 				 <template v-if="modalType === 'config'">
 					 <ace-editor v-model="configContent" ref="ace-editor"
-					             :readOnly="true" 
+					             :readOnly="true"
 					             style="max-height: 400px; overflow-y: auto;"></ace-editor>
 				 </template>
 			</div>
@@ -197,14 +199,14 @@
       </m-dialog>
 		</div>
 		<template slot="footer">
-			<m-button v-if="modalType==='backup'" 
+			<m-button v-if="modalType==='backup'"
 			          type="primary"
 								class="create-btn"
-								icon="fa fa-save" 
+								icon="fa fa-save"
 								@on-click="confirm">备份</m-button>
-			<m-button v-if="modalType=== 'restore'" 
-			          type="primary" 
-								class="create-btn" 
+			<m-button v-if="modalType=== 'restore'"
+			          type="primary"
+								class="create-btn"
 								@on-click="confirm"
 								icon="fa fa-retweet">恢复</m-button>
       <span v-show="modalType === 'config'"></span>
@@ -346,7 +348,7 @@ export default {
 				this.rules[prop].error = true;
 				this.rules[prop].message = "不能为空!";
 				return;
-			} 
+			}
 			if(prop === 'emailto' && value && !/\w+@(\w+)\.(\w+)$/.test(value)) {
         this.rules[prop].error = true;
 				this.rules[prop].message = "邮箱格式不正确!";

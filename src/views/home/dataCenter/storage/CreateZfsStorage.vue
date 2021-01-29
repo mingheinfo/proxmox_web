@@ -14,6 +14,7 @@
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
+            required
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
@@ -33,6 +34,7 @@
             :show-error="rules.portal.error"
             :error-msg="rules.portal.message"
             v-model="portal"
+            required
             placeholder="请输入门户"
           />
           <m-select
@@ -43,6 +45,7 @@
 						:disabled="!isCreate"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.iscsiprovider.error"
             :error-msg="rules.iscsiprovider.message"
             v-model="iscsiprovider"
@@ -63,6 +66,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.pool.error"
             :error-msg="rules.pool.message"
             v-model="pool"
@@ -76,6 +80,7 @@
 						:disabled="!isCreate"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.blocksize.error"
             :error-msg="rules.blocksize.message"
             v-model="blocksize"
@@ -89,6 +94,7 @@
             validateEvent
 						:disabled="!isCreate"
             @validate="validate"
+            required
             :show-error="rules.target.error"
             :error-msg="rules.target.message"
             v-model="target"

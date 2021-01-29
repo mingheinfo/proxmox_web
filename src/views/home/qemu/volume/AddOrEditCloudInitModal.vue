@@ -24,6 +24,7 @@
               prop="deviceIndex"
               :_style="{ paddingLeft: '115px' }"
               @validate="validate"
+              required
               :error-msg="rules['deviceIndex'].message"
               :show-error="rules['deviceIndex'].error"
             >
@@ -68,6 +69,7 @@
                   v-model="storage"
                   validateEvent
                   @validate="validate"
+                  required
                   :show-error="rules['storage'].error"
                   :error-msg="rules['storage'].message"
                   :readonly="true"
@@ -271,7 +273,7 @@ export default {
 		},
 		setDefaultDeviceIndex() {
 			debugger;
-		
+
 			this.usedIDList = Object.keys(this.db.qemuConfigObj).filter(it => {
 					let regx = new RegExp(`\^\(${this.device}\)\\d\$`, 'g');
 					  return regx.test(it)

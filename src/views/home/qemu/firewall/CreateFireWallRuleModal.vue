@@ -41,6 +41,7 @@
                 @validate="validate('action')"
                 :show-error="rules['action'].error"
                 :error-msg="rules['action'].message"
+                required
                  v-show="modalType === 'rule' || isGroup"
                 placeholder="请选择安全组"
               >

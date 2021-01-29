@@ -75,6 +75,7 @@
                 prop="clusterName"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.clusterName.error"
                 :error-msg="rules.clusterName.message"
                 v-model="clusterName"
@@ -94,6 +95,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.link0.error"
                 :error-msg="rules.link0.message"
                 :readonly="false"
@@ -210,6 +212,7 @@
                 prop="serializedinfo"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.serializedinfo.error"
                 :error-msg="rules.serializedinfo.message"
                 v-model="serializedinfo"
@@ -228,6 +231,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.hostname.error"
                 :error-msg="rules.hostname.message"
                 v-model="hostname"
@@ -241,6 +245,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.password.error"
                 :error-msg="rules.password.message"
                 v-model="password"
@@ -253,6 +258,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :readonly="isCreate"
                 :show-error="rules.fingerprint.error"
                 :error-msg="rules.fingerprint.message"
@@ -271,6 +277,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.link0.error"
                 :error-msg="rules.link0.message"
                 :readonly="false"

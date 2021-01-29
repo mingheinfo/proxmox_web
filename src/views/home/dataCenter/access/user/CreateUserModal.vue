@@ -22,6 +22,7 @@
                 v-model="username"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.username.error"
                 :error-msg="rules.username.message"
                 :disabled="modalType !== 'create'"
@@ -43,6 +44,7 @@
                 v-model="realm"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.realm.error"
                 :error-msg="rules.realm.message"
                 :readonly="false"
@@ -73,6 +75,7 @@
                 v-model="groups"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.groups.error"
                 :error-msg="rules.groups.message"
                 :readonly="false"
@@ -110,6 +113,7 @@
                 v-model="email"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.email.error"
                 :error-msg="rules.email.message"
                 placeholder="请输入Email"
@@ -167,6 +171,7 @@
                 v-model="password"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.password.error"
                 :error-msg="rules.password.message"
                 placeholder="请输入密码"
@@ -179,6 +184,7 @@
                 v-model="confirmPsw"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.confirmPsw.error"
                 :error-msg="rules.confirmPsw.message"
                 placeholder="请输入确认密码"
@@ -237,6 +243,7 @@
                     v-model="challenge"
                     validateEvent
                     @validate="validate"
+                    required
                     :show-error="rules.challenge.error"
                     :error-msg="rules.challenge.message"
                     placeholder="请输入验证码"

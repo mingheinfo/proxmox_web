@@ -54,6 +54,7 @@
 								label="CT ID"
 								labelWidth="100px"
                 validateEvent
+                required
                 :show-error="rules['vmid'].error"
                 :error-msg="rules['vmid'].message"
                 @validate="validate"
@@ -69,6 +70,7 @@
                 :show-error="rules.nodename.error"
                 :error-msg="rules.nodename.message"
                 :readonly="false"
+                required
                 @on-change="(value) => nodename = value"
                 v-model="nodename"
                 placeholder="请选择节点"
@@ -95,7 +97,7 @@
                   </div>
                 </m-option>
               </m-select>
-            
+
 						<m-select
                 prop="pool"
                 label="资源池"
@@ -127,8 +129,8 @@
                   </div>
                 </m-option>
               </m-select>
-              
-							
+
+
 							<m-input
                 v-model="password"
 								type='password'
@@ -154,7 +156,7 @@
                 @validate="validate"
                 placeholder="请输入确认密码"
               />
- 
+
 							<m-input
                 v-model="ssh"
 								type='text'
@@ -190,6 +192,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.storage.error"
                 :error-msg="rules.storage.message"
                 :readonly="false"
@@ -221,7 +224,7 @@
                   </div>
                 </m-option>
               </m-select>
-            
+
 						<m-select
                 prop="tmpl"
                 label="模板"
@@ -230,6 +233,7 @@
                 @validate="validate"
                 :show-error="rules.tmpl.error"
                 :error-msg="rules.tmpl.message"
+                required
                 :readonly="false"
                 @on-change="(value) => tmpl = value"
                 v-model="tmpl"
@@ -257,7 +261,7 @@
                   </div>
                 </m-option>
               </m-select>
-							
+
             </dd>
           </dl>
         </div>
@@ -278,6 +282,7 @@
                 @validate="validate"
                 :error-msg="rules['rootStorage'].message"
                 :show-error="rules['rootStorage'].error"
+                required
                 :readonly="false"
                 placeholder="请选存储"
               >
@@ -313,6 +318,7 @@
                 @validate="validate"
                 prop="size"
                 :min="1"
+                required
                 :error-msg="rules['size'].message"
                 :show-error="rules['size'].error"
               />
@@ -385,6 +391,7 @@
                 :min="0"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['cores'].error"
                 :error-msg="rules['cores'].message"
                 placeholder="请输入核数"
@@ -405,6 +412,7 @@
                 :min="0"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['cpulimit'].error"
                 :error-msg="rules['cpulimit'].message"
                 placeholder="请输入CPU限制"
@@ -418,6 +426,7 @@
                 :min="8"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['cpuunits'].error"
                 :error-msg="rules['cpuunits'].message"
                 placeholder="请输入CPU权重"
@@ -441,6 +450,7 @@
                 validateEvent
                 :min="16"
                 @validate="validate"
+                required
                 :show-error="rules['memory'].error"
                 :error-msg="rules['memory'].message"
                 placeholder="请输入内存"
@@ -454,6 +464,7 @@
                 validateEvent
                 @validate="validate"
                 :min="0"
+                required
                 :show-error="rules['swap'].error"
                 :error-msg="rules['swap'].message"
                 placeholder="请输入交换分区"
@@ -478,9 +489,10 @@
 										 validateEvent
 										 @validate="validate"
 										 placeholder="形如：eth0"
+                     required
 										 :show-error="rules['name'].error"
 										 :error-msg="rules['name'].message"/>
-						
+
 						<m-input v-model="hwaddr"
 						         prop="hwaddr"
 										 label="MAC地址"
@@ -490,18 +502,19 @@
 										 placeholder="形如：2A:75:78:42:45:37"
 										 :show-error="rules['hwaddr'].error"
 										 :error-msg="rules['hwaddr'].message"/>
-						
+
 						<m-select v-model="bridge"
 						         prop="bridge"
 										 label="桥接"
 										 labelWidth="100px"
 										 validateEvent
 										 @validate="validate"
+                      required
 										 :show-error="rules['bridge'].error"
 										 :error-msg="rules['bridge'].message"
 										 @on-change="(value) => bridge = value"
 										 >
-							<m-option v-for="(item, index) in networkList" 
+							<m-option v-for="(item, index) in networkList"
 							          :key="item.iface"
 												:label="item.iface"
 												:value="item.iface">
@@ -528,7 +541,7 @@
 										 labelWidth="100px"
 										 placeholder="请输入VLAN标签"
 										/>
-						
+
 						<m-input v-model="rate"
 						         type="number"
 						         prop="rate"
@@ -537,7 +550,7 @@
 										 :min="0"
 										 placeholder="请输入速率限制"
 										/>
-						
+
 						<m-checkbox v-model="firewall"
 						         prop="firewall"
 										 label="防火墙"
@@ -584,7 +597,7 @@
 										 :error-msg="rules['ip'].message"
 										 :disabled="ip4type !== 'static'"
 										 placeholder="None"/>
-						
+
 						<m-input v-model="gw"
 						         prop="gw"
 										 label="网关(IPv4)"
@@ -651,7 +664,7 @@
 										 :error-msg="rules['ip6'].message"
 										 :disabled="ip6type !== 'static'"
 										 placeholder="None"/>
-						
+
 						<m-input v-model="gw6"
 						         prop="gw6"
 										 label="网关(IPv6)"
@@ -1358,7 +1371,7 @@ export default {
   width: 55px;
   display: inline-block;
 }
-.m-form__section{ 
+.m-form__section{
 	dl{
 			width: 964px
 	}

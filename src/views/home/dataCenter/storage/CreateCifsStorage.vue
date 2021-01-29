@@ -11,6 +11,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
@@ -29,6 +30,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.server.error"
             :error-msg="rules.server.message"
             v-model="server"
@@ -43,6 +45,7 @@
             :disabled="!isCreate"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.username.error"
             :error-msg="rules.username.message"
             v-model="username"
@@ -55,6 +58,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.password.error"
             :error-msg="rules.password.message"
             :disabled="!username || !isCreate"
@@ -78,6 +82,7 @@
             v-model="share"
             :readonly="false"
 						 :disabled="!isCreate"
+            required
             @visible-change="handleExportReq"
             :show-error="rules.share.error"
             :error-msg="rules.share.message"
@@ -98,6 +103,7 @@
             @validate="validate"
             prop="content"
             v-model="content"
+            required
             :show-error="rules.content.error"
             :error-msg="rules.content.message"
             label="内容"
@@ -130,6 +136,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.domain.error"
             :error-msg="rules.domain.message"
             min="0"

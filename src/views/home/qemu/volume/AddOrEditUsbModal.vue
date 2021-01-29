@@ -42,6 +42,7 @@
               validateEvent
               @validate="validate"
               :readonly="true"
+              required
               :show-error="rules['device'].error"
               :error-msg="rules['device'].message"
               :disabled="type !== 'device'"
@@ -95,6 +96,7 @@
               v-model="port"
               validateEvent
               @validate="validate"
+              required
               :show-error="rules['port'].error"
               :error-msg="rules['port'].message"
               :readonly="true"

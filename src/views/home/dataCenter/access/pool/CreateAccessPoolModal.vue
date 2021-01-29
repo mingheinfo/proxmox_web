@@ -21,6 +21,7 @@
                 v-model="poolid"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.poolid.error"
                 :error-msg="rules.poolid.message"
                 :disabled="modalType !== 'create'"

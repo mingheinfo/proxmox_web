@@ -21,6 +21,7 @@
                 v-model="group"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.group.error"
                 :error-msg="rules.group.message"
                 placeholder="请输入名称"

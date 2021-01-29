@@ -20,6 +20,7 @@
                 labelWidth="100px"
 								validateEvent
 								@validate="validate"
+                required
 								:show-error="rules['name'].error"
 								:error-msg="rules['name'].message"
                 v-model="name"
@@ -33,6 +34,7 @@
                 v-model="cidr"
 								validateEvent
 								@validate="validate"
+                required
 								:show-error="rules['cidr'].error"
 								:error-msg="rules['cidr'].message"
                 :placeholder="'请输入IP/CIDR'"
@@ -61,7 +63,7 @@
 <script>
 import Dialog from "@src/components/dialog/Dialog";
 import QemuFireWallHttp from "@src/views/home/qemu/firewall/http";
-import { flotToFixed, percentToFixed, byteToSize, 
+import { flotToFixed, percentToFixed, byteToSize,
   IP4_cidr_match,
   IP4_match,
   IP6_match,
@@ -130,7 +132,7 @@ export default {
       //创建安全组
       if (this.isCreate) {
         Object.assign(this.$data, this.$options.data());
-     
+
       } else if (this.modalType === "edit") {//当类型不为group时编辑安全组
         Object.assign(_this.$data, _this.$options.data());
         if (_this.param && String(_this.param.name)) {

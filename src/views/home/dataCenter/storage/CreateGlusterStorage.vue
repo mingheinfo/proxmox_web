@@ -11,6 +11,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
@@ -29,6 +30,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.server.error"
             :error-msg="rules.server.message"
             v-model="server"
@@ -57,6 +59,7 @@
             v-model="volumename"
             :readonly="false"
             :disabled="!isCreate"
+            required
             @visible-change="handleGlusterExportReq"
             :show-error="rules.volumename.error"
             :error-msg="rules.volumename.message"
@@ -77,6 +80,7 @@
             @validate="validate"
             prop="content"
             v-model="content"
+            required
             :show-error="rules.content.error"
             :error-msg="rules.content.message"
             label="内容"

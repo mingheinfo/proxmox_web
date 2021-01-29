@@ -21,6 +21,7 @@
                 v-model="name"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.name.error"
                 :error-msg="rules.name.message"
                 placeholder="请输入名称"
@@ -92,7 +93,7 @@ export default {
   methods: {
     async __init__() {
       if (this.isCreate) {
-       
+
       } else {
         Object.keys(this.param).forEach((it) => {
 					if(it === 'sid') this.vmid = this.param[it];

@@ -17,11 +17,12 @@
 										 label="名称"
 										 labelWidth="100px"
 										 validateEvent
+										 required
 										 @validate="validate"
 										 placeholder="形如：eth0"
 										 :show-error="rules['name'].error"
 										 :error-msg="rules['name'].message"/>
-						
+
 						<m-input v-model="hwaddr"
 						         prop="hwaddr"
 										 label="MAC地址"
@@ -31,18 +32,19 @@
 										 placeholder="形如：2A:75:78:42:45:37"
 										 :show-error="rules['hwaddr'].error"
 										 :error-msg="rules['hwaddr'].message"/>
-						
+
 						<m-select v-model="bridge"
 						         prop="bridge"
 										 label="桥接"
 										 labelWidth="100px"
 										 validateEvent
+											required
 										 @validate="validate"
 										 :show-error="rules['bridge'].error"
 										 :error-msg="rules['bridge'].message"
 										 @on-change="(value) => bridge = value"
 										 >
-							<m-option v-for="(item, index) in netWorkList" 
+							<m-option v-for="(item, index) in netWorkList"
 							          :key="item.iface"
 												:label="item.iface"
 												:value="item.iface">
@@ -69,7 +71,7 @@
 										 labelWidth="100px"
 										 placeholder="请输入VLAN标签"
 										/>
-						
+
 						<m-input v-model="rate"
 						         type="number"
 						         prop="rate"
@@ -78,7 +80,7 @@
 										 :min="0"
 										 placeholder="请输入速率限制"
 										/>
-						
+
 						<m-checkbox v-model="firewall"
 						         prop="firewall"
 										 label="防火墙"
@@ -125,7 +127,7 @@
 										 :error-msg="rules['ip'].message"
 										 :disabled="ip4type !== 'static'"
 										 placeholder="None"/>
-						
+
 						<m-input v-model="gw"
 						         prop="gw"
 										 label="网关(IPv4)"
@@ -192,7 +194,7 @@
 										 :error-msg="rules['ip6'].message"
 										 :disabled="ip6type !== 'static'"
 										 placeholder="None"/>
-						
+
 						<m-input v-model="gw6"
 						         prop="gw6"
 										 label="网关(IPv6)"
@@ -206,7 +208,7 @@
 					</dd>
 				</dl>
 			</div>
-		</template>  
+		</template>
 	</m-dialog>
 </template>
 

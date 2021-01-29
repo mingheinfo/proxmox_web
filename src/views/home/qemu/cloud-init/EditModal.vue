@@ -35,6 +35,7 @@
                 :rows="10"
                 labelWidth="100px"
                 validateEvent
+                required
                 :show-error="rules['sshkeys'].error"
                 :error-msg="rules['sshkeys'].message"
                 @validate="validate"
@@ -89,6 +90,7 @@
                          labelWidth="100px"
                          validateEvent
                          @validate="validate"
+                         required
                          :show-error="rules['ip'].error"
                          :error-msg="rules['ip'].message"
                          :disabled="ip4type !== 'static'"
@@ -100,6 +102,7 @@
                          labelWidth="100px"
                          validateEvent
                          @validate="validate"
+                         required
                          placeholder="形如：10.10.10.0"
                          :show-error="rules['gw'].error"
                          :disabled="ip4type !== 'static'"
@@ -142,6 +145,7 @@
                          labelWidth="100px"
                          validateEvent
                          @validate="validate"
+                         required
                          :show-error="rules['ip6'].error"
                          :error-msg="rules['ip6'].message"
                          :disabled="ip6type !== 'static'"
@@ -153,6 +157,7 @@
                          labelWidth="100px"
                          validateEvent
                          @validate="validate"
+                         required
                          :show-error="rules['gw6'].error"
                          placeholder="形如：2001:DB8::42"
                          :disabled="ip6type !== 'static'"

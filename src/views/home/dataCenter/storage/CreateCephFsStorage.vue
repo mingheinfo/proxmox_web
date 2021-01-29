@@ -14,6 +14,7 @@
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
+						required
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
@@ -25,6 +26,7 @@
 						:disabled="pveceph"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.monhost.error"
             :error-msg="rules.monhost.message"
             v-model="monhost"
@@ -50,6 +52,7 @@
 										@validate="validate"
 										prop="content"
 										v-model="content"
+										required
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">

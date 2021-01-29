@@ -14,6 +14,7 @@
           @on-change="(value) => (nodename = value)"
           vidateEvent
           @validate="validate"
+          required
           :show-error="rules['nodename'].error"
           :error-msg="rules['nodename'].message"
           label="主机"
@@ -57,6 +58,7 @@
           @validate="validate"
           :validateEvent="true"
           prop="name"
+          required
           :show-error="rules['name'].error"
           :error-msg="rules['name'].message"
         />
@@ -67,6 +69,7 @@
           @validate="validate"
           :validateEvent="true"
           prop="placement_groups"
+          required
           :show-error="rules['placement_groups'].error"
           :error-msg="rules['placement_groups'].message"
         />

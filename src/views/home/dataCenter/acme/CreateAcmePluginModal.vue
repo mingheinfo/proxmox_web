@@ -26,7 +26,7 @@
 								:disabled="!isCreate"
                 placeholder="请输入名称"
               />
-          
+
                <m-input
                 type="number"
                 prop="validationDelay"
@@ -35,6 +35,7 @@
                 v-model="validationDelay"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.validationDelay.error"
                 :error-msg="rules.validationDelay.message"
                 placeholder="请输入Validation Delay"
@@ -45,6 +46,7 @@
                 labelWidth="100px"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.api.error"
                 :error-msg="rules.api.message"
                 :readonly="false"

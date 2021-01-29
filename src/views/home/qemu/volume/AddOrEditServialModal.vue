@@ -24,9 +24,10 @@
 							max="3"
               prop="serial"
               @validate="validate"
+              required
               :error-msg="rules['serial'].message"
               :show-error="rules['serial'].error"
-            />                   
+            />
         </dd>
         </dl>
       </div>
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-import { 
+import {
 	DEVICELIST,
 	CACHELIST
  } from "@libs/enum/enum";

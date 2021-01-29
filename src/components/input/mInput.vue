@@ -1,11 +1,11 @@
 <template>
 	 <div class="m-input">
-		 <label class="m-input__label" :style="{width: labelWidth}">{{label}}</label>
+		 <label class="m-input__label" :style="{width: labelWidth}" :class="{'require': required}">{{label}}</label>
 		 <div class="m-input__container clearfix" :class="{'m-input__error': showError}" :style="__conStyle">
 			  <div class="prefix" v-if="prefixIcon || $slots['prefix']">
 					<slot name="prefix"></slot>
 				</div>
-			  <input :type="showPassword ? 'text' : type" 
+			  <input :type="showPassword ? 'text' : type"
 		        :value="value"
 						@input.stop="handleInput"
 						@change.stop="handleChange"
@@ -20,7 +20,7 @@
 						:readonly="(readonly === 'readonly' || readonly)"
 						class="m-input__inner"/>
 				<slot v-else-if="$slots['other']" name="other"></slot>
-				<textarea v-else 
+				<textarea v-else
 			          :value="value"
 								@input.stop="handleInput"
 						    @change.stop="handleChange"
@@ -160,13 +160,17 @@ export default {
 					return true;
 				}
 			}
+		},
+		required: {
+		  type: Boolean,
+			default: false
 		}
 	},
 	computed: {
 		__style() {
 			  if(this.type==='number')
 				   return Object.assign({padding: '0 10px 0px 10px'}, this._style)
-				else  
+				else
 				return this._style
 		}
 	},
@@ -322,5 +326,12 @@ export default {
 	}
 	input:disabled{
 		background: #dde4ed;
+	}
+	.require{
+		&::before{
+			content: "*";
+			color: #f56c6c;
+			margin-right: 4px;
+		}
 	}
 </style>

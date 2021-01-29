@@ -87,6 +87,7 @@
                 prop="pool_id"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['pool_id'].error"
                 :error-msg="rules['pool_id'].message"
               />

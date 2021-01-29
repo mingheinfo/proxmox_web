@@ -25,6 +25,7 @@
                 :show-error="rules.name.error"
                 :error-msg="rules.name.message"
                 v-model="name"
+                required
 								:disabled="!isCreate"
                 placeholder="请输入名称"
               />
@@ -176,7 +177,7 @@ export default {
       return this.rules['name'].error === true;
 		},
 		/**
-			*确定 
+			*确定
 		*/
 		confirm() {
 			 if(this.validateAll()) return;

@@ -20,6 +20,7 @@
 											 labelWidth="100px"
 											 validateEvent
 											 @validate="validate"
+												 required
 											 :show-error="rules['name'].error"
 											 :error-msg="rules['name'].message"
 											 @on-change="(value) => name = value"

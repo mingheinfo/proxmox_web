@@ -11,13 +11,14 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
-					<m-checkbox  
+					<m-checkbox
 					    label="共享"
 							v-model="shared"
               labelWidth="100px"></m-checkbox>
@@ -28,12 +29,13 @@
 										@validate="validate"
 										prop="basesel"
 										v-model="basesel"
+										required
 										:show-error="rules.basesel.error"
                     :error-msg="rules.basesel.message"
 										v-show="isCreate"
 					          label="基本存储">
 					    <template v-if="db.iscsiList && db.iscsiList.length > 0">
-									<m-option v-for="item in db.iscsiList" 
+									<m-option v-for="item in db.iscsiList"
 						          :key="item.storage"
                       :label="item.storage +' (iSCSI)'"
                       :value="item.storage"></m-option>
@@ -51,10 +53,11 @@
 										prop="vgname"
 										v-model="vgname"
 										:disabled="!isCreate"
+										required
 										:show-error="rules.vgname.error"
                     :error-msg="rules.vgname.message"
 					          label="卷组">
-						<m-option v-for="item in db.vgList" 
+						<m-option v-for="item in db.vgList"
 						          :key="item.vg"
                       :label="item.vg"
                       :value="item.vg">{{item.vg}}</m-option>
@@ -66,15 +69,16 @@
 										@validate="validate"
 										prop="content"
 										v-model="content"
+										required
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in options"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
 					</m-select>
-					<m-checkbox  
+					<m-checkbox
 					    label="启用"
 							v-model="disable"
               labelWidth="100px"></m-checkbox>
@@ -201,8 +205,8 @@ export default {
 					} else if(key === 'nodes' || key === 'content'){
 						debugger;
 						_this[key] = _this.param[key].split(',');
-					} else {			
-				    this[key] = this.param[key]	
+					} else {
+				    this[key] = this.param[key]
 					}
 				})
 					this.disable = this.param.disable ? false : true

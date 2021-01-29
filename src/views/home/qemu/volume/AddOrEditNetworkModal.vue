@@ -23,6 +23,7 @@
                 v-model="bridge"
 								validateEvent
                 @validate="validate"
+								required
 								:show-error="rules['bridge'].error"
 								:error-msg="rules['bridge'].message"
                 :readonly="true"
@@ -83,7 +84,7 @@
               class="m-margin-top-10"
               v-model="mac"
             />
-							<m-checkbox label="防火墙" 
+							<m-checkbox label="防火墙"
 						            v-model="firewall"
 												labelWidth="100px"></m-checkbox>
 							 <div class="m-form__section">
@@ -94,16 +95,16 @@
         <div class="m-form__section" v-if="isAdvice">
           <dl>
             <dt>高级</dt>
-            <dd>  
+            <dd>
               <m-input
                 type="number"
                 labelWidth="100px"
                 label="速率限制"
                 v-model="rate"
               />
-								<m-checkbox label="断开" 
+								<m-checkbox label="断开"
 						            v-model="link_down"
-												labelWidth="100px"></m-checkbox> 
+												labelWidth="100px"></m-checkbox>
               <m-input
                 type="number"
                 labelWidth="100px"
@@ -131,7 +132,7 @@
 </template>
 
 <script>
-import { 
+import {
 	DEVICELIST,
 	CACHELIST,
 	MODELLIST
@@ -237,7 +238,7 @@ export default {
 				let param = {
 					[`net${id}`]: network.replace(/\,$/, ""),
           digest: this.db.qemuConfigObj.digest,
-          background_delay: 5    
+          background_delay: 5
 				}
 				this.createHardWare(param)
 				    .then(res =>{

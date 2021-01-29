@@ -89,6 +89,7 @@
                   :show-error="rules['storage'].error"
                   :error-msg="rules['storage'].message"
                   :readonly="true"
+                  required
                   :disabled="mediaType !== 'iso'"
                   placeholder="请选存储"
                 >
@@ -123,6 +124,7 @@
                   validateEvent
                   @validate="validate"
                   :readonly="true"
+                  required
                   :show-error="rules['image'].error"
                   :error-msg="rules['image'].message"
                   :disabled="mediaType !== 'iso'"

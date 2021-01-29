@@ -14,10 +14,11 @@
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
+						required
 						 :disabled="!isCreate"
             placeholder="请输入ID"
           />
-					<m-checkbox  
+					<m-checkbox
 					    label="启用"
 							v-model="disable"
               labelWidth="100px"></m-checkbox>
@@ -28,6 +29,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.portal.error"
             :error-msg="rules.portal.message"
             v-model="portal"
@@ -42,17 +44,18 @@
 										prop="target"
 										v-model="target"
 										:readonly="false"
+										required
 										@visible-change="handleTargetReq"
 										:show-error="rules.target.error"
                     :error-msg="rules.target.message"
 										 :disabled="!isCreate"
 					          label="Target">
-						<m-option v-for="item in db.glusterfsList" 
+						<m-option v-for="item in db.glusterfsList"
 						          :key="item.share"
                       :label="item.share"
                       :value="item.share"></m-option>
 					</m-select>
-						<m-checkbox  
+						<m-checkbox
 					    label="直接使用LUN"
 							v-model="lun"
               labelWidth="100px"></m-checkbox>

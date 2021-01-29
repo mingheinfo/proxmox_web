@@ -21,6 +21,7 @@
                 v-model="name"
                 validateEvent
                 @validate="validate"
+                required
                 :error-msg="rules['name'].message"
                 :show-error="rules['name'].error"
                 :placeholder="'请输入名称'"
@@ -33,6 +34,7 @@
                 v-model="raidlevel"
                 validateEvent
                 @validate="validate"
+                required
                 :error-msg="rules['raidlevel'].message"
                 :show-error="rules['raidlevel'].error"
                 :readonly="true"
@@ -54,6 +56,7 @@
                 v-model="compression"
                 validateEvent
                 @validate="validate"
+                required
                 :error-msg="rules['compression'].message"
                 :show-error="rules['compression'].error"
                 placeholder="请选择磁盘"

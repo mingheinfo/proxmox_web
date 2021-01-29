@@ -32,6 +32,7 @@
                 @validate="validate"
                 :show-error="rules.nodename.error"
                 :error-msg="rules.nodename.message"
+                required
                 @on-change="
                   (value) => {
                     nodename = value;
@@ -184,6 +185,7 @@
                 @validate="validate"
                 :show-error="rules.nodename.error"
                 :error-msg="rules.nodename.message"
+                required
                 @on-change="
                   (value) => {
                     nodename = value;
@@ -447,6 +449,7 @@
             @validate="validate"
             :show-error="rules['group'].error"
             :error-msg="rules['group'].message"
+            required
             placeholder="请选择组"
           >
             <m-option
@@ -531,6 +534,7 @@
                   @validate="validate"
                   :show-error="rules['id'].error"
                   :error-msg="rules['id'].message"
+                  required
                   prop="id"
                 />
               </li>

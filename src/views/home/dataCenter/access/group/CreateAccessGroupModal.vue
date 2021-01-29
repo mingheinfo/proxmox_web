@@ -21,6 +21,7 @@
                 v-model="groupid"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.groupid.error"
                 :error-msg="rules.groupid.message"
                 :disabled="modalType !== 'create'"

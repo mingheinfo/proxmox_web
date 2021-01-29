@@ -14,6 +14,7 @@
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
+            required
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
@@ -31,6 +32,7 @@
             validateEvent
 						:disabled="!isCreate"
             @validate="validate"
+            required
             :show-error="rules.pool.error"
             :error-msg="rules.pool.message"
             v-model="pool"
@@ -55,6 +57,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.blocksize.error"
             :error-msg="rules.blocksize.message"
             v-model="blocksize"
@@ -67,10 +70,11 @@
 										@validate="validate"
 										prop="content"
 										v-model="content"
+                    required
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in options"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>

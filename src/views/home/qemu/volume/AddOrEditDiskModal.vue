@@ -25,6 +25,7 @@
               :_style="{ paddingLeft: '115px' }"
               @validate="validate"
                v-show="isShow()"
+              required
               :error-msg="rules['deviceIndex'].message"
               :show-error="rules['deviceIndex'].error"
             >
@@ -94,6 +95,7 @@
               validateEvent
               @validate="validate"
               prop="disksize"
+              required
               v-show="modalType === 'create'"
               :error-msg="rules['disksize'].message"
               :show-error="rules['disksize'].error"
@@ -107,7 +109,7 @@
             >
 						 <div slot="other" style="height: 28px; line-height: 28px;padding-left: 5px;" class="disabled">{{editStorage}}</div>
 						</m-input>
-							<m-checkbox label="丢弃" 
+							<m-checkbox label="丢弃"
 						            v-model="discard"
 												labelWidth="100px"
 												:disabled="device === 'virtio'"></m-checkbox>
@@ -166,7 +168,7 @@
               </m-select>
           </dd>
         </dl>
-      </div>		
+      </div>
       <div class="m-margin-top-10 m-form__section" v-if="isAdvice">
         <dt>高级</dt>
         <dd>
@@ -207,6 +209,7 @@
             @validate="validate"
             validateEvent
             class="m-margin-top-10"
+            required
             :show-error="rules['iops_rd'].error"
             :error-msg="rules['iops_rd'].message"
             v-model="iops_rd"
@@ -262,6 +265,7 @@
             @validate="validate"
             class="m-margin-top-10"
             validateEvent
+            required
             :show-error="rules['iops_wr_max'].error"
             :error-msg="rules['iops_wr_max'].message"
             v-model="iops_wr_max"
@@ -286,7 +290,7 @@
 </template>
 
 <script>
-import { 
+import {
 	DEVICELIST,
 	CACHELIST
  } from "@libs/enum/enum";
@@ -448,7 +452,7 @@ export default {
 				let param = {
 					[`scsi${this.deviceIndex}`]: device.slice(0, device.length - 1),
           digest: this.db.qemuConfigObj.digest,
-           background_delay: 5    
+           background_delay: 5
 				}
 				this.createHardWare(param)
 				    .then(res =>{
@@ -480,7 +484,7 @@ export default {
 				}
           let param = {
 					[/(unused)/.test(this.param.type) ? `scsi${this.deviceIndex}` : this.param.type]: device.slice(0, device.length - 1),
-           digest: this.db.qemuConfigObj.digest,  
+           digest: this.db.qemuConfigObj.digest,
 				  }
           	this.updateHardWare(param)
 				    .then(res =>{

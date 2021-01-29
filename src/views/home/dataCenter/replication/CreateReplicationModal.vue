@@ -21,6 +21,7 @@
                 min="100"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.id.error"
                 :error-msg="rules.id.message"
                 v-model="id"
@@ -35,6 +36,7 @@
                 validateEvent
                 :disabled="!isCreate"
                 @validate="validate"
+                required
                 :show-error="rules.target.error"
                 :error-msg="rules.target.message"
                 :readonly="false"
@@ -279,7 +281,7 @@ export default {
       if (this.modalType !== "create") {
 				params["id"] =  this.param.id;
 				params["digest"] = this.db.dataCenterReplicationObj.digest;
-				if(!params.disable) params['delete'] = 'disable'; 
+				if(!params.disable) params['delete'] = 'disable';
         this.updateReplication(params).then(() => {
           this.close();
         });

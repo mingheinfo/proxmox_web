@@ -22,6 +22,7 @@
                 v-model="cidr"
 								:readonly="false"
                 @validate="validate('cidr')"
+                required
                 :show-error="rules['cidr'].error"
                 :error-msg="rules['cidr'].message"
                 placeholder="请选择安全组"

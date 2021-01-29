@@ -22,6 +22,7 @@
               v-model="sockets"
               validateEvent
               @validate="validate"
+              required
               prop="sockets"
               :min="1"
               :error-msg="rules['sockets'].message"
@@ -58,6 +59,7 @@
               @validate="validate"
               prop="cores"
               :min="1"
+              required
               :error-msg="rules['cores'].message"
               :show-error="rules['cores'].error"
             />
@@ -85,6 +87,7 @@
             @validate="validate"
             prop="vcpus"
             :min="1"
+            required
             :error-msg="rules['vcpus'].message"
             :show-error="rules['vcpus'].error"
           />
@@ -96,6 +99,7 @@
             prop="cpuunits"
             validateEvent
             @validate="validate"
+            required
             :error-msg="rules['cpuunits'].message"
             :show-error="rules['cpuunits'].error"
             :min="8"

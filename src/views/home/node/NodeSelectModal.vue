@@ -18,6 +18,7 @@
                 @on-change="handleNodeSelect"
                 v-model="node"
                 @validate="validate('node')"
+                required
                 :show-error="rules['node'].error"
                 :error-msg="rules['node'].message"
                 placeholder="请选择节点"

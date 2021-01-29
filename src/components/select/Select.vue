@@ -1,6 +1,6 @@
 <template>
   <ul class="m-select">
-    <label class="select__label" :style="{ width: labelWidth }">{{
+    <label class="select__label" :style="{ width: labelWidth }" :class="{'required': required}">{{
       label
     }}</label>
     <span class="m-select__input">
@@ -192,6 +192,10 @@ export default {
       type: String,
       default: "请选择",
     },
+    required: {
+      type: Boolean,
+      default: false
+    }
   },
   model: {
     event: 'on-change',
@@ -435,4 +439,12 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+  .required{
+    &::before{
+      content: "*";
+      color: #f56c6c;
+      margin-right: 4px;
+    }
+  }
 </style>

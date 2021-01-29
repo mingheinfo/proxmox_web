@@ -11,24 +11,26 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
-					
+
 					<m-select labelWidth="100px"
 										@on-change="handleVgNameSelect"
 										validateEvent
 										@validate="validate"
 										prop="vgname"
 										v-model="vgname"
+										required
 										:show-error="rules.vgname.error"
                     :error-msg="rules.vgname.message"
 										:disabled="!isCreate"
 					          label="卷组">
-						<m-option v-for="item in db.vgList" 
+						<m-option v-for="item in db.vgList"
 						          :key="item.vg"
                       :label="item.vg"
                       :value="item.vg">{{item.vg}}</m-option>
@@ -41,18 +43,19 @@
 										validateEvent
 										@validate="validate"
 										prop="thinpool"
+										required
 										v-model="thinpool"
 										:disabled="!isCreate"
 										:show-error="rules.thinpool.error"
                     :error-msg="rules.thinpool.message"
 					          label="精简池">
-						<m-option v-for="item in db.poolThinList" 
+						<m-option v-for="item in db.poolThinList"
 						          :key="item.lv"
                       :label="item.lv"
                       :value="item.lv"></m-option>
 					</m-select>
 
-					<m-checkbox  
+					<m-checkbox
 					      label="启用"
 							  v-model="disable"
                 labelWidth="100px"></m-checkbox>
@@ -64,10 +67,11 @@
 										@validate="validate"
 										prop="content"
 										v-model="content"
+										required
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in options" 
+						<m-option v-for="item in options"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
@@ -192,8 +196,8 @@ export default {
 						this[key] = this.param[key] ===  1 ? true : false;
 					} else if(key === 'nodes' || key === 'content' || key==='thinpool'){
 						this[key] = this.param[key].split(',');
-					} else {			
-				    this[key] = this.param[key]	
+					} else {
+				    this[key] = this.param[key]
 					}
 				})
 					this.disable = this.param.disable ? false : true

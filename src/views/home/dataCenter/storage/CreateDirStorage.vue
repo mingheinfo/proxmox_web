@@ -11,6 +11,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
@@ -30,6 +31,7 @@
             @validate="validate"
             prop="content"
             v-model="content"
+            required
             :show-error="rules.content.error"
             :error-msg="rules.content.message"
             label="内容"
@@ -53,6 +55,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+            required
             :show-error="rules.path.error"
             :error-msg="rules.path.message"
             v-model="path"
@@ -208,8 +211,8 @@ export default {
 						_this[key] = _this.param[key] ===  1 ? true : false;
 					} else if(key === 'nodes' || key === 'content'){
 						_this[key] = _this.param[key].split(',');
-					} else {			
-				    this[key] = this.param[key]	
+					} else {
+				    this[key] = this.param[key]
 					}
 						this.disable = this.param.disable ? false : true
 			  })

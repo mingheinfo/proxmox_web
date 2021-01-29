@@ -23,6 +23,7 @@
                 @validate="validate"
                 :show-error="rules.groups.error"
                 :error-msg="rules.groups.message"
+                required
 								v-if="modalType === 'group'"
                 :readonly="false"
                 placeholder="请选择组"
@@ -61,6 +62,7 @@
                 @validate="validate"
                 :show-error="rules.users.error"
                 :error-msg="rules.users.message"
+                required
                 :readonly="false"
 								v-if="modalType === 'user'"
                 placeholder="请选择用户"
@@ -99,6 +101,7 @@
                 @validate="validate"
                 :show-error="rules.tokens.error"
                 :error-msg="rules.tokens.message"
+                required
                 :readonly="false"
 								v-if="modalType === 'apiToken'"
                 placeholder="请选择Api Token"

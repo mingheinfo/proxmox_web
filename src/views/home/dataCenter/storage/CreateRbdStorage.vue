@@ -11,6 +11,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
@@ -23,6 +24,7 @@
 										@on-change="(value) => pool = value"
 									  validateEvent
 										@validate="validate"
+										required
 										:show-error="rules.pool.error"
 										:error-msg="rules.pool.message"
 										v-model="pool"
@@ -40,6 +42,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
 						:disabled="pveceph"
             :show-error="rules.monhost.error"
             :error-msg="rules.monhost.message"
@@ -64,6 +67,7 @@
 										@on-change="handleSelect"
 										validateEvent
 										@validate="validate"
+											required
 										prop="content"
 										v-model="content"
 										:show-error="rules.content.error"

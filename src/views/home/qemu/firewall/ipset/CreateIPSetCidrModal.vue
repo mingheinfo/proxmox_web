@@ -24,6 +24,7 @@
                 @validate="validate('cidr')"
                 :show-error="rules['cidr'].error"
                 :error-msg="rules['cidr'].message"
+                required
                 placeholder="请选择安全组"
               >
                 <m-option

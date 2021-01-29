@@ -41,6 +41,7 @@
                 v-model="name"
                 prop="name"
                 validateEvent
+                required
                 :show-error="rules['name'].error"
                 :error-msg="rules['name'].message"
                 @validate="validate"
@@ -56,6 +57,7 @@
                 @validate="validate"
                 validateEvent
                 prop="vmid"
+                required
                 :show-error="rules['vmid'].error"
                 :error-msg="rules['vmid'].message"
                 v-model="vmid"
@@ -486,6 +488,7 @@
                 prop="deviceIndex"
                 :_style="{ paddingLeft: '115px' }"
                 @validate="validate"
+                required
                 :error-msg="rules['deviceIndex'].message"
                 :show-error="rules['deviceIndex'].error"
               >
@@ -590,6 +593,7 @@
                 validateEvent
                 @validate="validate"
                 prop="disksize"
+                required
                 :error-msg="rules['disksize'].message"
                 :show-error="rules['disksize'].error"
               />
@@ -750,6 +754,7 @@
               @validate="validate"
               validateEvent
               class="m-margin-top-10"
+              required
               :show-error="rules['iops_rd'].error"
               :error-msg="rules['iops_rd'].message"
               v-model="iops_rd"
@@ -763,6 +768,7 @@
               class="m-margin-top-10"
               @validate="validate"
               validateEvent
+              required
               :show-error="rules['iops_wr'].error"
               :error-msg="rules['iops_wr'].message"
               v-model="iops_wr"
@@ -792,6 +798,7 @@
               @validate="validate"
               class="m-margin-top-10"
               validateEvent
+              required
               :show-error="rules['iops_rd_max'].error"
               :error-msg="rules['iops_rd_max'].message"
               v-model="iops_rd_max"
@@ -805,6 +812,7 @@
               @validate="validate"
               class="m-margin-top-10"
               validateEvent
+              required
               :show-error="rules['iops_wr_max'].error"
               :error-msg="rules['iops_wr_max'].message"
               v-model="iops_wr_max"
@@ -825,6 +833,7 @@
                 prop="sockets"
                 @validate="validate"
                 validateEvent
+                required
                 :show-error="rules['sockets'].error"
                 :error-msg="rules['sockets'].message"
                 class="m-margin-top-10"
@@ -863,6 +872,7 @@
                 prop="cores"
                 @validate="validate"
                 validateEvent
+                required
                 :show-error="rules['cores'].error"
                 :error-msg="rules['cores'].message"
                 v-model="cores"
@@ -897,6 +907,7 @@
                 prop="vcpus"
                 @validate="validate"
                 validateEvent
+                required
                 :show-error="rules['vcpus'].error"
                 :error-msg="rules['vcpus'].message"
                 v-model="vcpus"
@@ -916,6 +927,7 @@
                 @validate="validate"
                 validateEvent
                 class="m-margin-top-10"
+                required
                 :show-error="rules['cpuunits'].error"
                 :error-msg="rules['cpuunits'].message"
                 v-model="cpuunits"
@@ -978,6 +990,7 @@
                 validateEvent
                 class="m-margin-top-10"
                 @validate="validate"
+                required
                 :show-error="rules['memory'].error"
                 :error-msg="rules['memory'].message"
                 v-model="memory"
@@ -997,6 +1010,7 @@
                 validateEvent
                 class="m-margin-top-10"
                 @validate="validate"
+                required
                 :show-error="rules['ballon'].error"
                 :error-msg="rules['ballon'].message"
                 :disable="!balloncheck"

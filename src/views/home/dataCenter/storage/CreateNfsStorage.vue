@@ -11,13 +11,14 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.storage.error"
             :error-msg="rules.storage.message"
             v-model="storage"
 						:disabled="!isCreate"
             placeholder="请输入ID"
           />
-					<m-checkbox  
+					<m-checkbox
 					    label="启用"
 							v-model="disable"
               labelWidth="100px"></m-checkbox>
@@ -31,6 +32,7 @@
             :show-error="rules.server.error"
             :error-msg="rules.server.message"
             v-model="server"
+						required
 						:disabled="!isCreate"
             placeholder="请输入服务器"
           />
@@ -46,7 +48,7 @@
                     :error-msg="rules.export1.message"
 											:disabled="!isCreate"
 					          label="export">
-						<m-option v-for="item in db.nfsList" 
+						<m-option v-for="item in db.nfsList"
 						          :key="item.path"
                       :label="item.path"
                       :value="item.path"></m-option>
@@ -61,7 +63,7 @@
 										:show-error="rules.content.error"
                     :error-msg="rules.content.message"
 					          label="内容">
-						<m-option v-for="item in contentItems" 
+						<m-option v-for="item in contentItems"
 						          :key="item.value"
                       :label="item.label"
                       :value="item.value"></m-option>
@@ -73,6 +75,7 @@
             labelWidth="100px"
             validateEvent
             @validate="validate"
+						required
             :show-error="rules.maxfiles.error"
             :error-msg="rules.maxfiles.message"
 						min="0"
@@ -92,7 +95,7 @@
 					          label="版本">
 						<m-option v-for="item in optionsItems"
 						          :value="item.value"
-											:label="item.label" 
+											:label="item.label"
 						          :key="item.value"></m-option>
 					</m-select>
         </dd>
@@ -260,8 +263,8 @@ export default {
 						this['export1'] =  this.param.export;
 					} else if(key === 'options'){
             this.options = this.param.options.replace(/(vers=)/, '');
-					} else {			
-				    this[key] = this.param[key]	
+					} else {
+				    this[key] = this.param[key]
 					}
 				})
 					this.disable = this.param.disable ? false : true

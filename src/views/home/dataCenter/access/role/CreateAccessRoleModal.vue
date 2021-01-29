@@ -21,6 +21,7 @@
                 v-model="roleid"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.roleid.error"
                 :error-msg="rules.roleid.message"
                 :disabled="modalType !== 'create'"

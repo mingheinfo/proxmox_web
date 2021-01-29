@@ -21,6 +21,7 @@
                 v-model="name"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules['name'].error"
                 :error-msg="rules['name'].message"
                 v-if="modalType === 'create'"
@@ -34,6 +35,7 @@
                 v-model="domains"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.domains.error"
                 :error-msg="rules.domains.message"
                 v-if="modalType !== 'create'"
@@ -48,6 +50,7 @@
                 :show-error="rules.directory.error"
                 :error-msg="rules.directory.message"
                 :readonly="false"
+                required
                 @on-change="handleDirectorySelect"
                 v-model="directory"
                 :disabled="!isCreate"
@@ -93,6 +96,7 @@
                 v-model="contact"
                 validateEvent
                 @validate="validate"
+                required
                 :show-error="rules.contact.error"
                 :error-msg="rules.contact.message"
                 placeholder="请输入E-mail"

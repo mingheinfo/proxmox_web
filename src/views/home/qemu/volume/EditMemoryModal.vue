@@ -24,12 +24,13 @@
               @validate="validate"
               prop="memory"
 							:min="1"
+              required
               :error-msg="rules['memory'].message"
               :show-error="rules['memory'].error"
             />
           </dd>
         </dl>
-      </div>		
+      </div>
       <div class="m-margin-top-10 m-form__section" v-if="isAdvice">
         <dt>高级</dt>
         <dd>
@@ -81,7 +82,7 @@
 </template>
 
 <script>
-import { 
+import {
 	DEVICELIST,
 	CACHELIST
  } from "@libs/enum/enum";
@@ -146,7 +147,7 @@ export default {
 				  memory:  this.memory,
 					balloon: this.balloon,
 					shares:  this.shares,
-          digest: this.db.qemuConfigObj.digest,  
+          digest: this.db.qemuConfigObj.digest,
 				}
 				Object.keys(param).forEach((key) => {
 					if(!param[key]) delete param[key]
