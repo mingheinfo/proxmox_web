@@ -1,3 +1,12 @@
+# Proxmox_web
+基于Proxmox-ve_6.2.1后端的，前端开源项目，运用[Vue + vuex + element + vue-router]开发，包括虚拟机管理、克隆、备份、复制
+
+以及Lvm、Lvm-thin、ceph本地存储等
+
+感谢开源社区，感谢promox-ve提供后端开源项目！
+
+如果帮助到了您一点点，star 一下吧 🙂
+
 ##后端代码部署
    安装proxmox-ve_6.2-1.iso版本
    
