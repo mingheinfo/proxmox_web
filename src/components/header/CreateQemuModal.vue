@@ -13,6 +13,7 @@
       left: '0',
       right: '0',
       bottom: '0',
+      'overflow-y': 'clip'
     }"
     title="创建虚拟机"
   >
