@@ -1,8 +1,18 @@
 <template>
-  <div class="dialog" v-if="visible" ref="dialog" :key="key" :class="{'show': visible}">
+  <div
+    class="dialog"
+    v-if="visible"
+    ref="dialog"
+    :key="key"
+    :class="{ show: visible }"
+  >
     <div class="dialog-mask"></div>
     <div class="dialog-wrapper">
-      <div class="dialog-content animate__backInLeft animate__backOutRight" ref="pop-wrapper" :style="contentStyles">
+      <div
+        class="dialog-content animate__backInLeft animate__backOutRight"
+        ref="pop-wrapper"
+        :style="contentStyles"
+      >
         <div
           class="dialog-header"
           ref="pop-header"
@@ -11,13 +21,17 @@
           <span class="dialog-title">{{ title }}</span>
           <span class="dialog-close" @click="close">&times;</span>
         </div>
-        <div class="dialog-main">
+          <div class="dialog-main">
             <slot name="content"></slot>
-        </div>
+          </div>
         <div class="dialog-footer">
           <template v-if="!$slots['footer']">
-            <m-button type="danger" class="dialog-cancel" @on-click="cancel">{{ cancelText }}</m-button>
-            <m-button type="primary" class="dialog-confirm" @on-click="ok">{{ confirmText }}</m-button>
+            <m-button type="danger" class="dialog-cancel" @on-click="cancel">{{
+              cancelText
+            }}</m-button>
+            <m-button type="primary" class="dialog-confirm" @on-click="ok">{{
+              confirmText
+            }}</m-button>
           </template>
           <template v-else>
             <slot name="footer"></slot>
@@ -75,7 +89,7 @@ export default {
       moveTarget: null,
       appendToBody: true,
       key: 1,
-      interval: null
+      interval: null,
     };
   },
   computed: {
@@ -93,12 +107,12 @@ export default {
       let _this = this;
       _this.show = false;
       this.interval = setTimeout(() => {
-       _this.$emit("close");
-       _this.closed = true;
-       if (this.appendToBody) {
-         document.body.removeChild(this.$el);
+        _this.$emit("close");
+        _this.closed = true;
+        if (this.appendToBody) {
+          document.body.removeChild(this.$el);
         }
-      },0)
+      }, 0);
     },
     //点击取消触发回调
     cancel() {
@@ -111,8 +125,7 @@ export default {
     },
     handleMoveStart(event) {
       var dragDom = this.$refs["pop-header"];
-       if(this.$refs['dialog'])
-      this.$refs['dialog'].classList.toggle('move')
+      if (this.$refs["dialog"]) this.$refs["dialog"].classList.toggle("move");
       //阻止所选dom内容被选中
       dragDom.onselectstart = dragDom.ondrag = function () {
         return false;
@@ -186,8 +199,7 @@ export default {
       document.removeEventListener("mousemove", this.handleMoveMove);
       //移除鼠标按下事件
       document.removeEventListener("mousedown", this.handleMoveStart);
-      if(this.$refs['dialog'])
-      this.$refs['dialog'].classList.toggle('move')
+      if (this.$refs["dialog"]) this.$refs["dialog"].classList.toggle("move");
       //阻止事件默认行为
       event.preventDefault();
       //阻止事件冒泡
@@ -198,21 +210,28 @@ export default {
     let _this = this;
     _this.isMounted = true;
     _this.draggable = _this.drag ? _this.drag : true;
-     if (this.appendToBody) {
+    if (this.appendToBody) {
       document.body.appendChild(this.$el);
     }
     //初始化弹框出现在可视区的位置
-    if(_this.$refs["pop-wrapper"])
-    _this.mouseEndPoint = {
-      left:
-        (getDocument().clientWidth - _this.$refs["pop-wrapper"].clientWidth) / 2,
-      top: (getDocument().clientHeight - 1.5 * _this.$refs["pop-wrapper"].clientHeight) /
-        2 <=0 ? 0 : (getDocument().clientHeight - 1.5 * _this.$refs["pop-wrapper"].clientHeight) /
-        2,
-    };
+    if (_this.$refs["pop-wrapper"])
+      _this.mouseEndPoint = {
+        left:
+          (getDocument().clientWidth - _this.$refs["pop-wrapper"].clientWidth) /
+          2,
+        top:
+          (getDocument().clientHeight -
+            1.5 * _this.$refs["pop-wrapper"].clientHeight) /
+            2 <=
+          0
+            ? 0
+            : (getDocument().clientHeight -
+                1.5 * _this.$refs["pop-wrapper"].clientHeight) /
+              2,
+      };
   },
   destroyed() {
-    if(this.interval !== null) {
+    if (this.interval !== null) {
       clearTimeout(this.interval);
       this.interval = null;
     }

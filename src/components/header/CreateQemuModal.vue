@@ -1862,6 +1862,11 @@ export default {
         return newVal;
       }
     },
+    $route: function(newVal, oldVal) {
+      if(newVal !== oldVal) {
+        this.close();
+      }
+    }
   },
 };
 </script>
