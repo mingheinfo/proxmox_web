@@ -6,14 +6,13 @@
           class="m-sub-item"
           :class="tree.data.selected && tree.data.selected ? 'is-selected': ''"
           @click.stop="handleSelect(tree.data)"
+          @mouseover.stop="showTip(tree)"
+          @mouseout="hiddenTip(tree)"
         >
-          <div class="m-sub-item-content">
+          <div class="m-sub-item-content" :ref="`m$sub$item${tree.data.id}`">
             <i :class="tree.data.iconCls" class="m-icon-custom"></i>
             <span>{{tree.data.text}}</span>
           </div>
-          <div
-            class="m-sub-item-tips"
-          >名称：{{tree.data.text}}<br/>{{tree.data.status ? `状态: ${tree.data.status}` : ''}}</div>
         </div>
       </template>
       <div class="m-sub_li"></div>
@@ -74,6 +73,31 @@ export default {
       loop(this.renderData);
       this.$forceUpdate();
     },
+    showTip(tree) {
+      let el = document.createDocumentFragment(),
+          pos = this.$refs[`m$sub$item${tree.data.id}`][0].getBoundingClientRect(),
+          con = document.querySelector('.m-tree'),
+          dom = document.createElement('div');
+          dom.className = 'm-sub-item-tips';
+          dom.setAttribute('id', `${tree.data.id.replace(/\//g, '')}`)
+          dom.style.left = con.clientWidth + 'px';
+          dom.style.top = (pos.top - 15) + 'px';
+          dom.style.zIndex = '999';
+          dom.style.backgroundColor = '#fff';
+          dom.style.padding = "10px 20px";
+          dom.style.color =  "#222";
+          dom.style.position = 'absolute';
+          dom.innerHTML = `<ul>
+   <li>名称：${tree.data.text ? tree.data.text : ''}</li>
+   <li>状态：${tree.data.status ? tree.data.status : ''}</li>
+</ul>`
+          el.appendChild(dom);
+      document.body.appendChild(el);
+    },
+    hiddenTip(tree) {
+      let id = document.querySelector(`#${tree.data.id.replace(/\//g, '')}`);
+      document.body.removeChild(id);
+    }
   },
   watch: {
     treeData: {
@@ -87,7 +111,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .m-sub {
   &-item {
     padding: 5px 0px;
@@ -102,32 +126,34 @@ export default {
       display: inline-block;
     }
     &-tips {
-      display: none;
       position: absolute;
       z-index: 1086;
-      background: #222;
-      color: #fff;
-      top: calc(-100% - 20px);
+      background: #fff;
+      color: #222;
       padding: 5px 20px;
       font-size: 12px;
       text-overflow: normal;
       word-wrap: break-word;
       white-space: normal;
-      width: 100%;
+      box-shadow: 1px 1px 12px #ccc;
+      transition: all 0.5s ease-in;
       &:before {
         content: "";
         display: block;
-        width: 5px;
-        height: 5px;
-        border-right: 2px solid #222;
-        border-bottom: 2px solid #222;
-        -webkit-transform: rotate(35deg);
-        transform: rotate(43deg);
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid #f6f6f6;
+        border-bottom: 2px solid #f6f6f6;
+        -webkit-transform: rotate(135deg);
         position: absolute;
         bottom: -4px;
         text-align: center;
-        background: #222;
-         left: 50%;
+        background: #fff;
+        top: 50%;
+        transform:translateY(-50%) scale(1) rotate(135deg);
+        transition-delay: .5s;
+        transition-timing-function: ease-in;
+        left: -5px;
       }
     }
     &:hover {
