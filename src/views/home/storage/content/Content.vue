@@ -258,11 +258,11 @@ export default {
         msg: `确定要删除以下内容吗?`,
         icon: 'icon-question'
       }).then(() => {
-        this.delete();
-      }).catch((res) => {
-        this.$confirm.info({
-          msg: res
-        })
+        this.delete().catch((res) => {
+          this.$confirm.info({
+            msg: res
+          })
+        });
       })
     },
     //选择镜像

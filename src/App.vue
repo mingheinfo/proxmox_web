@@ -8,9 +8,7 @@
   export default {
     name: "App",
     methods: {
-      confirm() {
-        alert('ok!');
-      }
+      
     }
   }
 </script>
