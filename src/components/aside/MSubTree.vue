@@ -215,8 +215,12 @@
       } else if(this.param.data.type === 'lxc'){
         this.menuData = [
           {text: this.param.data.name},
-          {text: '重启', icon: 'fa fa-refresh', operate: 'reset', disabled: (()=>!this.inLxcStatus('running'))()},
+          {text: '启动', icon: 'fa fa-play', operate:  'start', disabled: (()=> !this.inLxcStatus('stopped', 'paused'))()},
+          {text: '重启', icon: 'fa fa-refresh', operate: 'reboot', disabled: (()=>!this.inLxcStatus('running'))()},
           {text: '停止', icon: 'fa fa-stop', operate: 'off', disabled: (()=> this.inLxcStatus('stopped'))()},
+          {text: '转化成模板', icon: 'fa fa-fw fa-file-o', operate: 'file', disabled: (()=> this.inStatus('running'))()},
+          {text: '控制台', icon: 'fa fa-terminal', operate: 'novnc'},
+          {text: '克隆', icon: 'fa fa-fw fa-clone', operate: 'clone'}
         ]
         return true;
       } else {
@@ -423,7 +427,9 @@
         })
         .then(() => {
           this.offQemu().then(res => {
-            this.__init__();
+            if(res.data) {
+              this.interval = setInterval( () => this.queryStatus(res.data), 3000);
+            }
           }).catch(res => {
             this.alertConfirm(res);
           })
