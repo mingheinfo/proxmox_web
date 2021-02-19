@@ -141,20 +141,24 @@
       }),
     },
     async mounted() {
-      await this.__init__();
-      this.setMenu(this.qemu.type);
+      this.__init__();
     },
     methods: {
       /**
        * 初始请求
        */
       __init__(type) {
-        this.queryResource()
+        let _this = this;
+        _this.queryResource()
           .then(res => {
-            this.isTemplate = this.db.qemuObj && this.db.qemuObj.template && this.db.qemuObj.template === 1 ? true : false;
-            if(type) this.setMenu(type);
+            _this.isTemplate = _this.db.qemuObj && _this.db.qemuObj.template && _this.db.qemuObj.template === 1 ? true : false;
+            if(type) {
+              _this.setMenu(type);
+            } else {
+              _this.setMenu(_this.qemu.type);
+            }
           });
-        this.queryNodeList();
+        _this.queryNodeList();
       },
       /**
        * 重启虚拟机

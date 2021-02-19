@@ -795,6 +795,8 @@ export default {
     };
   },
   mounted() {
+    let last = window.localStorage.getItem("lastsel") || "[]";
+    this.qemu = (JSON.parse(last) && JSON.parse(last)) || "";
     //初始化请求
     this.__init__();
   },
