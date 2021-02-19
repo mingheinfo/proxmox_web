@@ -654,6 +654,16 @@ export default {
       type: String,
       default: "",
     },
+    isLeft: {
+      type: Boolean,
+      default: false
+    },
+    param: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
   },
   computed: {
     /**
@@ -995,7 +1005,11 @@ export default {
      */
     async __init__() {
       let _this = this;
-      await this.queryResource();
+      if(!this.isLeft){
+        await this.queryResource();
+      } else {
+        this.qemu = this.param;
+      }
       await this.queryNodeList();
       if (this.modalType === "migrate") {
         this.checkMigratePreconditions();

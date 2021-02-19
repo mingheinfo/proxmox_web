@@ -1551,6 +1551,11 @@ function getUniqueObj(arrays) {
   return newArr;
 }
 
+function hasClass(cls) {
+  let classes = this.className.split(' ');
+  return classes.includes(cls);
+}
+
 export {
   getEvent,
   stopEvent,
@@ -1626,5 +1631,6 @@ export {
   off,
   parseQemuDrive,
   parsePropertyString,
-  getUniqueObj
+  getUniqueObj,
+  hasClass
 }

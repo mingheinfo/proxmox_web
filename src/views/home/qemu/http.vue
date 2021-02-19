@@ -92,9 +92,10 @@ export default {
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           this.incEventSuccess(event);
           this.__init__();
+          return Promise.resolve(res);
         })
         .catch((res) => {
           this.incEventFail(event);
@@ -104,7 +105,7 @@ export default {
     /**
      * 查询资源
     */
-    queryResource() {
+    async queryResource() {
       let last = window.localStorage.getItem("lastsel") || "[]";
       this.qemu = (JSON.parse(last) && JSON.parse(last)) || "";
       return this.$http
@@ -137,9 +138,10 @@ export default {
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           this.incEventSuccess(event);
           this.__init__();
+          return Promise.resolve(res);
         })
        .catch((res) => {
           this.incEventFail(event);
@@ -189,9 +191,10 @@ export default {
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           this.incEventSuccess(event);
           this.__init__();
+          return Promise.resolve(res);
         })
         .catch((res) => {
           this.incEventFail(event);
@@ -214,9 +217,10 @@ export default {
             },
           }
         )
-        .then(() => {
+        .then((res) => {
           this.incEventSuccess(event);
           this.__init__();
+          return Promise.resolve(res);
         })
         .catch((res) => {
           this.incEventFail(event);

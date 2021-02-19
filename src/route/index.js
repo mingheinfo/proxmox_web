@@ -18,14 +18,14 @@ const router = new VueRoute({
     {
       path: '/login',
       name: 'login',
-      component:() => import(/*webpackChunkName: "Login"*/"@view/login/index.vue"),
+      component: () => import(/*webpackChunkName: "Login"*/"@view/login/index.vue"),
       meta: {
         title: 'login.title'
       }
     },
     {
       path: '/home',
-      component:() => import(/*webpackChunkName: "home" */"@view/home/index.vue"),
+      component: () => import(/*webpackChunkName: "home" */"@view/home/index.vue"),
       children: [
         {
           path: '/datacenter',
@@ -363,13 +363,13 @@ const router = new VueRoute({
               }
             },
             {
-                path: 'ceph/config',
-                name: 'node-ceph-config',
-                component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/config/Config.vue"),
-                meta: {
-                  title: 'config'
-                }
-             },
+              path: 'ceph/config',
+              name: 'node-ceph-config',
+              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/config/Config.vue"),
+              meta: {
+                title: 'config'
+              }
+            },
             {
               path: 'ceph/monitor',
               name: 'node-ceph-monitor',
@@ -612,7 +612,7 @@ const router = new VueRoute({
         {
           path: '/storage',
           name: 'storage',
-          component:  () => import(/*webpackChunkName: 'storage' */"@view/home/storage/index.vue"),
+          component: () => import(/*webpackChunkName: 'storage' */"@view/home/storage/index.vue"),
           meta: {
             title: 'storage'
           },
@@ -646,7 +646,7 @@ const router = new VueRoute({
         {
           path: '/pool',
           name: 'pool',
-          component:  () => import(/*webpackChunkName: 'pool' */"@view/home/pool/index.vue"),
+          component: () => import(/*webpackChunkName: 'pool' */"@view/home/pool/index.vue"),
           children: [
             {
               path: 'overview',
@@ -698,8 +698,8 @@ router.onError((error) => {
 });
 
 function setDocumentTitle(to) {
-  if(window.vm)
-  document.title = 'MHFLEX_' + window.vm.$t(`${to.meta.title}`);
+  if (window.vm)
+    document.title = 'MHFLEX_' + window.vm.$t(`${to.meta.title}`);
 }
 
 const originalPush = VueRoute.prototype.push

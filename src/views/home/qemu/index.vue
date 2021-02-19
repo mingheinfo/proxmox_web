@@ -5,7 +5,7 @@
         <div class="m-operate-left">{{qemu.type === 'qemu' ? '虚拟机' : "容器"}}{{qemu.vmid}}({{qemu.name}})</div>
         <div class="m-operate-right">
           <m-button
-              v-if="qemu.type === 'qemu' && !isTempalte"
+              v-if="qemu.type === 'qemu' && !isTemplate"
               icon="fa fa-play"
               v-confirm="{msg: `启动虚拟机\'${qemu.name}\'？`,
                 ok: () => handleReset()
@@ -15,7 +15,7 @@
           </m-button>
           <!--当为lxc容器时，在stopped状态下才可以启动-->
           <m-button
-              v-if="qemu.type === 'lxc' && !isTempalte"
+              v-if="qemu.type === 'lxc' && !isTemplate"
               icon="fa fa-play"
               v-confirm="{msg: `启动lxc容器\'${qemu.name}\'？`,
                 ok: () => handleReset()
@@ -27,7 +27,7 @@
               style="width: auto; border: 1px solid #adb0b8;display: inline-block;padding:0px 10px;"
               :disabled="qemu.type === 'qemu' ? inStatus('stopped', 'suspended') : inLxcStatus('stopped')"
               @on-change="handleOperate"
-              v-if="!isTempalte"
+              v-if="!isTemplate"
           >
             <m-button
                 icon="fa fa-power-off"
@@ -41,7 +41,7 @@
               <dropdown-item command="hibernate" icon="fa fa-download" :disabled="inStatus('paused')">挂起到磁盘
               </dropdown-item>
               <dropdown-item command="stop" icon="fa fa-stop" :disabled="inStatus('stopped')">立即停止</dropdown-item>
-              <dropdown-item command="reset" icon="fa fa-bolt" :disabled="inStatus('')">重置</dropdown-item>
+              <dropdown-item command="reset" icon="fa fa-bolt" :disabled="!inStatus('running')">重置</dropdown-item>
             </template>
             <template v-if="qemu.type === 'lxc'">
               <dropdown-item command="reboot" icon="fa fa-refresh" :disabled="!inLxcStatus('running')">重启
@@ -59,7 +59,7 @@
           <dropdown
               style="width: auto; border:  1px solid #adb0b8;display: inline-block;padding:0px 10px;"
               @on-change="handleConsole"
-              v-if="!isTempalte"
+              v-if="!isTemplate"
           >
             <m-button icon="fa fa-terminal" slot="label" style="border: none;height: 28px;">控制台</m-button>
             <dropdown-item command="novnc" name="novnc">NoVNC</dropdown-item>
@@ -74,7 +74,7 @@
           >
             <m-button icon="fa fa-fw fa-ellipsis-v" slot="label" style="border: none;height: 28px;">更多操作</m-button>
             <dropdown-item command="clone" icon="fa fa-fw fa-clone">克隆</dropdown-item>
-            <dropdown-item command="file" icon="fa fa-fw fa-file-o" :disabled="isTempalte">转换成模板</dropdown-item>
+            <dropdown-item command="file" icon="fa fa-fw fa-file-o" :disabled="isTemplate">转换成模板</dropdown-item>
             <dropdown-item command="ha" icon="fa fa-heartbeat">管理HA</dropdown-item>
             <dropdown-item command="delete" icon="fa fa-trash-o"
                            :disabled="qemu.type === 'qemu' ? !inStatus('stopped') : !inLxcStatus('stopped')">删除
@@ -86,6 +86,7 @@
                      :title="title"
                      v-if="visible"
                      :modalType="modalType"
+                     :isLeft="false"
                      @close="visible = false; __init__()"></operate-modal>
       <Pv-Menu :data="menuData"></Pv-Menu>
       <m-scrollbar>
@@ -129,8 +130,9 @@
         visible: false,
         title: '',
         modalType: '',
-        isTempalte: false,
-        nodeList: []
+        isTemplate: false,
+        nodeList: [],
+        flag: false
       };
     },
     computed: {
@@ -146,10 +148,11 @@
       /**
        * 初始请求
        */
-      __init__() {
+      __init__(type) {
         this.queryResource()
           .then(res => {
-            this.isTempalte = this.db.qemuObj && this.db.qemuObj.template && this.db.qemuObj.template === 1 ? true : false;
+            this.isTemplate = this.db.qemuObj && this.db.qemuObj.template && this.db.qemuObj.template === 1 ? true : false;
+            if(type) this.setMenu(type);
           });
         this.queryNodeList();
       },
@@ -453,11 +456,12 @@
        * 当为lxc容器时， 与虚拟机菜单略有不同分别做不同过滤
        */
       setMenu(type) {
-        if (type === 'lxc') {
+        this.menuData = [];
+        if (type === 'lxc' && !this.isTemplate) {
           this.menuData = qemuMenuList.filter(item => {
             return !/(monitor|volume|cloud-init)/.test(item.path)
           })
-        } else if(this.isTempalte) {
+        } else if(this.isTemplate) {
           this.menuData = qemuMenuList.filter(item => {
             return !/(console|monitor|snapshot|resource|network)/.test(item.path)
           })
@@ -524,10 +528,10 @@
       }
     },
     watch: {
-      "$store.state.db.lastSelectObj": function (newVal, oldVal) {
+      "$store.state.db.lastSelectObj":  function (newVal, oldVal) {
+        let  _this = this;
         if (newVal !== oldVal && (newVal.type === "qemu" || newVal.type === 'lxc')) {
-          this.__init__();
-          this.setMenu(newVal.type);
+          _this.__init__(newVal.type);
         }
       },
     },
