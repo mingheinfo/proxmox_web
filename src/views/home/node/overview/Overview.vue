@@ -1,13 +1,13 @@
 <template>
-  <div class="overview">
+  <div class="overview chart-content">
     <div class="overview-time__select">
       <m-button class="soft-version" @on-click="watchVersion"
         >软件包版本</m-button
       >
       <m-select @on-change="handleIntervalChange" v-model="timeframe">
         <m-option
-          v-for="item of intervalList"
-          :key="item.value"
+          v-for="(item, index) of intervalList"
+          :key="index"
           :label="item.label"
           :value="item.value"
         >
@@ -405,12 +405,10 @@ export default {
         });
     },
     queryRrdData() {
+      let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
       this.$http
         .get(
-          `/json/nodes/${this.node}/rrddata?timeframe=${this.timeframe.replace(
-            /(.*?)\((.*?)\)/g,
-            "$1"
-          )}&cf=${this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")}`
+          `/json/nodes/${this.node}/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${encodeURIComponent(cf)}&_dc=`+ new Date().getTime()
         )
         .then((res) => {
           this.cpu = Object.assign({}, this.cpu, {

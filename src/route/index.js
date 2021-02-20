@@ -13,29 +13,39 @@ const router = new VueRoute({
       meta: {
         title: '404'
       },
-      component: () => import(/*webpackChunkName： "Error404"*/"@view/error/Error404")
+      component: r => {
+        require.ensure([], () => r(require('@view/error/Error404')), 'Error404')
+      }
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/*webpackChunkName: "Login"*/"@view/login/index.vue"),
+      component: r => {
+        require.ensure([], () => r(require('@view/login/index.vue')), 'Login')
+      },
       meta: {
         title: 'login.title'
       }
     },
     {
       path: '/home',
-      component: () => import(/*webpackChunkName: "home" */"@view/home/index.vue"),
+      component: r => {
+        require.ensure([], () => r(require('@view/home/index.vue')), 'Home')
+      },
       children: [
         {
           path: '/datacenter',
           name: 'datacenter',
-          component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/index.vue"),
+          component: r => {
+            require.ensure([], () => r(require('@view/home/dataCenter/index.vue')), 'DataCenter')
+          },
           children: [
             {
               path: 'overview',
               name: 'overview',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/overview/index.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/overview/index.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'overview'
               }
@@ -43,7 +53,9 @@ const router = new VueRoute({
             {
               path: 'search',
               name: 'search',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/search/index.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/search/index.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'search'
               }
@@ -51,7 +63,9 @@ const router = new VueRoute({
             {
               path: 'cluster',
               name: 'cluster',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/cluster/Cluster.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/cluster/Cluster.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'cluster'
               }
@@ -59,15 +73,19 @@ const router = new VueRoute({
             {
               path: 'option',
               name: 'option',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/option/Option.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/option/Option.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'option'
               }
             },
             {
               path: 'storage',
-              name: 'storage',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/storage/Storage.vue"),
+              name: 'datacenter-storage',
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/storage/Storage.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'storages'
               }
@@ -75,7 +93,9 @@ const router = new VueRoute({
             {
               path: 'backup',
               name: 'backup',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/backup/BackUp.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/backup/BackUp.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'backup'
               }
@@ -83,7 +103,9 @@ const router = new VueRoute({
             {
               path: 'replication',
               name: 'replication',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/replication/Replication.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/replication/Replication.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'replication'
               }
@@ -91,7 +113,9 @@ const router = new VueRoute({
             {
               path: 'access',
               name: 'access',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/Access.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/access/Access.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'access'
               }
@@ -99,7 +123,9 @@ const router = new VueRoute({
             {
               path: 'access/user',
               name: 'access-user',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/user/User.vue"),
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/access/user/User.vue')), 'DataCenter')
+              },
               meta: {
                 title: 'user'
               }
@@ -107,217 +133,298 @@ const router = new VueRoute({
             {
               path: 'access/apitoken',
               name: 'access-apitoken',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/apitoken/ApiToken.vue"),
-              meta: {
-                title: 'Api Tokens'
-              }
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/access/apitoken/ApiToken.vue')), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'Api Tokens'
+                }
             },
             {
               path: 'access/group',
               name: 'access-group',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/group/Group.vue"),
-              meta: {
-                title: 'groups'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/access/group/Group.vue')), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'groups'
+                }
+            }
+            ,
             {
               path: 'access/pool',
               name: 'access-pool',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/pool/Pool.vue"),
-              meta: {
-                title: 'pools'
-              }
-            },
+              component: r => {
+                  require.ensure([], () => r(require('@view/home/dataCenter/access/pool/Pool.vue')), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'pools'
+                }
+            }
+            ,
             {
               path: 'access/role',
               name: 'access-role',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/role/Role.vue"),
-              meta: {
-                title: 'roles'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require('@view/home/dataCenter/access/role/Role.vue')), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'roles'
+                }
+            }
+            ,
             {
               path: 'access/domains',
               name: 'access-domains',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/access/domains/Domains.vue"),
-              meta: {
-                title: 'domains'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/access/domains/Domains.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'domains'
+                }
+            }
+            ,
             {
               path: 'ha',
               name: 'ha',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ha/Ha.vue"),
-              meta: {
-                title: 'HA'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/ha/Ha.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'HA'
+                }
+            }
+            ,
             {
               path: 'ha-group',
               name: 'ha-group',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ha/hagroup/HaGroup.vue"),
-              meta: {
-                title: 'groups'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/ha/hagroup/HaGroup.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'groups'
+                }
+            }
+            ,
             {
               path: 'acme',
               name: 'acme',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/acme/Acme.vue"),
-              meta: {
-                title: 'Acme'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/acme/Acme.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'Acme'
+                }
+            }
+            ,
             {
               path: 'firewall',
               name: 'firewall',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/Firewall.vue"),
-              meta: {
-                title: 'firewall'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/firewall/Firewall.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'firewall'
+                }
+            }
+            ,
             {
               path: 'firewall/option',
               name: 'firewall-option',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/options/FirOptions.vue"),
-              meta: {
-                title: 'option'
-              }
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/firewall/options/FirOptions.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'option'
+                }
             },
             {
               path: 'firewall/group',
               name: 'firewall-group',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/group/FireWallGroup.vue"),
-              meta: {
-                title: 'groups'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/firewall/group/FireWallGroup.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'groups'
+                }
+            }
+            ,
             {
               path: 'firewall/alias',
               name: 'firewall-alias',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/alias/FireWallAlias.vue"),
-              meta: {
-                title: 'firewall-alias'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/firewall/alias/FireWallAlias.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'firewall-alias'
+                }
+            }
+            ,
             {
               path: 'firewall/ipset',
               name: 'firewall-ipset',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/firewall/ipset/IpSet.vue"),
-              meta: {
-                title: 'IPSet'
-              }
-            },
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/firewall/ipset/IpSet.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'IPSet'
+                }
+            }
+            ,
             {
               path: 'ceph',
-              name: 'ceph',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ceph/Ceph.vue"),
-              meta: {
-                title: 'Ceph'
-              }
+              name: 'datacenter-ceph',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/ceph/Ceph.vue")), 'DataCenter')
+              },
+              meta:
+                {
+                  title: 'Ceph'
+                }
             }
           ]
         },
         {
           path: '/node',
           name: 'node',
-          component: () => import(/*webpackChunkName: 'node' */"@view/home/node/index.vue"),
-          meta: {
-            title: 'node'
+          component: r => {
+            require.ensure([], () => r(require("@view/home/node/index.vue")), 'Node')
           },
+          meta:
+            {
+              title: 'node'
+            }
+          ,
           children: [
             {
               path: 'search',
-              name: 'search',
-              component: () => import(/*webpackChunkName: 'search' */"@view/home/node/search/Search.vue"),
+              name: 'node-search',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/search/Search.vue")), 'Node')
+              },
               meta: {
                 title: 'search'
               }
             },
             {
               path: 'overview',
-              name: 'overview',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/overview/Overview.vue"),
+              name: 'node-overview',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/overview/Overview.vue")), 'Node')
+              },
               meta: {
                 title: 'overview'
               }
             },
             {
               path: 'console',
-              name: 'shell',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/shell/Shell.vue"),
+              name: 'node-shell',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/shell/Shell.vue")), 'Node')
+              },
               meta: {
                 title: 'shell'
               }
             },
             {
               path: 'notes',
-              name: 'notes',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/notes/Notes.vue"),
+              name: 'node-notes',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/notes/Notes.vue")), 'Node')
+              },
               meta: {
                 title: 'notes'
               }
             },
             {
               path: 'system',
-              name: 'system',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/System.vue"),
+              name: 'node-system',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/System.vue")), 'Node')
+              },
               meta: {
                 title: 'system'
               }
             },
             {
               path: 'network',
-              name: 'network',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/network/NetWork.vue"),
+              name: 'node-network',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/network/NetWork.vue")), 'Node')
+              },
               meta: {
                 title: 'network'
               }
             },
             {
               path: 'certificates',
-              name: 'certificates',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/certificates/Certificates.vue"),
+              name: 'node-certificates',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/certificates/Certificates.vue")), 'Node')
+              },
               meta: {
                 title: 'certificate'
               }
             },
             {
               path: 'dns',
-              name: 'dns',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/dns/Dns.vue"),
+              name: 'node-dns',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/dns/Dns.vue")), 'Node')
+              },
               meta: {
                 title: 'dns'
               }
             },
             {
               path: 'hosts',
-              name: 'hosts',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/hosts/Host.vue"),
+              name: 'node-hosts',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/hosts/Host.vue")), 'Node')
+              },
               meta: {
                 title: 'hosts'
               }
             },
             {
               path: 'time',
-              name: 'time',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/time/TimeZone.vue"),
+              name: 'node-time',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/time/TimeZone.vue")), 'Node')
+              },
               meta: {
                 title: 'time'
               }
             },
             {
               path: 'syslog',
-              name: 'syslog',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/system/syslog/SysLog.vue"),
+              name: 'node-syslog',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/system/syslog/SysLog.vue")), 'Node')
+              },
               meta: {
                 title: 'syslog'
               }
             },
             {
               path: 'apt-update',
-              name: 'apt-update',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/apt-update/AptUpdate.vue"),
+              name: 'node-apt-update',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/apt-update/AptUpdate.vue")), 'Node')
+              },
               meta: {
                 title: 'apt-update'
               }
@@ -325,7 +432,9 @@ const router = new VueRoute({
             {
               path: 'firewall',
               name: 'node-firewall',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/FireWall.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/firewall/FireWall.vue")), 'Node')
+              },
               meta: {
                 title: 'firewall'
               }
@@ -333,7 +442,9 @@ const router = new VueRoute({
             {
               path: 'firewall/option',
               name: 'node-firewall-option',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/option/Option.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/firewall/option/Option.vue")), 'Node')
+              },
               meta: {
                 title: 'option'
               }
@@ -341,7 +452,9 @@ const router = new VueRoute({
             {
               path: 'firewall/log',
               name: 'node-firewall-log',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/firewall/log/FireWallLog.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/firewall/log/FireWallLog.vue")), 'Node')
+              },
               meta: {
                 title: 'logs'
               }
@@ -349,7 +462,9 @@ const router = new VueRoute({
             {
               path: 'disk',
               name: 'node-disk',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/Disk.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/disk/Disk.vue")), 'Node')
+              },
               meta: {
                 title: 'disk'
               }
@@ -357,7 +472,9 @@ const router = new VueRoute({
             {
               path: 'ceph',
               name: 'ceph',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/dataCenter/ceph/Ceph.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/dataCenter/ceph/Ceph.vue")), 'Node')
+              },
               meta: {
                 title: 'Ceph'
               }
@@ -365,7 +482,9 @@ const router = new VueRoute({
             {
               path: 'ceph/config',
               name: 'node-ceph-config',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/config/Config.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/config/Config.vue")), 'Node')
+              },
               meta: {
                 title: 'config'
               }
@@ -373,7 +492,9 @@ const router = new VueRoute({
             {
               path: 'ceph/monitor',
               name: 'node-ceph-monitor',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/monitor/monitor.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/monitor/monitor.vue")), 'Node')
+              },
               meta: {
                 title: 'monitor'
               }
@@ -381,7 +502,9 @@ const router = new VueRoute({
             {
               path: 'ceph/osd',
               name: 'node-ceph-osd',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/osd/osd.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/osd/osd.vue")), 'Node')
+              },
               meta: {
                 title: 'OSD'
               }
@@ -389,7 +512,9 @@ const router = new VueRoute({
             {
               path: 'ceph/fs',
               name: 'node-ceph-fs',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/cephfs/cephFs.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/cephfs/cephFs.vue")), 'Node')
+              },
               meta: {
                 title: 'CephFs'
               }
@@ -397,7 +522,9 @@ const router = new VueRoute({
             {
               path: 'ceph/pools',
               name: 'node-ceph-pools',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/pools/Pools.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/pools/Pools.vue")), 'Node')
+              },
               meta: {
                 title: 'Pools'
               }
@@ -405,7 +532,9 @@ const router = new VueRoute({
             {
               path: 'ceph/log',
               name: 'node-ceph-log',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/node/ceph/log/log.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/ceph/log/log.vue")), 'Node')
+              },
               meta: {
                 title: 'log'
               }
@@ -413,7 +542,9 @@ const router = new VueRoute({
             {
               path: 'disk/lvm',
               name: 'node-disk-lvm',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/lvm/Lvm.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/disk/lvm/Lvm.vue")), 'Node')
+              },
               meta: {
                 title: 'lvm'
               }
@@ -421,7 +552,9 @@ const router = new VueRoute({
             {
               path: 'disk/lvmthin',
               name: 'node-disk-lvmthin',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/lvmthin/LvmThin.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/disk/lvmthin/LvmThin.vue")), 'Node')
+              },
               meta: {
                 title: 'lvmthin'
               }
@@ -429,7 +562,9 @@ const router = new VueRoute({
             {
               path: 'disk/directory',
               name: 'node-disk-directory',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/directory/Directory.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/disk/directory/Directory.vue")), 'Node')
+              },
               meta: {
                 title: 'node-disk-directory'
               }
@@ -437,242 +572,308 @@ const router = new VueRoute({
             {
               path: 'disk/zfs',
               name: 'node-disk-zfs',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/disk/zfs/ZFS.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/disk/zfs/ZFS.vue")), 'Node')
+              },
               meta: {
                 title: 'node-disk-zfs'
               }
             },
             {
               path: 'replication',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/replication/Replication.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/replication/Replication.vue")), 'Node')
+              },
               meta: {
                 title: 'replication'
               }
             },
             {
               path: 'task',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/node/task/HistoryTask.vue"),
+              component: r => {
+                require.ensure([], () => r(require("@view/home/node/task/HistoryTask.vue")), 'Node')
+              },
               meta: {
                 title: 'task'
               }
             }
           ]
-        },
+        }
+        ,
         {
           path: '/qemu',
           name: 'qemu',
-          component: () => import(/*webpackChunkName: 'node' */"@view/home/qemu/index.vue"),
-          children: [
-            {
-              path: 'overview',
-              name: 'overview',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/qemu/overview/Overview.vue"),
-              meta: {
-                title: 'overview'
+          component: r => {
+            require.ensure([], () => r(require("@view/home/qemu/index.vue")), 'Qemu')
+          },
+          children:
+            [
+              {
+                path: 'overview',
+                name: 'qemu-overview',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/overview/Overview.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'overview'
+                }
+              },
+              {
+                path: 'console',
+                name: 'qemu-console',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/console/Console.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'console'
+                }
+              },
+              {
+                path: 'volume',
+                name: 'qemu-volume',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/volume/Volume.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'volume'
+                }
+              },
+              {
+                path: 'options',
+                name: 'qemu-options',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/options/Options.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'option'
+                }
+              },
+              {
+                path: 'historytask',
+                name: 'qemu-historytask',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/task/HistoryTask.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'task'
+                }
+              },
+              {
+                path: 'monitor',
+                name: 'qemu-monitor',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/monitor/Monitor.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'monitor'
+                }
+              },
+              {
+                path: 'backup',
+                name: 'qemu-backup',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/backup/QemuBackup.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'backup'
+                }
+              },
+              {
+                path: 'replication',
+                name: 'qemu-replication',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/replication/Replication.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'replication'
+                }
+              },
+              {
+                path: 'snapshot',
+                name: 'qemu-snapshot',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/snapshot/SnapShot.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'snapshot'
+                }
+              },
+              {
+                path: 'cloud-init',
+                name: 'qemu-cloud-init',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/cloud-init/CloudInit.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'Cloud Init'
+                }
+              },
+              {
+                path: 'lxc-resource',
+                name: 'lxc-resource',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/lcx-resource/Resource.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'resource'
+                }
+              },
+              {
+                path: 'lxc-network',
+                name: 'lxc-network',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/lxc-network/NetWork.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'network'
+                }
+              },
+              {
+                path: 'firewall',
+                name: 'lxc-firewall',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/firewall/FireWall.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'firewall'
+                }
+              },
+              {
+                path: 'firewall/alias',
+                name: 'qemu-alias',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/firewall/alias/FireWallAlias.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'datacenter-firewall-alias'
+                }
+              },
+              {
+                path: 'firewall/ipset',
+                name: 'qemu-ipset',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/firewall/ipset/IpSet.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'datacenter-firewall-ipset'
+                }
+              },
+              {
+                path: 'firewall/log',
+                name: 'qemu-log',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/firewall/log/FireWallLog.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'node-firewall-log'
+                }
+              },
+              {
+                path: 'firewall/options',
+                name: 'qemu-firewall-options',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/firewall/options/Options.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'option'
+                }
+              },
+              {
+                path: 'access',
+                name: 'qemu-access',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/access/Access.vue")), 'Qemu')
+                },
+                meta: {
+                  title: 'access'
+                }
               }
-            },
-            {
-              path: 'console',
-              name: 'console',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/qemu/console/Console.vue"),
-              meta: {
-                title: 'console'
-              }
-            },
-            {
-              path: 'volume',
-              name: 'volume',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/qemu/volume/Volume.vue"),
-              meta: {
-                title: 'volume'
-              }
-            },
-            {
-              path: 'options',
-              name: 'options',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/qemu/options/Options.vue"),
-              meta: {
-                title: 'option'
-              }
-            },
-            {
-              path: 'historytask',
-              name: 'historytask',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/qemu/task/HistoryTask.vue"),
-              meta: {
-                title: 'task'
-              }
-            },
-            {
-              path: 'monitor',
-              name: 'monitor',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/monitor/Monitor.vue"),
-              meta: {
-                title: 'monitor'
-              }
-            },
-            {
-              path: 'backup',
-              name: 'backup',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/backup/QemuBackup.vue"),
-              meta: {
-                title: 'backup'
-              }
-            },
-            {
-              path: 'replication',
-              name: 'replication',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/replication/Replication.vue"),
-              meta: {
-                title: 'replication'
-              }
-            },
-            {
-              path: 'snapshot',
-              name: 'snapshot',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/snapshot/SnapShot.vue"),
-              meta: {
-                title: 'snapshot'
-              }
-            },
-            {
-              path: 'cloud-init',
-              name: 'cloud-init',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/cloud-init/CloudInit.vue"),
-              meta: {
-                title: 'Cloud Init'
-              }
-            },
-            {
-              path: 'lxc-resource',
-              name: 'lxc-resource',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/lcx-resource/Resource.vue"),
-              meta: {
-                title: 'resource'
-              }
-            },
-            {
-              path: 'lxc-network',
-              name: 'lxc-network',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/lxc-network/NetWork.vue"),
-              meta: {
-                title: 'network'
-              }
-            },
-            {
-              path: 'firewall',
-              name: 'lxc-firewall',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/firewall/FireWall.vue"),
-              meta: {
-                title: 'firewall'
-              }
-            },
-            {
-              path: 'firewall/alias',
-              name: 'qemu-alias',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/firewall/alias/FireWallAlias.vue"),
-              meta: {
-                title: 'datacenter-firewall-alias'
-              }
-            },
-            {
-              path: 'firewall/ipset',
-              name: 'qemu-ipset',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/firewall/ipset/IpSet.vue"),
-              meta: {
-                title: 'datacenter-firewall-ipset'
-              }
-            },
-            {
-              path: 'firewall/log',
-              name: 'qemu-log',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/firewall/log/FireWallLog.vue"),
-              meta: {
-                title: 'node-firewall-log'
-              }
-            },
-            {
-              path: 'firewall/options',
-              name: 'qemu-firewall-options',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/firewall/options/Options.vue"),
-              meta: {
-                title: 'option'
-              }
-            },
-            {
-              path: 'access',
-              name: 'qemu-access',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/access/Access.vue"),
-              meta: {
-                title: 'access'
-              }
-            }
-          ]
-        },
+            ]
+        }
+        ,
         {
           path: '/storage',
           name: 'storage',
-          component: () => import(/*webpackChunkName: 'storage' */"@view/home/storage/index.vue"),
-          meta: {
-            title: 'storage'
+          component: r => {
+            require.ensure([], () => r(require("@view/home/storage/index.vue")), 'Storage')
           },
+          meta: {
+              title: 'storage'
+            }
+          ,
           children: [
             {
               path: 'overview',
-              name: 'overview',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/storage/overview/Overview.vue"),
+              name: 'storage-overview',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/storage/overview/Overview.vue")), 'Storage')
+              },
               meta: {
                 title: 'overview'
               }
             },
             {
               path: 'content',
-              name: 'content',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/storage/content/Content.vue"),
+              name: 'storage-content',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/storage/content/Content.vue")), 'Storage')
+              },
               meta: {
                 title: 'content'
               }
             },
             {
               path: 'access',
-              name: 'access',
-              component: () => import(/*webpackChunkName: 'dataCenter' */"@view/home/storage/access/Access.vue"),
+              name: 'storage-access',
+              component: r => {
+                require.ensure([], () => r(require("@view/home/storage/access/Access.vue")), 'Storage')
+              },
               meta: {
                 title: 'access'
               }
             }
           ]
-        },
+        }
+        ,
         {
           path: '/pool',
           name: 'pool',
-          component: () => import(/*webpackChunkName: 'pool' */"@view/home/pool/index.vue"),
-          children: [
-            {
-              path: 'overview',
-              name: 'overview',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/pool/overview/Overview.vue"),
-              meta: {
-                title: 'overview'
+          component: r => {
+            require.ensure([], () => r(require("@view/home/pool/index.vue")), 'Pool')
+          },
+          children:
+            [
+              {
+                path: 'overview',
+                name: 'pool-overview',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/pool/overview/Overview.vue")), 'Pool')
+                },
+                meta: {
+                  title: 'overview'
+                }
+              },
+              {
+                path: 'member',
+                name: 'pool-member',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/pool/member/member.vue")), 'Pool')
+                },
+                meta: {
+                  title: 'member'
+                }
+              },
+              {
+                path: 'access',
+                name: 'pool-access',
+                component: r => {
+                  require.ensure([], () => r(require("@view/home/qemu/access/Access.vue")), 'Pool')
+                },
+                meta: {
+                  title: 'access'
+                }
               }
-            },
-            {
-              path: 'member',
-              name: 'member',
-              component: () => import(/*webpackChunkName: 'overview' */"@view/home/pool/member/member.vue"),
-              meta: {
-                title: 'member'
-              }
-            },
-            {
-              path: 'access',
-              name: 'access',
-              component: () => import(/*webpackChunkName: 'overview'*/"@view/home/qemu/access/Access.vue"),
-              meta: {
-                title: 'access'
-              }
-            }
-          ]
+            ]
         }
       ]
     }
@@ -691,6 +892,7 @@ router.afterEach((to, from) => {
 router.onError((error) => {
   const pattern = /Loading chunk (\d)+ failed/g;
   const isChunkLoadFailed = error.message.match(pattern);
+  console.log(router);
   const targetPath = router.history.pending.fullPath;
   if (isChunkLoadFailed) {
     router.replace(targetPath);

@@ -142,7 +142,7 @@
       el.style.height = el.parentNode.parentNode.clientHeight + 'px';
       _this.chartsDom = echart.init(el);
       _this.setOption();
-      _this._el = document.querySelector('.overview');
+      _this._el = document.querySelector('.chart-content');
       _this._el.addEventListener('resize',throttle(()=> {
         el.style.width = el.parentNode.parentNode.clientWidth + 'px';
         el.style.height = el.parentNode.parentNode.clientHeight + 'px';

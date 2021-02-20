@@ -11,9 +11,9 @@ const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const os = require('os');
 //开启线程
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const app = require('express')();
 
 function resolve(dirname) {
-  console.log(path.resolve(__dirname,  dirname));
   return path.resolve(__dirname,  dirname);
 }
 const isDevMode = process.env.NODE_ENV === 'development' ? true : false;
@@ -25,8 +25,8 @@ module.exports = {
   output: {
     publicPath: isDevMode ? '/public/' : '/',
     path: path.resolve(__dirname,'../public/dist'),
-    filename: isDevMode ? 'js/[name].[hash:16].js' : 'mhflex/js/[name].[contenthash].js',
-    chunkFilename: isDevMode ? 'js/[name].[hash:16].js' : 'mhflex/js/[name].[contenthash].js',
+    filename: isDevMode ? 'js/[name].[hash:8].js' : 'mhflex/js/[name].[hash:8].js',
+    chunkFilename: isDevMode ? 'js/[name].[hash:8].js' : 'mhflex/js/[name].[hash:8].js',
   },
   module: {
     unknownContextCritical: false,
@@ -102,10 +102,15 @@ module.exports = {
       loaders: [{
         loader: 'babel-loader',
         exclude: /node_modules/,
-        include: /node_modules\/ace-builds\/.*/,
+        include: [
+          resolve('../src'),
+          resolve('../node_modules/element-ui'),
+          resolve('../node_modules/ace-builds')
+         ],
         options: {
-          // babelrc: true,
+          babelrc: true,
           cacheDirectory: true, // 启用缓存
+          comments: false
         }
       }],
       //代表共享进程池，即多个 HappyPack 实例都使用同一个共享进程池中的子进程去处理任务，以防止资源占用过多。

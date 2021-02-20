@@ -1,3 +1,4 @@
+import("babel-polyfill");
 import Vue from 'vue';
 import App from './App';
 import { http } from '@libs/http/index';
@@ -11,7 +12,7 @@ import confirm from '@src/components/confirm/';
 import VueMixins from '@src/mixins/VuexMixins';
 import VueLazyload from 'vue-lazyload';
 import directives from '@src/directives/directive';
-import Fragment from 'vue-fragment'
+import Fragment from 'vue-fragment';
 Vue.use(Fragment.Plugin)
 // or
 

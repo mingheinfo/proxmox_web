@@ -1,5 +1,5 @@
 <template>
-  <div class="overview">
+  <div class="overview chart-content">
     <div class="overview-select">
       <m-select @on-change="handleIntervalChange" v-model="timeframe">
         <m-option

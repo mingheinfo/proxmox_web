@@ -1,5 +1,5 @@
 <template>
-   <div class="ceph">
+   <div class="ceph chart-content">
 		  <div class="ceph-content">
 				<div class="ceph-top">
 						<div class="ceph-top__left">
@@ -387,7 +387,6 @@ export default {
 		this.__init__();
 	},
 	mounted() {
-		this.updateHeight();
 	},
 	methods: {
 		/***
@@ -605,21 +604,6 @@ export default {
       me.version = version;
     },
 		/**
-		 * 计算此页面的高度
-		*/
-		updateHeight() {
-			this.$el.style.height = this.$el.parentElement.clientHeight + 'px';
-			console.log(this.$el.parentElement.clientHeight/document.documentElement.clientHeight);
-			window.addEventListener('resize', this.setELheight, false);
-		},
-		/**
-		 * 计算高度
-		*/
-		setELheight() {
-			this.$el.style.height = this.$el.parentElement.clientHeight + 'px';
-			console.log(this.$el.parentElement.clientHeight/document.documentElement.clientHeight);
-		},
-		/**
 		 * 展示detail
 		 * */
     showDetail(detail) {
@@ -633,7 +617,6 @@ export default {
 		}
 	},
 	beforeDestroy() {
-	  window.removeEventListener('resize', this.setELheight, false);
 	  if(this.interVal) {
 	    clearInterval(this.interVal);
 	    this.interVal = null;
@@ -652,7 +635,6 @@ export default {
 <style lang="less" scoped>
 	.ceph{
 		width: 100%;
-		height: 100%;
 		padding: 20px;
 		background: #010d1b;
 		color: #91add4;
