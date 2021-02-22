@@ -105,7 +105,7 @@ module.exports = {
         include: [
           resolve('../src'),
           resolve('../node_modules/element-ui'),
-          resolve('../node_modules/ace-builds')
+          resolve('../node_modules/ace-builds'),
          ],
         options: {
           babelrc: true,

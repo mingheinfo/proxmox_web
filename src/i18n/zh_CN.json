@@ -50,17 +50,6 @@
       "create": "创建证书",
       "acme": "更新Acme"
     },
-    "acme": {
-      "account": {
-        "create": "添加Acme账户"
-      },
-      "domains": {
-        "create": "创建域"
-      },
-      "certifices": {
-        "order": "修改顺序"
-      }
-    },
     "timezone": {
       "update": "更新时区"
     },
@@ -101,9 +90,6 @@
     },
     "update": {
       "pool": "跟新池 {name}"
-    },
-    "lxc": {
-      "reboot": "重启lxc容器"
     },
     "template": {
       "translate": "转换成模板 {name}"
@@ -257,7 +243,8 @@
     "lxc": {
       "create": "创建Lxc {name}",
       "delete": "删除Lxc {name}",
-      "update": "修改Lxc {name}"
+      "update": "修改Lxc {name}",
+      "reboot": "重启lxc容器"
     }
   },
   "type": {
