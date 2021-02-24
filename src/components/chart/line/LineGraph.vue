@@ -15,11 +15,12 @@
 </template>
 
 <script>
-  import { deepCopy, dateFormat, getEvent, throttle } from "@libs/utils";
-  import "@libs/utils/domResize";
+  import { deepCopy, dateFormat, getEvent, throttle, isIE, ieVersion } from "@libs/utils";
+  if(!isIE()) {
+    require("@libs/utils/domResize");
+  }
   import Loading from '@src/components/loading/loading';
   import echart from 'echarts/lib/echarts';
-  import echartsConfig from 'echarts/lib/config';
   import 'echarts/lib/component/legend';
   import 'echarts/lib/component/tooltip';
   import 'echarts/lib/component/title';
@@ -30,7 +31,7 @@
       Loading
     },
     props: {
-      data: Object
+      param: Object
     },
     data() {
       let _this = this;
@@ -40,6 +41,7 @@
         nodata: true,
         loading: false,
         _el: null,
+        observer: null,
         options: {
           title: {
             textStyle: {
@@ -70,7 +72,7 @@
               for (let i in param) {
                 str += `<div style="padding: 5px 0px;">
                  <span style="display: inline-block;width: 10px;height: 10px; background:${param[i].color.color}"></span>
-                 <span style="dispaly: inline-block;color: #222;">${param[i].seriesName}\r\t${param[i].value ? _this.data && _this.data.func && _this.data.func(param[i].value) || param[i].value.toFixed(2) : 0}</span>
+                 <span style="dispaly: inline-block;color: #222;">${param[i].seriesName}\r\t${param[i].value ? _this.param && _this.param.func && _this.param.func(param[i].value) || param[i].value.toFixed(2) : 0}</span>
                </div>`;
               }
               str += `</div>`;
@@ -143,12 +145,39 @@
       _this.chartsDom = echart.init(el);
       _this.setOption();
       _this._el = document.querySelector('.chart-content');
-      _this._el.addEventListener('resize',throttle(()=> {
+       /**
+       * 如果不是ie时触发
+       * **/
+      if(!isIE()) {
+        _this._el.addEventListener('resize',throttle(()=> {
         el.style.width = el.parentNode.parentNode.clientWidth + 'px';
         el.style.height = el.parentNode.parentNode.clientHeight + 'px';
         _this.chartsDom = echart.init(el);
         _this.chartsDom.resize();
       }, 100), false)
+      } else if(isIE() && ieVersion() !== '11') {//ie11触发
+          _this._el.attachEvent('onresize',throttle(()=> {
+          el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+          el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+          _this.chartsDom = echart.init(el);
+          _this.chartsDom.resize();
+        }, 100), false)
+      } else {
+        //其余ie版本触发
+        var oP = document.querySelector('.main-content');
+        let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+		    this.observer = new MutationObserver(function (mutations) {
+			    el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+          el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+          _this.chartsDom = echart.init(el);
+          _this.chartsDom.resize();
+		   });
+	   	   this.observer.observe(oP, {
+		   	  attributes: true,
+			    attributeFilter:['style'],
+		   	  attributeOldValue:true
+	    	});
+      }
     },
     methods: {
       //设置折线图的配置项
@@ -156,7 +185,7 @@
         //省拷贝options
         let _options = deepCopy(this.options);
         this.loading = true;
-        if(!this.data || this.data.value.length < 0 || !this.data.time || !this.data.color) {
+        if(!this.param || this.param.value.length < 0 || !this.param.time || !this.param.color) {
           this.nodata = true;
           this.loading = false
           return
@@ -164,30 +193,30 @@
         this.nodata = false;
         this.loading = false;
         //格式化x轴时间
-        _options.xAxis.data = this.data.time.map(item => {
+        _options.xAxis.data = this.param.time.map(item => {
           return dateFormat(new Date(item * 1000), 'yyyy-MM-dd hh:mm');
         });
-        if(this.data && this.data.axisLabelColor) {
-          _options.yAxis.axisLabel.color = this.data.axisLabelColor;
-          _options.xAxis.axisLabel.color = this.data.axisLabelColor;
-          _options.legend.textStyle.color = this.data.axisLabelColor;
+        if(this.param && this.param.axisLabelColor) {
+          _options.yAxis.axisLabel.color = this.param.axisLabelColor;
+          _options.xAxis.axisLabel.color = this.param.axisLabelColor;
+          _options.legend.textStyle.color = this.param.axisLabelColor;
         }
         //格式化y轴数据
         _options.yAxis.axisLabel.formatter = (value) => {
-          return this.data.func && this.data.func(value) || value;
+          return this.param.func && this.param.func(value) || value;
         }
-        _options.color = this.data.color.map(item => {
+        _options.color = this.param.color.map(item => {
           return item.end;
         })
-        _options.yAxis.name = this.data && this.data.title
-        this.data.value.forEach((item, index) => {
+        _options.yAxis.name = this.param && this.param.title
+        this.param.value.forEach((item, index) => {
           _options.series.push({
             data: item,
             type: 'line',
             smooth: true,
-            name: this.data.label[index],
+            name: this.param.label[index],
             areaStyle: {
-              color: this.data.color[index].line
+              color: this.param.color[index].line
             }
           })
         })
@@ -264,10 +293,30 @@
     },
     beforeDestroy() {
       let _this = this;
-      _this._el.removeEventListener('resize', this.setOption, false)
+      /**
+       * 如果不是ie时触发
+       * **/
+       if(!isIE()) {
+        _this._el.removeEventListener('resize',throttle(()=> {
+        el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+        el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+        _this.chartsDom = echart.init(el);
+        _this.chartsDom.resize();
+      }, 100), false)
+      } else if(isIE() && ieVersion() !== '11') {//ie11触发
+          _this._el.detachEvent('onresize',throttle(()=> {
+          el.style.width = el.parentNode.parentNode.clientWidth + 'px';
+          el.style.height = el.parentNode.parentNode.clientHeight + 'px';
+          _this.chartsDom = echart.init(el);
+          _this.chartsDom.resize();
+        }, 100), false)
+      } else {//其余ie版本触发
+        _this.observer = null;
+      }
+      _this._el.removeEventListener('resize', this.setOption, false);
     },
     watch: {
-      data: {
+      param: {
         handler: function (newVal, oldVal) {
            this.setOption();
          },

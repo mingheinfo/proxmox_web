@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HappyPack = require('happypack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const bundleConfig = require("./bundle-config.json");
 const manifest = require('../vendor-manifest.json');
 //拆分三方库并将其注入到html中
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
@@ -19,8 +18,9 @@ function resolve(dirname) {
 const isDevMode = process.env.NODE_ENV === 'development' ? true : false;
 module.exports = {
   mode: isDevMode ? 'development' : 'production',
+  context: path.resolve(__dirname, '../'),
   entry: {
-    'pve': ['babel-polyfill', resolve('../src/main.js')]
+    'pve': [resolve('../node_modules/babel-polyfill/dist/polyfill.js'), resolve('../src/main.js')]
   },
   output: {
     publicPath: isDevMode ? '/public/' : '/',
@@ -101,10 +101,10 @@ module.exports = {
       id: 'happyBabel',
       loaders: [{
         loader: 'babel-loader',
-        exclude: /node_modules/,
         include: [
           resolve('../src'),
-          resolve('../node_modules/element-ui'),
+          resolve('../node_modules/element-ui/src'),
+          resolve('../node_modules/element-ui/packages'),
           resolve('../node_modules/ace-builds'),
          ],
         options: {
@@ -167,8 +167,7 @@ module.exports = {
       template: resolve("../public/index.html"),
       filename: "index.html",
       minify: false,
-      inject: true,
-      excludeChunks: [resolve('../node_modules')]
+      inject: true
     }),
     new AddAssetHtmlPlugin({
       filepath: path.resolve(__dirname, '../public/dist/static/dll.vendor_*.js'),

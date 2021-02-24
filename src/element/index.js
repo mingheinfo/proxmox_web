@@ -1,4 +1,3 @@
-import 'element-ui/lib/theme-chalk/index.css';
 import {
   Table,
   TableColumn,
@@ -24,6 +23,7 @@ import Tab from '@src/components/tab/Tab';
 import TabPanel from '@src/components/tab/TabPanel';
 import Dialog from "@src/components/dialog/Dialog";
 import Switch from "@src/components/switch/Switch";
+import LineGraph from '@src/components/chart/line/LineGraph';
 const element = {
   install: (vue) => {
     vue.use(Table);
@@ -46,6 +46,7 @@ const element = {
     vue.component('m-tab-panel', TabPanel);
     vue.component('m-dialog', Dialog);
     vue.component('m-switch', Switch);
+    vue.component('line-graph', LineGraph)
     vue.use(Loading);
     vue.use(Scrollbar);
     vue.use(Pagination);

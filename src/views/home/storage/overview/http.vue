@@ -22,14 +22,13 @@ export default {
         });
     },
     queryRrdData() {
+       let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
+      if(/[\u4e00-\u9fa5]/.test(timeframe) || /[\u4e00-\u9fa5]/.test(cf)) return;
       return this.$http
         .get(
           `/json/nodes/${this.storage.node}/storage/${
             this.storage.storage
-          }/rrddata?timeframe=${this.timeframe.replace(
-            /(.*?)\((.*?)\)/g,
-            "$1"
-          )}&cf=${this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")}`
+          }/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${cf}`
         )
         .then((res) => {
           if (res.data && res.data.length > 0) {

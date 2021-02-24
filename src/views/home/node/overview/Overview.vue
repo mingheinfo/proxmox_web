@@ -185,7 +185,7 @@
         <overview-card>
           <div slot="title">CPU利用率</div>
           <template slot="content">
-            <line-graph :data="cpu"></line-graph>
+            <line-graph :param="cpu"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -195,7 +195,7 @@
         <overview-card>
           <div slot="title">服务器负载</div>
           <template slot="content">
-            <line-graph :data="loadavg"></line-graph>
+            <line-graph :param="loadavg"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -203,7 +203,7 @@
         <overview-card>
           <div slot="title">内存使用率</div>
           <template slot="content">
-            <line-graph :data="memory"></line-graph>
+            <line-graph :param="memory"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -211,7 +211,7 @@
     <overview-card>
       <div slot="title">网络流量</div>
       <template slot="content">
-        <line-graph :data="network"></line-graph>
+        <line-graph :param="network"></line-graph>
       </template>
     </overview-card>
     <m-dialog
@@ -255,17 +255,15 @@
 <script>
 import LinePercentChart from "@src/components/chart/line/LinePercentChart";
 import SingleLine from "@src/components/chart/line/SingleLine";
-import LineGraph from "@src/components/chart/line/LineGraph";
 import OverviewCard from "@src/components/card/OverviewCard";
 import { render_uptime, byteToSize } from "@libs/utils";
 
 export default {
-  name: "Overview",
+  name: "Node-Overview",
   components: {
     OverviewCard,
     LinePercentChart,
-    SingleLine,
-    LineGraph,
+    SingleLine
   },
   data() {
     return {
@@ -406,6 +404,7 @@ export default {
     },
     queryRrdData() {
       let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
+      if(/[\u4e00-\u9fa5]/.test(timeframe) || /[\u4e00-\u9fa5]/.test(cf)) return;
       this.$http
         .get(
           `/json/nodes/${this.node}/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${encodeURIComponent(cf)}&_dc=`+ new Date().getTime()
@@ -446,6 +445,7 @@ export default {
         });
     },
     handleIntervalChange(value) {
+      if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
       this.queryRrdData();
       if (this.interval) {

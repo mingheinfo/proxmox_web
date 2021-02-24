@@ -4,7 +4,8 @@ export default {
 	methods: {
 		 queryRrdData() {
        let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
-        this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/rrddata?timeframe=${timeframe}&cf=${cf}`)
+       if(/[\u4E00-\u9FA5]/.test(timeframe) || /[\u4E00-\u9FA5]/.test(cf)) return;
+        this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${encodeURIComponent(cf)}`)
           .then(res => {
             this.cpu = Object.assign({}, this.cpu, {
               value: [res.data.map(it => it.cpu ? it.cpu * 100 : 0)],

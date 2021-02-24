@@ -48,7 +48,6 @@ function stopEvent(ev) {
 function debounce(fn, delay) {
   let timer = null;
   return function () {
-    debugger;
     let context = this;
     let args = arguments;
     if (timer) {
@@ -99,7 +98,6 @@ function parseCookie() {
  * 设置cookie
  * */
 function setCookie(name, value) {
-  debugger;
   var argv = arguments,
     argc = arguments.length,
     expires = (argc > 2) ? argv[2] : null,
@@ -141,7 +139,6 @@ function treeNode(data, cb) {
       cb(item)
     }
   }
-  debugger;
   return loop(data);
 }
 /**
@@ -1556,6 +1553,26 @@ function hasClass(cls) {
   return classes.includes(cls);
 }
 
+
+function isIE() {
+  if(!!window.ActiveXObject || 'ActiveXObject' in window) {
+    return true;
+  } 
+  return false;
+}
+
+function ieVersion() {
+  let userAgent = window.navigator.userAgent,
+      isMSIE = userAgent.indexOf('MSIE') > -1;
+  if(isMSIE) {
+    /[MSIE]\s(\d+)/.test(userAgent);
+    return RegExp.$1;
+  } else {
+    /[rv:](\d+)/.test(userAgent);
+    return RegExp.$1;
+  }
+}
+
 export {
   getEvent,
   stopEvent,
@@ -1632,5 +1649,7 @@ export {
   parseQemuDrive,
   parsePropertyString,
   getUniqueObj,
-  hasClass
+  hasClass,
+  isIE,
+  ieVersion
 }

@@ -76,7 +76,7 @@
     <overview-card style="width: calc(100%)">
       <div slot="title">使用率</div>
       <template slot="content">
-        <line-graph :data="usedRate"></line-graph>
+        <line-graph :param="usedRate"></line-graph>
       </template>
     </overview-card>
   </div>
@@ -86,14 +86,12 @@
 import LinePercentChart from "@src/components/chart/line/LinePercentChart";
 import StorageOverviewHttp from "@src/views/home/storage/overview/http";
 import SingleLine from "@src/components/chart/line/SingleLine";
-import LineGraph from "@src/components/chart/line/LineGraph";
 import OverviewCard from "@src/components/card/OverviewCard";
 import { render_uptime, byteToSize } from "@libs/utils";
 export default {
   name: "StorageOverview",
   mixins: [StorageOverviewHttp],
   components: {
-    LineGraph,
     SingleLine,
     OverviewCard,
     LinePercentChart,
@@ -208,6 +206,7 @@ export default {
       this.queryRrdData();
     },
     handleIntervalChange(value) {
+      if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
       this.queryRrdData();
       if (this.interval) {

@@ -193,7 +193,7 @@
 								<overview-card>
 									<div slot="title">读取</div>
 									<template slot="content">
-										<line-graph :data="reads" style="height: 50px;"></line-graph>
+										<line-graph :param="reads" style="height: 50px;"></line-graph>
 									</template>
 								</overview-card>
 							</div>
@@ -201,7 +201,7 @@
 								<overview-card>
 									<div slot="title">写入</div>
 									<template slot="content">
-										<line-graph :data="writes" style="height: 50px;"></line-graph>
+										<line-graph :param="writes" style="height: 50px;"></line-graph>
 									</template>
 								</overview-card>
 							</div>
@@ -224,7 +224,6 @@ import CephInstallModal from './CephInstallModal';
 import { quickSort, byteToSize, stringFormat } from '@libs/utils/index';
 import PieCircle from "@src/components/chart/pie/pieCircle";
 import Circle from "@src/components/chart/circle/index.vue";
-import LineGraph from '@src/components/chart/line/LineGraph';
 import OverviewCard from '@src/components/card/OverviewCard';
 import ToolTips from "./toolTips";
 export default {
@@ -235,7 +234,6 @@ export default {
     PieCircle,
 		CephInstallModal,
     "mh-circle": Circle,
-    LineGraph,
     OverviewCard
 	},
 	data() {

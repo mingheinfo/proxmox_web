@@ -1,4 +1,4 @@
-{
+module.exports = {
   "presets": [
     [
       "@babel/preset-env",
@@ -7,18 +7,15 @@
       "targets": {
        "browsers": ["> 1%", "last 2 versions", "not ie <=8"]
       },
-      "useBuiltIns": "entry",
-      "corejs": 3
+      "useBuiltIns": "entry"
     }
    ],
    "@babel/preset-react"
   ],
+  sourceType:'unambiguous',
   "plugins": [
-    "syntax-dynamic-import",
-    "dynamic-import-webpack",
     "@babel/plugin-transform-runtime",
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-syntax-jsx",
     "transform-vue-jsx",
     [

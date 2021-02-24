@@ -115,7 +115,7 @@
         <overview-card>
           <div slot="title">CPU利用率</div>
           <template slot="content">
-            <line-graph :data="cpu"></line-graph>
+            <line-graph :param="cpu"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -125,15 +125,15 @@
          <overview-card>
       <div slot="title">内存利用率</div>
       <template slot="content">
-        <line-graph :data="memory"></line-graph>
+        <line-graph :param="memory"></line-graph>
       </template>
-    </overview-card>
+        </overview-card>
       </div>
       <div class="overview-content__center_right">
         <overview-card>
       <div slot="title">网络流量</div>
       <template slot="content">
-        <line-graph :data="network"></line-graph>
+        <line-graph :param="network"></line-graph>
       </template>
     </overview-card>
       </div>
@@ -141,7 +141,7 @@
     <overview-card v-if="!isTempalte">
       <div slot="title">磁盘IO</div>
       <template slot="content">
-        <line-graph :data="disk"></line-graph>
+        <line-graph :param="disk"></line-graph>
       </template>
     </overview-card>
     <Dialog
@@ -166,21 +166,19 @@
 import LinePercentChart from "@src/components/chart/line/LinePercentChart";
 import QemuOverviewHttp from "@src/views/home/qemu/overview/http";
 import SingleLine from "@src/components/chart/line/SingleLine";
-import LineGraph from "@src/components/chart/line/LineGraph";
 import OverviewCard from "@src/components/card/OverviewCard";
 import { render_uptime, byteToSize } from "@libs/utils";
 import Dialog from "@src/components/dialog/Dialog";
 import AceEditor from "@src/components/ace/AceEditor";
 
 export default {
-  name: "Overview",
+  name: "QEMU-Overview",
   mixins: [QemuOverviewHttp],
   components: {
     Dialog,
     OverviewCard,
     LinePercentChart,
     SingleLine,
-    LineGraph,
     AceEditor,
   },
   data() {
@@ -324,6 +322,7 @@ export default {
       this.handleIntervalChange(this.timeframe);
     },
     handleIntervalChange(value) {
+      if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
       this.queryRrdData();
       if (this.interval) {

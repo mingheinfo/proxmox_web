@@ -20,7 +20,7 @@
 <script>
   import BaseIcon from '@src/components/icon/BaseIcon';
   export default {
-    name: "Line-charts",
+    name: "Line-Percent-Chart",
     components: {
       BaseIcon
     },
