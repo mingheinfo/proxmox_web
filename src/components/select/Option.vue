@@ -24,7 +24,7 @@
     <div
       v-if="Select.type === 'multiple'"
       @click="handleClick"
-      style="display: inline-flex; align-items: center"
+      style="display: inline-flex; align-items: center;width: 100%"
     >
       <span v-if="icon" :class="['icon', icon]"></span>
       <base-icon
