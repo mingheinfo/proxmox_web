@@ -271,7 +271,7 @@
                  style="width: 100%"
                   max-height="250"
               >
-                <el-table-column type="index" width="55px;">
+                <el-table-column  width="55px;">
                   <template slot-scope="scope">
                     <el-radio :label="scope.row.name" v-model="snapshotname">&nbsp;</el-radio>
                   </template>

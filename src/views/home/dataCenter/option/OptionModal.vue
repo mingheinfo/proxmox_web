@@ -86,9 +86,9 @@
 					<el-table :data="netWorkList"
 						            @current-change="handleLink1Change"
 						            highlight-current-row>
-							 <el-table-column type="index" width="50">
+							 <el-table-column  width="50">
                   <template slot-scope="scope">
-                    <el-radio :label="scope.row.cidr" v-model="link1Radio">&nbsp</el-radio>
+                    <el-radio :label="scope.row.cidr" v-model="link1Radio">&nbsp;</el-radio>
                   </template>
                 </el-table-column>
 							 <el-table-column label="CIDR" prop="cidr" sortable></el-table-column>

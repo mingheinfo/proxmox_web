@@ -78,10 +78,10 @@
                 @current-change="handleCurrentChange"
                 highlight-current-row
               >
-                <el-table-column type="index" width="50">
+                <el-table-column width="50">
                   <template slot-scope="scope">
                     <el-radio :label="scope.row.id" v-model="templateRadio"
-                      >&nbsp</el-radio
+                      >&nbsp;</el-radio
                     >
                   </template>
                 </el-table-column>
@@ -116,10 +116,10 @@
                 highlight-current-row
                 :data="poolList"
               >
-                <el-table-column type="index" width="50">
+                <el-table-column  width="50">
                   <template slot-scope="scope">
                     <el-radio :label="scope.row.poolid" v-model="poolRadio"
-                      >&nbsp</el-radio
+                      >&nbsp;</el-radio
                     >
                   </template>
                 </el-table-column>
@@ -201,12 +201,12 @@
                     current-row-key
                     @current-change="handleStorageSingleList"
                   >
-                    <el-table-column type="index" width="50">
+                    <el-table-column width="50">
                       <template slot-scope="scope">
                         <el-radio
                           :label="scope.row.storage"
                           v-model="storageRadio"
-                          >&nbsp</el-radio
+                          >&nbsp;</el-radio
                         >
                       </template>
                     </el-table-column>
@@ -237,10 +237,10 @@
                     :data="isoList"
                     :class="{ 'm-input__error': rules['isoRadio'].error }"
                   >
-                    <el-table-column type="index" width="50">
+                    <el-table-column  width="50">
                       <template slot-scope="scope">
                         <el-radio :label="scope.row.volid" v-model="isoRadio"
-                          >&nbsp</el-radio
+                          >&nbsp;</el-radio
                         >
                       </template>
                     </el-table-column>
@@ -1142,10 +1142,10 @@
           <dt>网络</dt>
           <dd>
             <el-table :data="networkList">
-              <el-table-column type="index" width="50">
+              <el-table-column  width="50">
                 <template slot-scope="scope">
                   <el-radio :label="scope.row.iface" v-model="networkRadio"
-                    >&nbsp</el-radio
+                    >&nbsp;</el-radio
                   >
                 </template>
               </el-table-column>
