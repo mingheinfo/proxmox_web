@@ -8,6 +8,7 @@
       </section>
      <footer></footer>
      <ToastManager></ToastManager>
+     <split-line></split-line>
    </div>
 </template>
 
@@ -22,6 +23,7 @@
   import MCheckBox from '@src/components/checkbox/Checkbox';
   import Dropdown from '@src/components/dropdown/dropdown';
   import DropdownItem from '@src/components/dropdown/dropdownItem';
+  import SplitLine from '@src/components/split/SplitLine';
   //注册全局组件
   Vue.component(ToastManager);
   Vue.component('table-info-state', TableInfoState);
@@ -36,6 +38,7 @@
       ToastManager,
       PvHeader,
       AsideTree,
+      SplitLine
     }
   }
 </script>

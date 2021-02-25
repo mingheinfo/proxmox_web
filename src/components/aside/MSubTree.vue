@@ -191,7 +191,6 @@
       }
     },
     getContextMenu() {
-      debugger;
       if(this.param.data.template === 1) {
         this.menuData = [
           {text: this.param.data.name,},

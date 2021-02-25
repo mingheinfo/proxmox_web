@@ -14,11 +14,6 @@
     <div class="aside-tree">
       <m-tree :treeData="rootnode" @changeExpand="handleChangeExpand"></m-tree>
     </div>
-    <div
-      class="aside_col-resize"
-      @mousedown.stop="handleMouseDown"
-      @mouseup.stop="handleMouseUp"
-    ></div>
   </aside>
 </template>
 
@@ -134,64 +129,6 @@ export default {
     };
   },
   methods: {
-    //计算左侧菜单栏的宽度
-    handleMouseDown(event) {
-      stopEvent(event);
-      this.initX = event.clientX;
-      this.drageable = true;
-      document.addEventListener(
-        "mousemove",
-        this.handleMouseMove, 50,
-        false
-      );
-      document.addEventListener(
-        "mouseup",
-        this.handleMouseUp, 50,
-        false
-      );
-    },
-    //移动左侧菜单栏
-    handleMouseMove(event) {
-      stopEvent(event);
-      event.preventDefault();
-      if (!this.drageable) return;
-      let y = event.clientX - this.initX,
-          dis = this.initX + y;
-       while (dis <= 5) {
-        document.removeEventListener(
-          "mousemove",
-          this.handleMouseMove,
-          false
-        );
-        document.removeEventListener(
-          "mouseup",
-          this.handleMouseUp,
-          false
-        );
-        return;
-      }
-      this.$refs.aside.style.width = this.initX + y + "px";
-      let el = document.querySelector(".main-content");
-      el.style.width = `calc(100% - ${this.initX + y}px)`;
-      el.style.left = this.initX + y + "px";
-    },
-    //取消移动
-    handleMouseUp(event) {
-      stopEvent(event);
-      event.preventDefault();
-      document.removeEventListener(
-        "mousemove",
-        this.handleMouseMove, 50,
-        false
-      );
-      document.removeEventListener(
-        "mouseup",
-        this.handleMouseUp, 50,
-        false
-      );
-      this.initX = event.clientX;
-      this.drageable = false;
-    },
     //查询所有资源
     queryResource() {
       this.$http.get("/json/cluster/resources").then(async (res) => {
