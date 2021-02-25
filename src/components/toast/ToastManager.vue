@@ -15,15 +15,17 @@
         </div>
         <div v-if="item.type !== 'ticketMessage' && item.type !== 'alarmMessage'" class="toast" :class="getClass(item)">
           <!-- <div v-for="item in toastList" class="toast success"> -->
-          <span class="icon" />
+          <span class="icon"></span>
           <span class="text" :title="$t(item.action, { name: `'${item.name}'` })" v-if="item.count === 1 && item.name !== undefined">{{ $t(item.action, { name: `"${item.name}"` }) }}</span>
           <span class="text" :title="$t(item.action, { name: '' })" v-if="item.count > 1 || item.name === undefined">
-          <span style="width: 120px;">{{ $t(item.action, { name: '' }) }}</span>
-          <span v-if="item.resultType === 'success'">成功 {{ item.count }}</span>
-          <span v-if="item.resultType === 'fail'">失败 {{ item.count }}</span>
-        </span>
+            <span style="width: 120px;">{{ $t(item.action, { name: '' }) }}</span>
+            <span v-if="item.resultType === 'success'">成功 {{ item.count }}</span>
+            <span v-if="item.resultType === 'fail'">失败 {{ item.count }}</span>
+         </span>
           <!--<img @click="deleteToast($event, item)" style="position: absolute; right: 15px; top: 18px; cursor: pointer;" src="~assets/close.svg" />-->
-          <i @click="deleteToast($event, item)" class="el-alert__closebtn el-icon-close" style="color: #ccc;font-size:16px"></i>
+          <span style="position: absolute;top:0;right: 15px;">
+               <i @click="deleteToast($event, item)" class="el-alert__closebtn el-icon-close" style="color: #ccc;font-size:16px"></i>
+          </span>
         </div>
       </div>
     </div>
