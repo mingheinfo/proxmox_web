@@ -154,7 +154,7 @@
     },
     showTip(tree) {
       let el = document.createDocumentFragment(),
-          pos = this.$refs[`m$sub$item${tree.data.id}`][0].getBoundingClientRect(),
+          pos = this.$refs[`m$sub$item${tree.data.id}`][0] && this.$refs[`m$sub$item${tree.data.id}`][0].getBoundingClientRect(),
           con = document.querySelector('.m-tree'),
           dom = document.createElement('div');
           dom.className = 'm-sub-item-tips';
