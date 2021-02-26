@@ -203,21 +203,17 @@ export default {
       let last = window.localStorage.getItem("lastsel") || "[]";
       this.storage = (JSON.parse(last) && JSON.parse(last)) || "";
       this.queryStatus();
-      this.queryRrdData();
+      this.queryRrdData(this.timeframe);
     },
     handleIntervalChange(value) {
       if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
       this.queryRrdData();
-      if (this.interval) {
-        clearInterval(this.interval);
-        this.interval = null;
-      }
-      this.interval = setInterval(() => this.queryRrdData(), 60 * 1000);
     },
   },
   mounted() {
     this.__init__();
+    this.interval = setInterval(() => this.__init__(), 60 * 1000);
   },
   watch: {
     "$store.state.db.lastSelectObj": function (newVal, oldVal) {

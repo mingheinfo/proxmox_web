@@ -389,7 +389,7 @@ export default {
       this.node = (JSON.parse(last).node && JSON.parse(last).node) || "";
       this.loading = false;
       this.queryResource();
-      this.queryRrdData();
+      this.handleIntervalChange(this.timeframe);
     },
     queryResource() {
       this.$http
@@ -448,11 +448,6 @@ export default {
       if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
       this.queryRrdData();
-      if (this.interval) {
-        clearInterval(this.interval);
-        this.interval = null;
-      }
-      this.interval = setInterval(() => this.queryResource(), 60 * 1000);
     },
     //软件包版本
     watchVersion() {
@@ -470,7 +465,7 @@ export default {
   },
   mounted() {
     this.__init__();
-    this.interval = setInterval(() => this.queryResource(), 3000);
+    this.interval = setInterval(() => this.__init__(), 3000);
   },
   beforeDestroy() {
     if (this.interval) clearInterval(this.interval);
