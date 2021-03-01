@@ -10,7 +10,7 @@ function resolve(dirname) {
   return path.resolve(__dirname,  dirname);
 }
 module.exports = merge(baseWebpack, {
-  devtool: "cheap-module-source-map",
+  devtool: false,
   mode: 'production',
   optimization:{
       minimize: false,

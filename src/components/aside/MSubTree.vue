@@ -153,6 +153,15 @@
       this.$forceUpdate();
     },
     showTip(tree) {
+      /**
+       * 解决有时出现上一次tips不隐藏的bug
+       * **/
+      let tips = document.querySelectorAll('.m-sub-item-tips');
+      if(tips && tips.length > 0) {
+        tips.forEach(tip => {
+           document.body.removeChild(tip);
+        })
+      }
       let el = document.createDocumentFragment(),
           pos = this.$refs[`m$sub$item${tree.data.id}`][0] && this.$refs[`m$sub$item${tree.data.id}`][0].getBoundingClientRect(),
           con = document.querySelector('.m-tree'),
@@ -183,8 +192,7 @@
     </li>` 
    : ''}
 </ul>`
-debugger;
-          el.appendChild(dom);
+      el.appendChild(dom);
       document.body.appendChild(el);
       this.param = tree;
       this.qemu = this.param.data;

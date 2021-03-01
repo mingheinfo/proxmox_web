@@ -215,6 +215,16 @@ export default {
     this.__init__();
     this.interval = setInterval(() => this.__init__(), 60 * 1000);
   },
+  /***
+   * 
+   * 路由跳转之前清除定时任务
+  */
+  beforeDestroy() {
+    if(this.interval) {
+      clearInterval(this.interval);
+    }
+    this.interval = null;
+  },
   watch: {
     "$store.state.db.lastSelectObj": function (newVal, oldVal) {
       if (newVal !== oldVal && newVal.type === "storage") {
