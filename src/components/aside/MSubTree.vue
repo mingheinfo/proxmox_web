@@ -169,7 +169,21 @@
           dom.innerHTML = `<ul>
    <li>名称：${tree.data.text ? tree.data.text : ''}</li>
    <li>状态：${tree.data.status ? tree.data.status : ''}</li>
+   ${tree.data.type ===  'storage' ? `
+    <li>
+    <span style="display: inline-block;margin-right: 3px;">容量:</span>
+    <span style="width: calc(100% - 35px); display: inline-block; height: 8px;line-height: 8px;border-radius: 50px;position: relative; background-color: #f5f5f5;">
+        <div style="position: absolute;top:0;height: 100%;border-radius: 50px;width:${tree.data.disk && tree.data.maxdisk && tree.data.maxdisk !==0 ? ((tree.data.disk / tree.data.maxdisk) * 100).toFixed(1) : 0}%;
+                    background: ${tree.data.disk && tree.data.maxdisk && tree.data.maxdisk !==0 ? (tree.data.disk / tree.data.maxdisk) * 100 < 50 ? 'rgb(33, 191, 75)' : (tree.data.disk / tree.data.maxdisk) * 100 >= 50 && (tree.data.disk / tree.data.maxdisk) * 100 <= 80 ? 'rgb(255, 204, 0)' :
+                    (tree.data.disk / tree.data.maxdisk) * 100 >= 80 && (tree.data.disk / tree.data.maxdisk) * 100 <= 100 ? 
+                    '#ff0000' : 'transparent' : 'transparent'}">
+                    </div>
+        <div style="position: absolute; width: 100%;text-align: center;height: 8px; line-height: 8px;">${tree.data.disk && tree.data.maxdisk && tree.data.maxdisk !==0 ? ((tree.data.disk / tree.data.maxdisk) * 100).toFixed(1) : 0}%</div>
+     </span>
+    </li>` 
+   : ''}
 </ul>`
+debugger;
           el.appendChild(dom);
       document.body.appendChild(el);
       this.param = tree;
