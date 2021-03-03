@@ -211,7 +211,7 @@
       msg: {
         handler: function(newVal, oldVal) {
           if(newVal !== oldVal) return newVal;
-        }, 
+        },
         deep:true
       }
     }

@@ -2,7 +2,8 @@
    <div class="line-wrapper">
      <div class="line-desc">
        <div class="line-title">
-         <i v-if="icon" :class="icon" style="font-size: 16px"></i>
+         <i v-if="icon" :class="icon" style="font-size: 16px;display: inline-block;
+    width: 19px;"></i>
          <base-icon v-if="name" :name="name" :_style="{width: '16px', 'height': '16px'}"/>
          <span>{{title}}</span>
        </div>

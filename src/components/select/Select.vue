@@ -273,7 +273,7 @@ export default {
         ? event.stopPropagation()
         : (event.cancelBubble = true);
       this.isOpen = false;
-      this.$emit("validate", this.prop);
+      //this.$emit("validate", this.prop);
     }
   },
   destroyed() {

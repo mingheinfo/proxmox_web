@@ -24,7 +24,7 @@ class Confirm {
     if (isVNode(vm.msg)) {
       vm.$slots.default = [vm.msg];
       vm.msg = null;
-    } else { 
+    } else {
       delete vm.$slots.default;
     }
     this.idList.push(vm._uid);
@@ -51,11 +51,15 @@ class Confirm {
   }
 
   confirm(options) {
+    /**
+     * 实例化组件
+     * **/
     const vm = new VueComponent().$mount();
-    console.log(vm.msg);
+    //合并所有选项
     Object.assign(vm,defaultOptions , options,{
       type:'confirm'
     });
+    //如果是虚拟dom节点的话默认将信息复制给插槽
     if (isVNode(vm.msg)) {
       vm.$slots.default = [vm.msg];
       vm.msg = null;
@@ -65,6 +69,7 @@ class Confirm {
     this.idList.push(vm._uid);
     document.body.appendChild(vm.$el);
     document.body.classList.toggle('hidden');
+    //调用confirm方法
     return vm.confirm();
   }
 

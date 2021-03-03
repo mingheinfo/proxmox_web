@@ -182,8 +182,9 @@ export default {
       }
       // 获取弹窗在页面中距Y轴的最小、最大 位置
       let minY = 0;
+      //top值最小为0
       let maxY =
-        getDocument().clientHeight - this.$refs["pop-wrapper"].clientHeight;
+        getDocument().clientHeight - this.$refs["pop-wrapper"].clientHeight < 0? 0 : getDocument().clientHeight - this.$refs["pop-wrapper"].clientHeight;
       if (top <= minY) {
         top = minY;
       } else if (top >= maxY) {
@@ -219,15 +220,7 @@ export default {
         left:
           (getDocument().clientWidth - _this.$refs["pop-wrapper"].clientWidth) /
           2,
-        top:
-          (getDocument().clientHeight -
-            1.5 * _this.$refs["pop-wrapper"].clientHeight) /
-            2 <=
-          0
-            ? 0
-            : (getDocument().clientHeight -
-                1.5 * _this.$refs["pop-wrapper"].clientHeight) /
-              2,
+        top: 100,
       };
   },
   destroyed() {
@@ -238,7 +231,6 @@ export default {
   },
   watch: {
     visible(val) {
-      debugger;
       if (val) {
         this.closed = false;
         this.$emit("open");

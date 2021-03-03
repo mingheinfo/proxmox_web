@@ -34,7 +34,6 @@ Vue.use(Element);
 Vue.mixin(VueMixins)
 //全局印日http请求
 Vue.prototype.$http = http;
-
 window.vm = new Vue({
   el: '#root',
   store,

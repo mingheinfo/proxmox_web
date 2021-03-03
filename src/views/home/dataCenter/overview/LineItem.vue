@@ -14,12 +14,12 @@
        </div>
        <div class="line-content" v-show="data && data.template">
          <div class="line-content-item">
-           <i class="fa fa-fw fa-circle-o"></i>模板</div>
+           <i class="fa fa-circle-o"></i>模板</div>
          <div class="line-content-item">{{data && data.template}}</div>
        </div>
        <div class="line-content" v-show="data && data.error">
          <div class="line-content-item">
-           <i class="critical fa fa-fw fa-times-circle"></i>错误</div>
+           <i class="critical fa fa-times-circle"></i>错误</div>
          <div class="line-content-item">{{data && data.error}}</div>
        </div>
      </template>
