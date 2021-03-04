@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App';
 import { http } from '@libs/http/index';
+import { isIE } from '@libs/utils/index.js'
 import store from './store/index';
 import router  from  './route/index';
 import '@src/style/font-awasome.less';
@@ -43,3 +44,84 @@ window.vm = new Vue({
   mounted() {
   }
 })
+//
+// if(isIE) {
+//   var CustomEvent = function(event, params){
+//     params = params || { bubbles: false, cancelable: false, detail: undefined };
+//
+//     var evt = document.createEvent('CustomEvent');
+//
+//     evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+//
+//     return evt;
+//   };
+//
+//   CustomEvent.prototype = window.Event.prototype;
+//
+//   window.CustomEvent = CustomEvent;
+// }
+// // 统一拦截ajax请求
+// function ajaxEventTrigger (event) {
+//   var ajaxEvent = new CustomEvent(event, { detail: this })
+//   window.dispatchEvent(ajaxEvent)
+// }
+//
+// function myBrowser() {
+//   var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+//   var isOpera = userAgent.indexOf("Opera") > -1;
+//   if (isOpera) { //判断是否Opera浏览器
+//     return "Opera"
+//   }
+//   ;
+//   if (userAgent.indexOf("Firefox") > -1) { //判断是否Firefox浏览器
+//     return "FF";
+//   }
+//   ;
+//   if (userAgent.indexOf("Chrome") > -1) {
+//     return "Chrome";
+//   }
+//   ;
+//   if (userAgent.indexOf("Safari") > -1) { //判断是否Safari浏览器
+//     return "Safari";
+//   }
+//   ;
+//   if (isIE() && !isOpera) { //判断是否IE浏览器
+//     return "IE";
+//   }
+//   ;
+// }
+// var oldXHR = window.XMLHttpRequest;
+// function newXHR () {
+//   var realXHR = new oldXHR()
+//   realXHR.addEventListener('readystatechange', function () { ajaxEventTrigger.call(this, 'ajaxReadyStateChange') }, false)
+//   return realXHR
+// }
+// window.XMLHttpRequest = newXHR
+// var startTime = 0
+// var gapTime = 0 // 计算请求延时
+// window.addEventListener('ajaxReadyStateChange', function (e) {
+//   var xhr = e.detail
+//   var status = xhr.status
+//   var readyState = xhr.readyState
+//   /**
+//    * 计算请求延时
+//    */
+//   if (readyState === 1) {
+//     startTime = (new Date()).getTime()
+//   }
+//   if (readyState === 4) {
+//     gapTime = (new Date()).getTime() - startTime
+//   }
+//   /**
+//    * 上报请求信息
+//    */
+//   if (readyState === 4) {
+//     if(status === 200){
+//       // 接口正常响应时捕获接口响应耗时
+//       console.log('接口',xhr.responseURL,'耗时',gapTime, myBrowser())
+//     }else{
+//       // 接口异常时捕获异常接口及状态码
+//       console.log('异常接口',xhr.responseURL,'状态码',status, myBrowser())
+//     }
+//   }
+// })

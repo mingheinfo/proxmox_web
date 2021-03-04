@@ -1,5 +1,11 @@
 <template>
   <page-template>
+    <div slot="toolbar-right" style="text-align: right;padding-right: 10px;">
+        <span class="search-input">
+          <m-input placeholder="搜索"
+                   v-model="searchModel"/>
+        </span>
+    </div>
     <div slot="toolbar-left">
       <m-button type="primary" @on-click="showModal('create')" icon="fa fa-save"
         >添加</m-button
@@ -25,6 +31,11 @@
         :disabled="inStatus()"
         >回滚</m-button
       >
+      <m-button type="info"
+                @on-click="handleClone"
+                icon="el-icon-view"
+                :disabled="current === ''"
+                >克隆虚拟机</m-button>
     </div>
     <div slot="page-content" style="
     position: relative;
@@ -41,12 +52,11 @@
             <span id="common-createDate" class="date">日期</span>
 						<span id="common-createDate" class="description">描述</span>
           </div>
-          <label class="row" v-for="(it) in snapshotList" :key="it.name"
+          <label class="row" v-for="(it) in chunkData(searchTable, pageSize)[currentPage - 1]" :key="it.name"
 					   :class="{'is-active': current === it.name}">
             <template>
 							<input name="snapshot" :id="it.name" type="radio" style="display: none;width:0px"  @change="handleSelect"/>
-              <span class="root-name" v-if="it.parent">{{ it.name && it.name}}</span>
-							<span class="root-name" v-if="!it.parent">起始</span>
+              <span class="root-name">{{ it.name && it.name}}</span>
               <span class="name">
 									<table-info-state :state="it.vmstate === 1 ? 'actived' : 'unActived'" :content="it.vmstate === 1 ? '是' : '否'"></table-info-state>
 							</span>
@@ -54,6 +64,16 @@
 					    <span class="description">{{it.description && it.description}}</span>
 					</template>
           </label>
+          <el-pagination  class="page-table-pagination"
+                          @size-change="(val) => {pageSize = val; currentPage = 1; __init__();current = ''}"
+                          @current-change="(val) => {currentPage = val; __init__();current = ''}"
+                          :current-page="currentPage"
+                          :page-sizes="[10, 20, 30, 40, 50]"
+                          :page-size="pageSize"
+                          :total="searchTable.length"
+                          small
+                          layout="total, sizes, prev, pager, next, jumper">
+          </el-pagination>
         </div>
       <add-snap-shot-modal
         :visible="visible"
@@ -82,6 +102,10 @@
         </template>
         <template slot="footer"><span></span></template>
       </m-dialog>
+      <operate-modal :visible="visibleclone"
+                     v-if="visibleclone"
+                     :param="{snapshotname: current}"
+                     @close="visibleclone = false; __init__()"></operate-modal>
     </div>
   </page-template>
 </template>
@@ -91,8 +115,8 @@ import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import Dialog from "@src/components/dialog/Dialog";
 import AddSnapShotModal from "./AddSnapShotModal";
-import { dateFormat, byteToSize, quickSort, isEmpty } from "@libs/utils/index";
-import * as d3 from "d3";
+import { dateFormat, byteToSize, quickSort, isEmpty, chunkData } from "@libs/utils/index";
+import OperateModal from './CloneQemuModal';
 export default {
   name: "Snapshot",
   mixins: [SnapShotHttp],
@@ -101,6 +125,7 @@ export default {
     MButton,
     Dialog,
     AddSnapShotModal,
+    OperateModal
   },
   data() {
     return {
@@ -122,7 +147,24 @@ export default {
       ySpace: 34,
       fakeNewNode: {},
       currentTreeUuid: "",
+      currentPage: 1,
+      pageSize: 10,
+      searchModel: '',
+      visibleclone: false,
     };
+  },
+  computed: {
+    searchTable() {
+      let _this = this;
+      let datas =  _this.snapshotList.filter(item => {
+        if (_this.searchModel && item.name.indexOf(_this.searchModel) > -1 && item.name !== 'current') {
+          return item;
+        }else if(_this.searchModel === ''){
+          return item;
+        }
+      })
+      return datas || [];
+    }
   },
   mounted() {
     let _this = this;
@@ -131,11 +173,18 @@ export default {
   methods: {
     dateFormat,
     byteToSize,
+    chunkData,
     //初始化查找
     __init__() {
       let _this = this;
       _this.querySnapShotList({ _dc: new Date().getTime() }).then((res) => {
-          _this.snapshotList = quickSort(_this.db.snapshotList.filter((item) => item.name !== 'current'), 'snaptime', '-');
+          _this.snapshotList = quickSort(_this.db.snapshotList.map((item) => {
+            if(item.name == 'current') {
+              item.snaptime = new Date().getTime() / 1000;
+            }
+            return item;
+          }), 'snaptime', '-');
+          //_this.snapshotList.push();
       });
     },
     //按钮是否可点击
@@ -257,6 +306,10 @@ export default {
           });
         });
     },
+    //克隆虚拟机
+    handleClone() {
+      this.visibleclone = true;
+    }
   },
   beforeDestroy() {
     if (this.interVal) {
@@ -321,7 +374,6 @@ export default {
 
 .list {
   padding-top: 7px;
-  padding-left: 40px;
   font-size: 14px;
 }
 

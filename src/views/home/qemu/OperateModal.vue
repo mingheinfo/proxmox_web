@@ -1029,15 +1029,18 @@ export default {
           _this.clonemode = "clone";
         });
         this.querySnapShot({ _dc: new Date().getTime() }).then((res) => {
-          if (this.snapshotList) this.snapshotname = this.snapshotList[0].name;
-          this.snapdbshotList = quickSort(this.snapshotList.filter(item => {
-            return item.name !== 'current'
-          }), 'snaptime', '-');
           _this.hasSnapshots =
-            this.snapshotList.length === 1 &&
-            this.snapshotList[0].name === "current"
+            _this.snapshotList.length === 1 &&
+            _this.snapshotList[0].name === "current"
               ? false
               : true;
+          this.snapdbshotList = quickSort(this.snapshotList.map(item => {
+            if(item.name == 'current') {
+              item.snaptime = new Date().getTime() / 1000;
+            }
+            return item;
+          }), 'snaptime', '-');
+          if (_this.snapdbshotList && _this.hasSnapshots) _this.snapshotname = _this.snapdbshotList[1].name;
         });
         this.queryNextVmid({ _dc: new Date().getTime() });
         this.queryPool();

@@ -889,24 +889,24 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   setDocumentTitle(to);
 })
-router.onError((error) => {
-  const pattern = /Loading chunk (\d)+ failed/g;
-  const isChunkLoadFailed = error.message.match(pattern);
-  console.log(router);
-  const targetPath = router.history.pending.fullPath;
-  if (isChunkLoadFailed) {
-    router.replace(targetPath);
-  }
-});
+// router.onError((error) => {
+//   const pattern = /Loading chunk (\d)+ failed/g;
+//   const isChunkLoadFailed = error.message.match(pattern);
+//   console.log(router);
+//   const targetPath = router.history.pending.fullPath;
+//   if (isChunkLoadFailed) {
+//     router.replace(targetPath);
+//   }
+// });
 
 function setDocumentTitle(to) {
   if (window.vm)
     document.title = 'MHFLEX_' + window.vm.$t(`${to.meta.title}`);
 }
 
-const originalPush = VueRoute.prototype.push
-VueRoute.prototype.push = function push(location) {
-  //捕获路由重复点击时出现的异常
-  return originalPush.call(this, location).catch(err => err)
-}
+// const originalPush = VueRoute.prototype.push
+// VueRoute.prototype.push = function push(location) {
+//   //捕获路由重复点击时出现的异常
+//   return originalPush.call(this, location).catch(err => err)
+// }
 export default router;

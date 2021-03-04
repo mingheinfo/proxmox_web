@@ -99,7 +99,6 @@
       PageTemplate
     },
     data() {
-        PageTemplate
       return {
         searchModel: '',
         intervalId: null,
