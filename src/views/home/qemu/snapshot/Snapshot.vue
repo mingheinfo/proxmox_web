@@ -64,6 +64,9 @@
 					    <span class="description">{{it.description && it.description}}</span>
 					</template>
           </label>
+          <p v-if="searchTable.length <=0" style="text-align: center;">
+            <img src="~@images/noata.png"/>
+          </p>
           <el-pagination  class="page-table-pagination"
                           @size-change="(val) => {pageSize = val; currentPage = 1; __init__();current = ''}"
                           @current-change="(val) => {currentPage = val; __init__();current = ''}"

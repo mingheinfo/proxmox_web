@@ -613,7 +613,7 @@ export default {
   cursor: pointer;
   background: #2e3d50;
   border-right: 1px solid #f5f5f5;
-  color: #fff;
+  color: #fff!important;
   &-select {
     margin: 5px 10px;
     position: relative;

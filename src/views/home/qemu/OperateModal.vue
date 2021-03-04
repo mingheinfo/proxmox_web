@@ -1319,7 +1319,7 @@ export default {
       })
     }
   },
-  beforeDestoryed() {
+  beforeDestroy() {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
