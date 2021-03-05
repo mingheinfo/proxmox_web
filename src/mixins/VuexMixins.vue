@@ -14,7 +14,8 @@
         'updateDbObject': 'UPDATE_DB_OBJECT',
         'updateToast': 'UPDATE_TOAST',
         'updateLastSelect': 'UPDATE_LAST_SELECT',
-        'updateChangeTree': 'UPDATE_CHANGE_TREE'
+        'updateChangeTree': 'UPDATE_CHANGE_TREE',
+        'update401Count': 'UPDATE_401_COUNT'
       }),
       ...mapMutations({
         'commitUpateLastSelect': 'UPDATE_LAST_SELECT',

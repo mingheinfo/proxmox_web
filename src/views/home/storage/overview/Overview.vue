@@ -95,7 +95,6 @@ export default {
     SingleLine,
     OverviewCard,
     LinePercentChart,
-    loading: false,
   },
   data() {
     return {
@@ -103,6 +102,7 @@ export default {
       storage: {},
       interval: null,
       timeframe: "hour(AVERAGE)",
+      loading: false,
       intervalList: [
         {
           label: "小时（平均）",

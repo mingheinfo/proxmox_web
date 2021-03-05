@@ -4,6 +4,9 @@ import axios from 'axios';
 import store from '@src/store/'
 function handleError(error, errorTip) {
   if(error.error.response &&error.error.response.status === 401) {
+     let count = window.vm.$store.state.db.response401count++;
+     this.update401Count(count);
+     if(window.vm.$store.state.db.response401count > 5)
       window.location.href='/login'
   }
   if(error.error && error.error.response && error.error.response.statusText) {

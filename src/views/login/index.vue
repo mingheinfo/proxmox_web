@@ -146,6 +146,7 @@
             let lastLink = window.localStorage.getItem("lastLink") || "";
             if(lastLink) {
                this.$router.push({path: lastLink});
+               this.update401Count(0);
             } else {
               //当没有最后登录路由时跳转到地域中心概览页面并将路由赋值给最后登录页面
               this.$router.push({path: '/datacenter/overview'});

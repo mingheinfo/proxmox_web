@@ -110,6 +110,7 @@ const state = {
   lastSelectObj: {},
   changeTree: false,
   treeData: { dataIndex: {}, updateCount: 0 },
+  response401count: 0
 }
 
 const actions = {
@@ -133,6 +134,9 @@ const actions = {
   },
   [types.UPDATE_CHANGE_TREE]:(ctx, payload) => {
     ctx.commit(types.UPDATE_CHANGE_TREE, payload);
+  },
+  [types.UPDATE_401_COUNT]:(ctx, payload) => {
+    ctx.commit(types.UPDATE_401_COUNT, payload);
   }
 }
 
@@ -161,8 +165,12 @@ const mutations = {
   },
   [types.UPDATE_CHANGE_TREE](state, payload) {
     Vue.set(state, 'changeTree', payload);
+  },
+  [types.UPDATE_401_COUNT](state, payload) {
+    Vue.set(state, 'response401count', payload)
   }
 }
+
 
 export default {
   state,
