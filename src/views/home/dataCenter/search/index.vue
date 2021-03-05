@@ -3,7 +3,9 @@
       <div slot="toolbar-right" style="text-align: right;padding-right: 10px;">
         <span class="search-input">
           <m-input placeholder="搜索"
-                   v-model="searchModel"/>
+                   v-model="searchModel">
+            <i slot="prefix" class="el-icon-search"></i>
+          </m-input>
         </span>
       </div>
       <template slot="page-content">

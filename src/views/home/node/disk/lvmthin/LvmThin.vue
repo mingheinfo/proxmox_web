@@ -18,6 +18,7 @@
       <el-table
         :data="db.nodeDiskLvmThinList"
         ref="dataTable"
+				v-loading="loading"
       >
         <el-table-column label="名称" prop="lv">
 					<template slot-scope="scope">
@@ -96,6 +97,7 @@ export default {
     return {
       visible: false,
       title: "创建：Lvm Thinpool",
+      loading: false,
     };
   },
   mounted() {

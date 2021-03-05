@@ -12,15 +12,19 @@ export default {
 	},
 	methods: {
 		queryDiskLvm(param) {
+		  this.loading = true;
 			return this.$http.get(`json/nodes/${this.node}/disks/lvm`, param)
 			           .then(res => {
+			              this.loading = false;
                     if(res.data) {
 											this.updateDbObject({
 												name: 'nodeDiskLvmObj',
 												data: res.data
 											})
 										}
-								 })
+								 }).catch(res => {
+								   this.loading = false;
+        })
 		},
 		queryListNodeDiskList(param) {
 			return this.$http.get(`json/nodes/${this.node}/disks/list`, param)

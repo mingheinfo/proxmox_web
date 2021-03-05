@@ -185,7 +185,7 @@
         <overview-card>
           <div slot="title">CPU利用率</div>
           <template slot="content">
-            <line-graph :param="cpu"></line-graph>
+            <line-graph :param="cpu" v-loading="rrdLoading"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -195,7 +195,7 @@
         <overview-card>
           <div slot="title">服务器负载</div>
           <template slot="content">
-            <line-graph :param="loadavg"></line-graph>
+            <line-graph :param="loadavg" v-loading="rrdLoading"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -203,7 +203,7 @@
         <overview-card>
           <div slot="title">内存使用率</div>
           <template slot="content">
-            <line-graph :param="memory"></line-graph>
+            <line-graph :param="memory" v-loading="rrdLoading"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -211,7 +211,7 @@
     <overview-card>
       <div slot="title">网络流量</div>
       <template slot="content">
-        <line-graph :param="network"></line-graph>
+        <line-graph :param="network" v-loading="rrdLoading"></line-graph>
       </template>
     </overview-card>
     <m-dialog
@@ -275,6 +275,7 @@ export default {
       loadingText: "",
       versionList: [],
       visible: false,
+      rrdLoading: false,
       intervalList: [
         {
           label: "小时（平均）",
@@ -387,14 +388,15 @@ export default {
     __init__() {
       let last = window.localStorage.getItem("lastsel") || "[]";
       this.node = (JSON.parse(last).node && JSON.parse(last).node) || "";
-      this.loading = false;
       this.queryResource();
       this.handleIntervalChange(this.timeframe);
     },
     queryResource() {
+      this.loading = true;
       this.$http
         .get(`/json/nodes/${this.node}/status`)
         .then((res) => {
+          this.loading = false;
           this.baseInfo = res.data;
         })
         .catch((res) => {
@@ -405,11 +407,13 @@ export default {
     queryRrdData() {
       let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
       if(/[\u4e00-\u9fa5]/.test(timeframe) || /[\u4e00-\u9fa5]/.test(cf)) return;
+      this.rrdLoading = true;
       this.$http
         .get(
           `/json/nodes/${this.node}/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${encodeURIComponent(cf)}&_dc=`+ new Date().getTime()
         )
         .then((res) => {
+          this.rrdLoading = false;
           this.cpu = Object.assign({}, this.cpu, {
             value: [
               res.data.map((it) => it.cpu * 100),
@@ -442,7 +446,9 @@ export default {
             func: this.byteToSize,
             time: res.data.map((it) => it.time),
           });
-        });
+        }).catch(res => {
+        this.rrdLoading = false;
+      });
     },
     handleIntervalChange(value) {
       if(/[\u4e00-\u9fa5]/.test(value)) return;
@@ -465,7 +471,7 @@ export default {
   },
   mounted() {
     this.__init__();
-    this.interval = setInterval(() => this.__init__(), 3000);
+    this.interval = setInterval(() => this.__init__(), 60 * 1000);
   },
   beforeDestroy() {
     if (this.interval) clearInterval(this.interval);

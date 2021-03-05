@@ -12,15 +12,19 @@ export default {
 	},
 	methods: {
 		queryDiskLvmThin(param) {
+		  this.loading = true;
 			return this.$http.get(`json/nodes/${this.node}/disks/lvmthin`, param)
 			           .then(res => {
+			               this.loading = false;
                     if(res.data) {
 											this.updateTable({
 												tableName: 'nodeDiskLvmThinList',
 												list: res.data
 											})
 										}
-								 })
+								 }).catch(res => {
+								   this.loading = false;
+        })
 		},
 		queryListNodeDiskList(param) {
 			return this.$http.get(`json/nodes/${this.node}/disks/list`, param)

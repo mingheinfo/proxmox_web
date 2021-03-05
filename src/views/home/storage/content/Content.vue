@@ -38,7 +38,9 @@
       >
     </div>
     <div slot="toolbar-right" style="text-align: right">
-      <m-input placeholder="请输入名称" @input="debounce(handleSearch(), 1000);" v-model="search"/>
+      <m-input placeholder="请输入名称" @input="debounce(handleSearch(), 1000);" v-model="search">
+        <i slot="prefix" class="el-icon-search"></i>
+      </m-input>
     </div>
     <div slot="page-content">
       <el-table

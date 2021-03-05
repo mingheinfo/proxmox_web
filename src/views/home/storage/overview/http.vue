@@ -24,6 +24,7 @@ export default {
     queryRrdData() {
        let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
       if(/[\u4e00-\u9fa5]/.test(timeframe) || /[\u4e00-\u9fa5]/.test(cf)) return;
+      this.loading = true;
       return this.$http
         .get(
           `/json/nodes/${this.storage.node}/storage/${
@@ -42,8 +43,10 @@ export default {
               time: res.data.map((it) => it.time),
             });
           }
+          this.loading = false;
         })
         .catch(() => {
+          this.loading = false;
           this.usedRate = {
             value: [],
             label: ["Total Size", "Used Size"],

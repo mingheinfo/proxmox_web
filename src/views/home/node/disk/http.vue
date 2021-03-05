@@ -13,18 +13,21 @@ export default {
 	},
 	methods: {
 		queryListNodeDiskList() {
+      this.loading = true;
 			return this.$http.get(`json/nodes/${this.node}/disks/list`)
 			           .then(res => {
+                   this.loading = false;
 									 if(res.data) {
 										 this.updateTable({
 											 tableName: 'nodeDiskList',
 											 list: res.data
 										 })
 									 }
-								 })
+								 }).catch(res => {
+								   this.loading = false;
+        })
 		},
 		querySMartList(param) {
-			  this.loading = true;
 				return this.$http.get(`json/nodes/${this.node}/disks/smart`, param)
 			           .then(res => {
 									 if(res.data) {
@@ -32,7 +35,6 @@ export default {
 											 name: 'nodeSmartList',
 											 data: res.data
 										 })
-										 this.loading = false;
 									 }
 								 })
 								 .catch((res) => {

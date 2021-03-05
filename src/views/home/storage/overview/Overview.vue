@@ -76,7 +76,7 @@
     <overview-card style="width: calc(100%)">
       <div slot="title">使用率</div>
       <template slot="content">
-        <line-graph :param="usedRate"></line-graph>
+        <line-graph :param="usedRate" v-loading="loading"></line-graph>
       </template>
     </overview-card>
   </div>
@@ -95,6 +95,7 @@ export default {
     SingleLine,
     OverviewCard,
     LinePercentChart,
+    loading: false,
   },
   data() {
     return {
@@ -216,7 +217,7 @@ export default {
     this.interval = setInterval(() => this.__init__(), 60 * 1000);
   },
   /***
-   * 
+   *
    * 路由跳转之前清除定时任务
   */
   beforeDestroy() {

@@ -12,15 +12,19 @@ export default {
   },
   methods: {
     queryDiskZfs(param) {
+      this.loading = true;
       return this.$http
         .get(`json/nodes/${this.node}/disks/zfs`, param)
         .then((res) => {
+          this.loading = false;
           if (res.data) {
             this.updateTable({
               tableName: "nodeDiskZfsList",
               list: res.data,
             });
           }
+        }).catch(res => {
+          this.loading = false;
         });
     },
     queryListNodeDiskList(param) {

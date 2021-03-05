@@ -11,6 +11,7 @@
         :data="db.nodeDiskList"
         ref="dataTable"
         @selection-change="handleSelect"
+        v-loading="loading"
       >
         <el-table-column type="selection" width="55" prop="pos"></el-table-column>
 				<el-table-column width="55" prop="pos"></el-table-column>
@@ -147,7 +148,8 @@ export default {
 			isGroup: false,
 			showLog: false,
 			interVal: null,
-			tab: 'log'
+			tab: 'log',
+      loading: false
     };
   },
   mounted() {
@@ -188,7 +190,7 @@ export default {
       this.stopTask(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
 		},
 		renderUsed(value) {
-			  if(!value) return; 
+			  if(!value) return;
 		    if (value.osdid >= 0) {
 			    let bluestore = '';
 			   if (value.bluestore === 1) {

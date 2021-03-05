@@ -20,6 +20,7 @@
         ref="dataTable"
         :row-key="setRowKeys"
         :expand-row-keys="expands"
+        v-loading="loading"
 				:tree-props="{children: 'children'}">
       >
         <el-table-column label="名称" prop="name">
@@ -67,7 +68,7 @@ import NodeDiskLvmHttp from "@src/views/home/node/disk/lvm/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import { percentToFixed, byteToSize } from '@libs/utils/index';
-import CreateVolumeGroupModal from './CreateVolumeModal'; 
+import CreateVolumeGroupModal from './CreateVolumeModal';
 export default {
   name: "Lvm",
   mixins: [NodeDiskLvmHttp],
@@ -83,6 +84,7 @@ export default {
       title: "创建：Lvm Volume Group",
       selectedList: [],
 			expands: [],
+      loading: false
     };
   },
   mounted() {
@@ -103,7 +105,7 @@ export default {
     //按钮是否可点击
     inStatus() {
       return this.selectedList.length !== 1;
-    },  
+    },
     expandChange(row, expandedRows) {
       var that = this;
       if (expandedRows.length) {

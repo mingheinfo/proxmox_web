@@ -253,7 +253,9 @@
               <div v-if="!isTemplate && hasSnapshots" style="margin: 0px 0px 10px 10px; display: flex;justify-content: space-between;">
                 <div>快照</div>
                 <div>
-                  <m-input placeholder="请输入快照名称" @input="debounce(searchSnapshot(), 1000);" v-model="snaphot"/>
+                  <m-input placeholder="请输入快照名称" @input="debounce(searchSnapshot(), 1000);" v-model="snaphot">
+                    <i slot="prefix" class="el-icon-search"></i>
+                  </m-input>
                 </div>
               </div>
               <el-table

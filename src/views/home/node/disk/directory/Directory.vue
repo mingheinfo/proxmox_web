@@ -18,6 +18,7 @@
       <el-table
         :data="db.nodeDiskDirectoryList"
         ref="dataTable"
+        v-loading="loading"
       >
         <el-table-column label="路径" prop="path"></el-table-column>
         <el-table-column label="设备" prop="device"></el-table-column>
@@ -42,7 +43,7 @@ import NodeDiskDirectoryHttp from "@src/views/home/node/disk/directory/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import { percentToFixed, byteToSize } from '@libs/utils/index';
-import CreateDirectoryModal from './CreateDirectoryModal'; 
+import CreateDirectoryModal from './CreateDirectoryModal';
 export default {
   name: "Lvm",
   mixins: [NodeDiskDirectoryHttp],
@@ -56,6 +57,7 @@ export default {
     return {
       visible: false,
       title: "创建：Lvm Directory",
+      loading: false,
     };
   },
   mounted() {

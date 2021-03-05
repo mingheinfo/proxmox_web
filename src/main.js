@@ -16,7 +16,7 @@ import Fragment from 'vue-fragment';
 Vue.use(Fragment.Plugin)
 // or
 
-import { Plugin } from 'vue-fragment'
+import { Plugin } from 'vue-fragment';
 Vue.use(Plugin)
 Vue.directive('confirm', directives);
 Vue.directive('slldrag', directives);

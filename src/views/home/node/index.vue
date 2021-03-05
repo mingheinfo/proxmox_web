@@ -35,7 +35,7 @@
            <router-view/>
          </div>
        </m-scrollbar>
-       <node-select-modal 
+       <node-select-modal
            :visible="visible"
            v-if="visible"
            :param="nodeModalParam"
@@ -101,7 +101,7 @@
       },
       handleClose() {
         this.$http.post(`/json/nodes/${this.node}/status`, {
-          command: 'stop'
+          command: 'shutdown'
         }, {
           headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         })

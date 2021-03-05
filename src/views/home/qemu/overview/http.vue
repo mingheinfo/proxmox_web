@@ -5,8 +5,10 @@ export default {
 		 queryRrdData() {
        let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
        if(/[\u4E00-\u9FA5]/.test(timeframe) || /[\u4E00-\u9FA5]/.test(cf)) return;
+       this.rrdLoading = true;
         this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/rrddata?timeframe=${encodeURIComponent(timeframe)}&cf=${encodeURIComponent(cf)}`)
           .then(res => {
+            this.rrdLoading = false;
             this.cpu = Object.assign({}, this.cpu, {
               value: [res.data.map(it => it.cpu ? it.cpu * 100 : 0)],
               color: this.colors,
@@ -30,7 +32,9 @@ export default {
               func: this.byteToSize,
               time: res.data.map(it => it.time)
             })
-          })
+          }).catch((rse) => {
+          this.rrdLoading = false;
+        })
 			},
       queryConfig() {
         return this.$http.get(`/json/nodes/${this.node.node}/${this.node.id}/config?_dc=${new Date().getTime()}`)
@@ -62,10 +66,11 @@ export default {
      * 查询资源
     */
     queryResource() {
-       this.loading = false;
+       this.loading = true;
       return this.$http
         .get(`/json/nodes/${this.node.node}/${this.node.id}/status/current`)
         .then((res) => {
+          this.loading = false;
 					this.updateDbObject({
 						name: 'qemuObj',
 						data: res.data

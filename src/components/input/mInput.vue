@@ -170,6 +170,8 @@ export default {
 		__style() {
 			  if(this.type==='number')
 				   return Object.assign({padding: '0 10px 0px 10px'}, this._style)
+				else if(this.$slots['prefix'])
+				   return Object.assign({padding: '0 10px 0px 25px'}, this._style)
 				else
 				return this._style
 		}
@@ -333,5 +335,12 @@ export default {
 			color: #f56c6c;
 			margin-right: 4px;
 		}
+	}
+	.prefix{
+		display: inline-block;
+		position: absolute;
+		left: 5px;
+		top: 5px;
+
 	}
 </style>

@@ -12,15 +12,19 @@ export default {
 	},
 	methods: {
 		queryDiskDirectory(param) {
+      this.loading = true;
 			return this.$http.get(`json/nodes/${this.node}/disks/directory`, param)
 			           .then(res => {
+                   this.loading = false;
                     if(res.data) {
 											this.updateTable({
 												tableName: 'nodeDiskDirectoryList',
 												list: res.data
 											})
 										}
-								 })
+								 }).catch(res => {
+          this.loading = false;
+        })
 		},
 		queryListNodeDiskList(param) {
 			return this.$http.get(`json/nodes/${this.node}/disks/list`, param)

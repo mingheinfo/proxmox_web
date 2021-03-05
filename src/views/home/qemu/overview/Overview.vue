@@ -115,7 +115,7 @@
         <overview-card>
           <div slot="title">CPU利用率</div>
           <template slot="content">
-            <line-graph :param="cpu"></line-graph>
+            <line-graph :param="cpu" v-loading="rrdLoading"></line-graph>
           </template>
         </overview-card>
       </div>
@@ -125,7 +125,7 @@
          <overview-card>
       <div slot="title">内存利用率</div>
       <template slot="content">
-        <line-graph :param="memory"></line-graph>
+        <line-graph :param="memory"  v-loading="rrdLoading"></line-graph>
       </template>
         </overview-card>
       </div>
@@ -133,7 +133,7 @@
         <overview-card>
       <div slot="title">网络流量</div>
       <template slot="content">
-        <line-graph :param="network"></line-graph>
+        <line-graph :param="network"  v-loading="rrdLoading"></line-graph>
       </template>
     </overview-card>
       </div>
@@ -141,7 +141,7 @@
     <overview-card v-if="!isTempalte">
       <div slot="title">磁盘IO</div>
       <template slot="content">
-        <line-graph :param="disk"></line-graph>
+        <line-graph :param="disk"  v-loading="rrdLoading"></line-graph>
       </template>
     </overview-card>
     <Dialog
@@ -191,6 +191,7 @@ export default {
       loading: false,
       loadingText: "",
       isTempalte: false,
+      rrdLoading: false,
       intervalList: [
         {
           label: "小时（平均）",

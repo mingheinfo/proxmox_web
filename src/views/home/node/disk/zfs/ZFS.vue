@@ -26,6 +26,7 @@
         :data="db.nodeDiskZfsList"
         ref="dataTable"
 				@selection-change="handleSelect"
+				v-loading="loading"
       >
 			  <el-table-column type="selection" width="55px"></el-table-column>
         <el-table-column label="名称" prop="name"></el-table-column>
@@ -77,9 +78,9 @@ import NodeDiskZfsHttp from "@src/views/home/node/disk/zfs/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
 import { percentToFixed, byteToSize } from '@libs/utils/index';
-import CreateZfsModal from './CreateZfsModal'; 
+import CreateZfsModal from './CreateZfsModal';
 export default {
-  name: "Lvm", 
+  name: "Lvm",
   mixins: [NodeDiskZfsHttp],
   components: {
     PageTemplate,
@@ -93,7 +94,8 @@ export default {
 			title: "创建：Lvm Directory",
 			type: '',
 			param: {},
-			selectedList: []
+			selectedList: [],
+			loading: false
     };
   },
   mounted() {
