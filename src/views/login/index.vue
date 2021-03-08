@@ -144,9 +144,12 @@
             window.localStorage.setItem('ticket', JSON.stringify(res.data) || '');
             //当有最后登录的路由时跳转到次路由
             let lastLink = window.localStorage.getItem("lastLink") || "";
+            this.update401Count({
+              'response401count': 0,
+              'silenceAuthFailures': true
+            });
             if(lastLink) {
                this.$router.push({path: lastLink});
-               this.update401Count(0);
             } else {
               //当没有最后登录路由时跳转到地域中心概览页面并将路由赋值给最后登录页面
               this.$router.push({path: '/datacenter/overview'});
@@ -156,8 +159,12 @@
           this.loading = false;
         }).catch(() => {
           this.invalidpassword = true;
-           this.invalidusername = true;
+          this.invalidusername = true;
           this.loading = false;
+           this.update401Count({
+              'response401count': 0,
+              'silenceAuthFailures': false
+            });
         })
       },
       //改变国际化

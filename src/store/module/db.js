@@ -110,7 +110,10 @@ const state = {
   lastSelectObj: {},
   changeTree: false,
   treeData: { dataIndex: {}, updateCount: 0 },
-  response401count: 0
+  exceptionLogin: {
+    response401count: 0,
+    silenceAuthFailures: false
+  }
 }
 
 const actions = {
@@ -167,7 +170,12 @@ const mutations = {
     Vue.set(state, 'changeTree', payload);
   },
   [types.UPDATE_401_COUNT](state, payload) {
-    Vue.set(state, 'response401count', payload)
+    if(payload.silenceAuthFailures && payload.silenceAuthFailures !== state.silenceAuthFailures) {
+      Vue.set(state, 'exceptionLogin', {silenceAuthFailures: payload.silenceAuthFailures})
+    }
+    if(payload.response401count) {
+      Vue.set(state, 'exceptionLogin', {response401count: payload.response401count})
+    }
   }
 }
 
