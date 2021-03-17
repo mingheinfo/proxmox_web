@@ -143,6 +143,10 @@
               label="名称"
               labelWidth="100px"
               prop="name"
+              validateEvent
+              @validate="validate"
+              :show-error="rules['name'].error"
+              :error-msg="rules['name'].message"
               v-model="name"
           />
 
@@ -345,6 +349,10 @@
             error: false,
             message: "",
           },
+          name: {
+            error: false,
+            message: ""
+          }
         },
       }
     },
@@ -442,7 +450,7 @@
         let value = String(this[prop]).trim();
         this.rules[prop].message = "";
         this.rules[prop].error = false;
-        if (/^\s*$/.test(value)) {
+        if (prop !== 'name' && /^\s*$/.test(value)) {
           this.rules[prop].message = "不能为空!";
           this.rules[prop].error = true;
           return;
@@ -453,6 +461,11 @@
             this.rules[prop].error = true;
             return;
           }
+        }
+        if(prop=== 'name' && /^[^a-zA-Z0-9]|[\u4e00-\u9fa5]/.test(this.name)) {
+          this.rules[prop].message = `名称不合法!`;
+          this.rules[prop].error = true;
+          return;
         }
       },
       /***

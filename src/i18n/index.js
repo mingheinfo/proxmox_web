@@ -10,7 +10,7 @@ const messages = {
   "en": Object.assign(en)
 }
 let i18n = new VueI18n({
-  locale: getCookie("PVELangCookie"),
+  locale: getCookie("PVELangCookie") || 'zh_CN',
   messages: messages
 })
 

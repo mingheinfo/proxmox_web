@@ -368,6 +368,10 @@
                 label="名称"
                 labelWidth="100px"
                 prop="name"
+                @validate="validate"
+                validateEvent
+                :show-error="rules['name'].error"
+                :error-msg="rules['name'].message"
                 v-model="name"
               />
 
@@ -793,6 +797,10 @@ export default {
           error: false,
           message: "",
         },
+        name: {
+          error: false,
+          message: ''
+        }
       },
     };
   },
@@ -1082,10 +1090,11 @@ export default {
      * 校验
      */
     validate(prop) {
+      debugger;
       let value = String(this[prop]).trim();
       this.rules[prop].message = "";
       this.rules[prop].error = false;
-      if (/^\s*$/.test(value)) {
+      if (prop !== 'name' && /^\s*$/.test(value)) {
         this.rules[prop].message = "不能为空!";
         this.rules[prop].error = true;
         return;
@@ -1093,6 +1102,13 @@ export default {
       if (this.modalType === "clone" && prop === "nodename") {
         if (this.qemu.type === "qemu" && this.nodename !== this.qemu.node) {
           this.rules[prop].message = `${this.nodename}不允许此操作!`;
+          this.rules[prop].error = true;
+          return;
+        }
+      }
+      if(this.modalType === 'clone' && prop === 'name') {
+        if(/^[^a-zA-Z0-9]|[\u4e00-\u9fa5]/.test(this.name)) {
+          this.rules[prop].message = `名称不合法!`;
           this.rules[prop].error = true;
           return;
         }

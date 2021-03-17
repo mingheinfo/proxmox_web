@@ -72,7 +72,7 @@
     data() {
       return {
         realm: '',
-        lang: getCookie('PVELangCookie') || setCookie('PVELangCookie','zh_CN'),//设置默认展示语言
+        lang: getCookie('PVELangCookie') || setCookie('PVELangCookie','zh_CN') || 'zh_CN',//设置默认展示语言
         loading: false,
         realmList: [],
         //语言选择框

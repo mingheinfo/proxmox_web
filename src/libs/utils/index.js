@@ -444,8 +444,18 @@ function openVNCViewer(vmtype, vmid, nodename, vmname, novnc) {
   for (let it in options) {
     url += encodeURIComponent(it) + '=' + encodeURIComponent(options[it]) + '&';
   }
-  var nw = window.open("/shell/?" + url.slice(0, url.length - 1), '_blank', "innerWidth=745,innerheight=427");
-  nw && nw.focus();
+  var dlink = document.createElement('a');
+  dlink.setAttribute('type', 'hidden');
+  dlink.setAttribute('target', '_blank');
+  dlink.href = "/shell/?" + url.slice(0, url.length - 1);
+  document.body.appendChild(dlink);
+  dlink.click();
+  dlink.remove() 
+  // a.setAttribute('href', "/shell/?" + url.slice(0, url.length - 1));  
+  // a.setAttribute('target', '_blank');  
+  // a.click();  
+  //var nw = window.open("/shell/?" + url.slice(0, url.length - 1), '_blank', "innerWidth=745,innerheight=427");
+  //nw && nw.focus();
 }
 
 function windowHostname() {
