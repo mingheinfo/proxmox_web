@@ -1583,6 +1583,78 @@ function ieVersion() {
   }
 }
 
+/**
+ * 精确加法
+ */
+function add(num1, num2) {
+  const num1Digits = (num1.toString().split('.')[1] || '').length;
+  const num2Digits = (num2.toString().split('.')[1] || '').length;
+  const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+  return (num1 * baseNum + num2 * baseNum) / baseNum;
+};
+/**
+ * 精确减法
+ * **/
+function subtract(num1, num2) {
+  const num1Digits = (num1.toString().split('.')[1] || '').length;
+  const num2Digits = (num2.toString().split('.')[1] || '').length;
+  const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+  return (num1 * baseNum - num2 * baseNum) / baseNum;
+}
+
+/**
+ * 精确乘法
+ * @param {arg1} 表示浮点数
+ * @param {arg2} 表示浮点数
+ * 小数点等于每个乘数的小数点位数相加
+ * **/
+function multiply(arg1, arg2) {
+  //m表示有多少个小数点
+  var m=0,s1=arg1.toString(),s2=arg2.toString();  
+  try
+  {
+    m+=s1.split(".")[1].length
+  }
+  catch(e)
+  {
+    
+  }  
+  try{
+    m+=s2.split(".")[1].length
+  }
+  catch(e)
+  {
+
+  }  
+  return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m);  
+}
+
+/**
+ * 精确除法
+ * **/
+function divide(arg1, arg2) {
+  var t1=0,t2=0,r1,r2;  
+  try
+  {
+    t1=arg1.toString().split(".")[1].length
+  }
+  catch(e)
+  {
+
+  }  
+  try
+  {
+    t2=arg2.toString().split(".")[1].length
+  }
+  catch(e)
+  {
+
+  }  
+  r1=Number(arg1.toString().replace(".",""));  
+  r2=Number(arg2.toString().replace(".",""));  
+  return (r1/r2)*Math.pow(10,t2-t1);   
+};
+
 export {
   getEvent,
   stopEvent,
@@ -1661,5 +1733,9 @@ export {
   getUniqueObj,
   hasClass,
   isIE,
-  ieVersion
+  ieVersion,
+  add,
+  subtract,
+  multiply,
+  divide
 }

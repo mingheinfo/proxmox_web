@@ -33,8 +33,8 @@
                 style="
                   display: inline-block;
                   position: absolute;
-                  top: -11px;
-                  left: -1px;
+                  top: -16px;
+                  left: -6px;
                   height: 100%;
                 "
               >
