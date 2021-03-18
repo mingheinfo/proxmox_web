@@ -3,14 +3,13 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HappyPack = require('happypack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const {VueLoaderPlugin} = require('vue-loader');
 const manifest = require('../vendor-manifest.json');
 //拆分三方库并将其注入到html中
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const os = require('os');
 //开启线程
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-const app = require('express')();
 
 function resolve(dirname) {
   return path.resolve(__dirname,  dirname);
@@ -35,8 +34,7 @@ module.exports = {
       loader: 'happypack/loader?id=happyBabel',
     },{
       test: /\.(vue)$/,
-        //'happypack/loader?id=happyVue',
-      loader: "vue-loader"
+      loader: 'vue-loader'
     },{
       test: /\.(c|le)ss$/,
       use: [
@@ -123,14 +121,14 @@ module.exports = {
       loaders: [{
         loader: 'vue-loader',
         options: {
-          // babelrc: true,
-          //cacheDirectory: true // 启用缓存
+           babelrc: true,
+           cacheDirectory: true // 启用缓存
         }
       }],
       //代表共享进程池，即多个 HappyPack 实例都使用同一个共享进程池中的子进程去处理任务，以防止资源占用过多。
       threadPool: happyThreadPool,
       //允许 HappyPack 输出日志
-      verbose: false,
+      verbose: false
     }),
     new HappyPack({
       id: 'happyStyle',

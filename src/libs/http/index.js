@@ -10,7 +10,7 @@ function handleError(error, errorTip) {
        window.location.href='/login';
      }
      //当用户鉴权失败后为了良好的用户体验，先不要直接跳转到登录页面
-     if(window.vm.$store.state.db.response401count > 5 && window.vm.$store.state.db.exceptionLogin.silenceAuthFailures) {
+     if(window.vm.$store.state.db.exceptionLogin.response401count > 5 && window.vm.$store.state.db.exceptionLogin.silenceAuthFailures) {
       window.location.href='/login';
       window.vm.$store.dispatch('UPDATE_401_COUNT', {silenceAuthFailures: false});
      }

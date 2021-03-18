@@ -140,7 +140,7 @@
         this.$refs.mSubTree.forEach((item) => {
           item.resetSelect(node);
         });
-        //跳转到选中树对应的路由
+        //跳转到选中树对应的路由;
         _this.linkTo(node);
         _this.$parent.selectById(node.id, node);
         //设置最终后选中的树节点

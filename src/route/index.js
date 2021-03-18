@@ -880,7 +880,7 @@ const router = new VueRoute({
   ]
 })
 
-
+//路由钩子中进行鉴权或者token验证
 router.beforeEach((to, from, next) => {
   store.commit('CLEAR_CANCEL_REQUEST') // 取消请求
   next();
@@ -889,7 +889,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   setDocumentTitle(to);
 })
-
+//路由钩子中进行鉴权或者token验证
 router.onError((error) => {
   const pattern = /Loading chunk (\d)+ failed/g;
   const isChunkLoadFailed = error.message.match(pattern);
