@@ -301,6 +301,7 @@
   "datacenter-firewall-group": "安全组",
   "datacenter-firewall-alias": "别名",
   "datacenter-firewall-ipset": "IPSet",
+  "datacenter-help": "快照克隆帮助",
   "certificates": {
     "filename": "名称",
     "notafter": "有效期至",

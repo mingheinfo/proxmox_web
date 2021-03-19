@@ -13,6 +13,7 @@ import VueMixins from '@src/mixins/VuexMixins';
 import VueLazyload from 'vue-lazyload';
 import directives from '@src/directives/directive';
 import Fragment from 'vue-fragment';
+import showdown from 'showdown'// 引入md文件
 Vue.use(Fragment.Plugin)
 // or
 
@@ -35,6 +36,14 @@ Vue.use(Element);
 Vue.mixin(VueMixins)
 //全局印日http请求
 Vue.prototype.$http = http;
+ 
+// 使用md文件
+Vue.prototype.md2html = (md)=> {
+  let converter = new showdown.Converter();
+  let text = md.toString();
+  let html = converter.makeHtml(text);
+  return html
+};
 window.vm = new Vue({
   el: '#root',
   store,

@@ -77,7 +77,21 @@ module.exports = {
         name: isDevMode ? 'font/[name].[hash:4].[ext]' : 'mhflex/font/[name].[hash:4].[ext]',
         esModule: false
       }
-    }]
+    },
+    {
+      test: /\.md$/,
+      use: [
+         { 
+           loader: 'vue-loader'
+         },
+         { 
+           loader: 'vue-markdown-loader/lib/markdown-compiler',
+           options: {
+            raw: true
+          }
+        }
+      ]
+   }]
   },
   resolve: {
     extensions: ['.js', '.vue', '.less', '.css'],

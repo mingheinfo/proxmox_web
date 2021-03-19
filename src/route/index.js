@@ -609,6 +609,12 @@ const router = new VueRoute({
           children:
             [
               {
+                path: 'help',
+                component: r => {
+                  require.ensure([], () => r(require('@view/help/index.vue')), 'Home')
+                }
+              },
+              {
                 path: 'overview',
                 name: 'qemu-overview',
                 component: r => {

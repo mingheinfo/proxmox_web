@@ -476,6 +476,12 @@ const qemuMenuList = [
     title: 'access',
     key: 'qemu-access',
     icon: 'fa fa-unlock'
+  },
+  {
+    path: '/qemu/help',
+    name: 'datacenter-help',
+    title: 'datacenter-help',
+    icon: 'fa fa-book'
   }
 ]
 /**
