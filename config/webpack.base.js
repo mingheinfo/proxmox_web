@@ -1,12 +1,13 @@
 const webpack = require('webpack');
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin       = require("mini-css-extract-plugin");
 const HappyPack = require('happypack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
+const HtmlWebpackPlugin          = require('html-webpack-plugin');
+const {VueLoaderPlugin}          = require('vue-loader');
 const manifest = require('../vendor-manifest.json');
 //拆分三方库并将其注入到html中
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const AddAssetHtmlPlugin         = require('add-asset-html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const os = require('os');
 //开启线程
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
@@ -108,6 +109,9 @@ module.exports = {
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: isDevMode ? 'css/[name].[hash:16].css' : '/mhflex/css/[name].[hash:16].css'
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'defer'
     }),
     new HappyPack({
       id: 'happyBabel',

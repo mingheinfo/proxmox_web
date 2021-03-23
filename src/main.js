@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import App from './App';
 import { http } from '@libs/http/index';
-import { isIE } from '@libs/utils/index.js'
 import store from './store/index';
 import router  from  './route/index';
 import '@src/style/font-awasome.less';

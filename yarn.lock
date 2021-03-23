@@ -3820,7 +3820,7 @@ debug@^3.1.0, debug@^3.1.1, debug@^3.2.6:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.1.0, debug@^4.1.1:
+debug@^4.1.0, debug@^4.1.1, debug@^4.2.0:
   version "4.3.1"
   resolved "https://registry.npm.taobao.org/debug/download/debug-4.3.1.tgz?cache=0&sync_timestamp=1607566537361&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdebug%2Fdownload%2Fdebug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
   integrity sha1-8NIpxQXgxtjEmsVT0bE9wYP2su4=
@@ -9432,6 +9432,13 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.6"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+script-ext-html-webpack-plugin@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.npm.taobao.org/script-ext-html-webpack-plugin/download/script-ext-html-webpack-plugin-2.1.5.tgz?cache=0&sync_timestamp=1603731479549&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fscript-ext-html-webpack-plugin%2Fdownload%2Fscript-ext-html-webpack-plugin-2.1.5.tgz#d4a57e43b04aaf531f675c935688c3971bfafc6c"
+  integrity sha1-1KV+Q7BKr1MfZ1yTVojDlxv6/Gw=
+  dependencies:
+    debug "^4.2.0"
 
 select-hose@^2.0.0:
   version "2.0.0"
