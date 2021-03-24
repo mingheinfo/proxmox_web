@@ -15,7 +15,8 @@ const actions = {
 
 const mutations= {
   [types.ADD_CANCEL_REQUEST]: (state, payload) => {
-    state.allResList.push(payload.cancelToken)
+    state.allResList.push(payload.cancelToken);
+    console.log(state.allResList);
   },
   [types.CLEAR_CANCEL_REQUEST]: (ctx, payload) => {
     if(state.allResList.length > 0)

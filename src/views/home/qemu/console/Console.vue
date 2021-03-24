@@ -1,6 +1,6 @@
 <template>
   <div ref="m-shell">
-    	<iframe ref ="shell" :src="`/shell/?console=${node.type === 'qemu' ? 'kvm' : 'lxc'}&vmid=${node.vmid}&node=${node.node}&resize=scale&novnc=1`" width="100%" height="100%"></iframe>
+    	<iframe ref ="shell" :src="src" width="100%" height="100%"></iframe>
 	</div>
 </template>
 
@@ -10,14 +10,16 @@
 		data() {
     return {
       node: {},
+      src: ''
     };
   },
   mounted() {
     let _this = this,
       last = window.localStorage.getItem("lastsel") || "[]";
        _this.node = (JSON.parse(last) && JSON.parse(last)) || "";
-			this.$refs.shell.style.height = this.$refs['m-shell'].parentNode.clientHeight + 'px';
-			window.addEventListener('resize', this.setShellHeight, false)
+       _this.src = `/shell/?console=${_this.node.type === 'qemu' ? 'kvm' : 'lxc'}&vmid=${_this.node.vmid}&node=${_this.node.node}&resize=scale&novnc=1`
+			 _this.$refs.shell.style.height = _this.$refs['m-shell'].parentNode.clientHeight + 'px';
+		 	 window.addEventListener('resize', _this.setShellHeight, false)
 	 },
     methods: {
       setShellHeight() {

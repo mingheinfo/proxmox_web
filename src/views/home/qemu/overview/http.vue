@@ -76,7 +76,7 @@ export default {
 						data: res.data
 					})
         }).catch((res) => {
-          this.loading = true;
+          this.loading = false;
           this.loadingText = res;
         });
     },

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRoute from 'vue-router';
-import store from '@src/store/';
+import { clearPending } from '@libs/http';
 //vue.install安装VueRoute
 Vue.use(VueRoute);
 //路由配置
@@ -888,7 +888,8 @@ const router = new VueRoute({
 
 //路由钩子中进行鉴权或者token验证
 router.beforeEach((to, from, next) => {
-  store.commit('CLEAR_CANCEL_REQUEST') // 取消请求
+  //路由跳转时取消上个页面未完成的请求
+  clearPending();
   next();
 })
 

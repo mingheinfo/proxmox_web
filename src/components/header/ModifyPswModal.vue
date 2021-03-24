@@ -134,6 +134,6 @@ export default {
 .modify-form{
 	margin: 0 auto;
   width: 325px;
-  margin-top: 45px;
+  margin-top: 20px;
 }
 </style>
