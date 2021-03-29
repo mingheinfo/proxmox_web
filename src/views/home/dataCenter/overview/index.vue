@@ -473,8 +473,10 @@ export default {
     this.intervalId = setInterval(() => this.__init__(), 3000);
   },
   beforeDestroy() {
-    clearInterval(this.intervalId);
-    this.intervalId = null;
+    if(this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   },
 };
 </script>

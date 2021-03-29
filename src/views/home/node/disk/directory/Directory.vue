@@ -3,7 +3,7 @@
     <div slot="toolbar-left">
       <m-button
         type="primary"
-        @on-click="__init__()"
+        @on-click="refresh"
         icon="el-icon-refresh"
         >重载</m-button
       >
@@ -42,7 +42,7 @@ import LinePercentChart from '@src/components/chart/line/LineCharts';
 import NodeDiskDirectoryHttp from "@src/views/home/node/disk/directory/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { percentToFixed, byteToSize } from '@libs/utils/index';
+import { percentToFixed, byteToSize, debounce } from '@libs/utils/index';
 import CreateDirectoryModal from './CreateDirectoryModal';
 export default {
   name: "Lvm",
@@ -70,6 +70,7 @@ export default {
     __init__() {
       this.queryDiskDirectory();
     },
+    refresh: debounce(function() {this.__init__()}, 500),
     //是否展示弹框
     showModal() {
       this.title = "创建：Lvm Directory";

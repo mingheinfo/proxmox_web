@@ -1,19 +1,8 @@
-<template>
-  <div class="m-scroll-wrapper">
-    <div class="m-scroll-view"  @scroll="onScroll">
-      <slot></slot>
-    </div>
-    <div class="m-scroll-bar" v-show="showScrollbar" :style="{ top: scrollTop + 'px', height: scrollLength + 'px' }" @mousedown="onScrollBarMouseDown($event)"></div>
-  </div>
-</template>
-
 <script>
-
+  import { throttle } from '@libs/utils/index'
   export default {
     name: 'm-scrollbar',
     mounted: function () {
-      this.scrollElementSelector = '.m-scroll-view';
-      this.scrollContainerSelector =  '.m-scroll-wrapper';
       //初始化滚动条
       this.initScrollbar()
     },
@@ -24,7 +13,7 @@
       } else {
         console.error(`${this.$options.name} calls destroyed twice!`)
       }
-      window.removeEventListener('resize', this.computeScroll)
+      window.removeEventListener('resize', throttle(this.computeScroll, 200))
     },
     data () {
       return {
@@ -45,7 +34,7 @@
         if (this.scrollContainerObserver) {
           this.scrollContainerObserver.disconnect()
           this.scrollContainerObserver = null
-          window.removeEventListener('resize', this.computeScroll)
+          window.removeEventListener('resize', throttle(this.computeScroll, 200))
         }
         let self = this
         let stopInterval = setInterval(() => {
@@ -64,17 +53,17 @@
           })
           //监听容器中元素的变化
           // pass in the target node, as well as the observer options
-          self.scrollContainerObserver.observe(self.scrollContainer, { childList: true, subtree: true })
+          self.scrollContainerObserver.observe(self.scrollContainer, { childList: true, subtree: true });
           // self.computeScroll()
           // late 1 ms to compute scroll. Several windows don't ready at this time.
           setTimeout(self.computeScroll, 1)
           window.addEventListener('resize', this.computeScroll)
         }, 0)
       },
-      onScroll: function ($event) {
+      onScroll: throttle(function($event) {
         this.scrollLength = $event.target.parentElement.clientHeight * $event.target.parentElement.clientHeight / $event.target.scrollHeight
         this.scrollTop = $event.target.scrollTop / $event.target.scrollHeight * $event.target.parentElement.clientHeight
-      },
+      },20),
       computeScroll: function () {
         if (this.startDrag) return
         //当滚动条的高度大于可视区的高度时证明出现滚动条
@@ -114,30 +103,4 @@
 </script>
 
 <style scoped lang="less">
-  .m-scroll-bar {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    right: 4px;
-    bottom: 0;
-    height: 20px;
-    width: 8px;
-    background-color: #9ea7b4;
-    border-radius: 2px;
-  }
-  .m-scroll-wrapper{
-    width: 100%;
-    overflow: hidden;
-    height: 100%;
-  }
-  .m-scroll-view{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    width: calc(100% + 20px);
-    padding-right: 20px;
-  }
 </style>

@@ -235,7 +235,7 @@ export default {
     },
     //增加磁盘大小
     updateHardWareSize(param) {
-     let event = this.createEvent("action.qemu.hardware.update.size");
+     let event = this.createEvent("action.qemu.hardware.size.update");
       return this.$http
         .put(`json/nodes/${this.node.node}/${this.node.id}/resize`, param, {
           headers: {

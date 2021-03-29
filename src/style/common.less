@@ -1126,3 +1126,30 @@ ul {
   margin-right: -16px;
 }
 
+.m-scroll-bar {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 4px;
+  bottom: 0;
+  height: 20px;
+  width: 8px;
+  background-color: #9ea7b4;
+  border-radius: 2px;
+}
+.m-scroll-wrapper{
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+}
+.m-scroll-view{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: calc(100% + 20px);
+  padding-right: 20px;
+}
+

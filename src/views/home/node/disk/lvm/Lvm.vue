@@ -3,7 +3,7 @@
     <div slot="toolbar-left">
       <m-button
         type="primary"
-        @on-click="__init__()"
+        @on-click="refresh"
         icon="el-icon-refresh"
         >重载</m-button
       >
@@ -67,7 +67,7 @@ import LinePercentChart from '@src/components/chart/line/LineCharts';
 import NodeDiskLvmHttp from "@src/views/home/node/disk/lvm/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { percentToFixed, byteToSize } from '@libs/utils/index';
+import { percentToFixed, byteToSize, throttle } from '@libs/utils/index';
 import CreateVolumeGroupModal from './CreateVolumeModal';
 export default {
   name: "Lvm",
@@ -93,6 +93,7 @@ export default {
   methods: {
 		percentToFixed,
 		byteToSize,
+    refresh: throttle(function() {this.__init__()}, 500),
     //初始化查找
     __init__() {
       this.queryDiskLvm({ _dc: new Date().getTime() });

@@ -21,7 +21,6 @@ const addPending = (config) => {
       pending.set(url, cancel)
     }
   })
-  console.log(pending);
 }
 /**
  * 移除请求
@@ -43,7 +42,7 @@ const removePending = (config) => {
 /**
  * 清空 pending 中的请求（在路由跳转时调用）
  */
-export const clearPending = () => {
+const clearPending = () => {
   for (const [url, cancel] of pending) {
     cancel(url)
   }
@@ -53,13 +52,10 @@ export const clearPending = () => {
 
 function handleError(error, errorTip) {
   if(error.error.response &&error.error.response.status === 401) {
-     let count = window.vm.$store.state.db.exceptionLogin.response401count;
+     let count = window.vm.$store.state.db.exceptionLogin.response401count || 0;
      window.vm.$store.dispatch('UPDATE_401_COUNT', {response401count: ++count});
-     if(!window.vm.$store.state.db.exceptionLogin.silenceAuthFailures) {
-       window.location.href='/login';
-     }
      //当用户鉴权失败后为了良好的用户体验，先不要直接跳转到登录页面
-     if(window.vm.$store.state.db.exceptionLogin.response401count > 5 && window.vm.$store.state.db.exceptionLogin.silenceAuthFailures) {
+     if(window.vm.$store.state.db.exceptionLogin.response401count > 5) {
       window.location.href='/login';
       window.vm.$store.dispatch('UPDATE_401_COUNT', {silenceAuthFailures: false});
      }
@@ -85,19 +81,10 @@ http.instance.interceptors.request.use(cfg => {
   // Do something before request is sent
   if(cfg.url !== "/json/access/ticket")
   cfg.headers['CSRFPreventionToken'] = window.localStorage.getItem('CSRFPreventionToken') || '';
-  // const request =
-  //     JSON.stringify(config.url) +
-  //     JSON.stringify(config.method) +
-  //     JSON.stringify(config.data || '')
-  //     // 这里配置了cancelToken属性，覆盖了原请求中的cancelToken
-  //    config.cancelToken = new CancelToken(cancel => {
-  //      sources[request] = cancel
-  //    })
-  // cfg.cancelToken = new axios.CancelToken(function (cancel) {
-  //   store.dispatch('ADD_CANCEL_REQUEST', {cancelToken: cancel})
-  // })
-  removePending(cfg) // 在请求开始前，对之前的请求做检查取消操作
-  addPending(cfg) // 将当前请求添加到 pending 中
+  if(cfg.url !== '/json/cluster/resources'){
+    removePending(cfg) // 在请求开始前，对之前的请求做检查取消操作
+    addPending(cfg) // 将当前请求添加到 pending 中
+  }
   return cfg;
 }, error => {
   // Do something with request error
@@ -110,7 +97,7 @@ http.instance.interceptors.response.use(response => {
   return response
 }, error => {
   if (axios.isCancel(error)) {
-    console.log('repeated request: ' + error.message)
+  
   } else {
     // handle error code
   }

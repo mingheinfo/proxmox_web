@@ -50,6 +50,12 @@ window.vm = new Vue({
   router,
   render: h => h(App),
   mounted() {
+    //如果存在Token则证明已经登录过否则表名没有登录过
+    if(window.localStorage.getItem('CSRFPreventionToken')) {
+      this.$store.dispatch('UPDATE_401_COUNT', {silenceAuthFailures: true})
+    } else {
+      this.$store.dispatch('UPDATE_401_COUNT', {silenceAuthFailures: false})
+    };
   }
 })
 //

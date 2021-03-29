@@ -8,11 +8,19 @@
         </div>
       </div>
       <Pv-Menu :data="menuData"></Pv-Menu>
-      <m-scrollbar>
-        <div class="m-content">
-          <router-view/>
+      <div class="m-scroll-wrapper  scroll-container">
+        <div class="m-scroll-view scroll-view" @scroll="onScroll">
+          <div class="m-content">
+            <router-view />
+          </div>
         </div>
-      </m-scrollbar>
+        <div
+          class="m-scroll-bar"
+          v-show="showScrollbar"
+          :style="{ top: scrollTop + 'px', height: scrollLength + 'px' }"
+          @mousedown="onScrollBarMouseDown($event)"
+        ></div>
+      </div>
     </div>
   </transition>
 </template>
@@ -28,10 +36,10 @@
   import DropdownItem from "@src/components/dropdown/dropdownItem";
   export default {
     name: "Node",
+    mixins: [MScrollbar],
     components: {
       DropdownItem,
       Dropdown,
-      MScrollbar,
       PvMenu,
       MButton
     },
@@ -45,6 +53,10 @@
       ...mapState({
         viewType: state => state.db.selectView
       })
+    },
+    mounted(){
+      this.scrollElementSelector = '.scroll-view';
+      this.scrollContainerSelector =  '.scroll-container';
     },
     methods: {
       handleReset() {

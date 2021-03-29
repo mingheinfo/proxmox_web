@@ -31,9 +31,10 @@ export default {
   mounted() {
     let _this = this;
     _this.queryResource();
+    //左侧导航树3秒刷新
     this.interval = setInterval(() => {
       _this.queryResource();
-    }, 10000);
+    }, 3000);
   },
   data() {
     //获取数据中心名称

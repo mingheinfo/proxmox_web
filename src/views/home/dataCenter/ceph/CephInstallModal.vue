@@ -11,7 +11,7 @@
 				 <div class="table-tr">
 					 {{param.message}}
 				 </div>
-				 <div class="table-tr" v-for="item of param.detail">
+				 <div class="table-tr" v-for="(item,index) of param.detail" :key="index">
 					 {{item.message}}
 				 </div>
 			 </div>
@@ -351,6 +351,12 @@ export default {
 			}
 			prop.forEach(item => this.validate(item));
 			return prop.some(item => this.rules[item].error === true);
+		}
+	},
+	beforeDestroy() {
+		if(this.interVal) {
+			clearInterval(this.interVal);
+			this.interVal = null;
 		}
 	}
 }

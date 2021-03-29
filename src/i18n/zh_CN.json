@@ -226,7 +226,8 @@
       "domain": {
         "create": "添加域 {name}",
         "update": "更新域 {name}",
-        "delete": "删除域 {name}"
+        "delete": "删除域 {name}",
+        "sync": "同步域 {name}"
       }
     },
     "acme": {

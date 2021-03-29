@@ -324,6 +324,9 @@ export default {
         return Promise.reject(error);
       })
     },
+    /**
+     * 更新组
+     * **/
     updateGroup(param) {
        let event = this.createEvent("action.access.group.create");
       let params = deepCopy(param);
@@ -340,6 +343,9 @@ export default {
         return Promise.reject(error);
       })
     },
+    /**
+     * 删除组
+     * **/
     deleteGroupById() {
       let event = this.createEvent("action.access.group.delete");
       let tasks = [],
@@ -359,6 +365,45 @@ export default {
         tasks.push(p);
       });
       return Promise.all(tasks);
+    },
+    /**
+     * 删除域
+     * **/
+     deleteAccessDomainById() {
+      let event = this.createEvent("action.access.group.delete");
+      let tasks = [],
+        p;
+      this.selectedList.forEach((item) => {
+        ((it) => {
+          p = this.$http
+            .del(`json/access/domains/${it.realm}`)
+            .then(() => {
+              this.incEventSuccess(event);
+              this.queryDomain();
+            })
+            .catch(() => {
+              this.incEventFail(event);
+            });
+        })(item);
+        tasks.push(p);
+      });
+      return Promise.all(tasks);
+    },
+    /**
+     * 同步域
+     * **/
+    syncAccessDomainById(realname, param) {
+      let event = this.createEvent("action.access.domain.sync");
+      if(!realname) return;
+      return this.$http
+            .post(`json/access/domains/${realname}/sync`, param)
+            .then(() => {
+              this.incEventSuccess(event);
+              this.queryDomain();
+            })
+            .catch(() => {
+              this.incEventFail(event);
+            });
     },
     getPoolsList() {
         return this.$http.get(`/json/pools`).then((res) => {

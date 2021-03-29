@@ -1,7 +1,7 @@
 <template>
   <page-template>
     <div slot="toolbar-left">
-      <m-button type="primary" @on-click="__init__" icon="el-icon-refresh">重载</m-button>
+      <m-button type="primary" @on-click="refresh" icon="el-icon-refresh">重载</m-button>
 			<m-button type="warning" @on-click="showModal()" icon="el-icon-view"
                 :disabled="selectedList.length !== 1">显示S.M.A.R.T.值</m-button>
 			<m-button type="primary" @on-click="updateGpt" icon="el-icon-refresh-left" :disabled="inStatus()">使用GPT初始化磁盘</m-button>
@@ -127,7 +127,7 @@
 import NodeDiskHttp from "@src/views/home/node/disk/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { byteToSize } from '@libs/utils/index';
+import { byteToSize, debounce } from '@libs/utils/index';
 import DisplayModal from './DisplayModal';
 export default {
   name: "Access",
@@ -157,6 +157,7 @@ export default {
   },
   methods: {
 		byteToSize,
+    refresh: debounce(function() {this.__init__()}, 500),
     //初始化查找
     __init__() {
       this.queryListNodeDiskList();

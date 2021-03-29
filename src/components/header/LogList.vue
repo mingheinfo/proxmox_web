@@ -9,8 +9,9 @@
       <span class="btn-txt">隐藏</span
       ><i class="el-icon-d-arrow-right btn-icon"></i>
       </div>
-      <m-scrollbar v-if="visible">
-        <m-tab v-model="logType" @tab-click="handleLogTypeChange" class="log-tab">
+      <div class="m-scroll-wrapper  log-scroll-container" v-if="visible">
+        <div class="m-scroll-view log-scroll-view" @scroll="onScroll">
+           <m-tab v-model="logType" @tab-click="handleLogTypeChange" class="log-tab">
           <m-tab-panel label="任务" name="task"></m-tab-panel>
           <m-tab-panel label="集群" name="cluster"></m-tab-panel>
         </m-tab>
@@ -68,7 +69,14 @@
             <div>消息：{{ item.msg ? item.msg : "" }}</div>
           </div>
         </div>
-      </m-scrollbar>
+        </div>
+        <div
+          class="m-scroll-bar"
+          v-show="showScrollbar"
+          :style="{ top: scrollTop + 'px', height: scrollLength + 'px' }"
+          @mousedown="onScrollBarMouseDown($event)"
+        ></div>
+      </div>
       <m-dialog
           :visible="showLog"
           @close="closeLog"
@@ -140,9 +148,9 @@ import MScrollbar from "@src/components/scroll/Scrollbar";
 import MSteps from "../step/MSteps.vue";
 import MStep from "../step/MStep.vue";
 export default {
-  components: { BaseIcon, MScrollbar, MSteps, MStep },
+  components: { BaseIcon, MSteps, MStep },
   name: "LogList",
-  mixins: [HeaderHttp],
+  mixins: [HeaderHttp, MScrollbar],
   props: {
     visible: {
       type: Boolean,
@@ -150,6 +158,8 @@ export default {
     },
   },
   mounted() {
+    this.scrollElementSelector = '.log-scroll-view';
+    this.scrollContainerSelector =  '.log-scroll-container';
     this.__init__();
   },
   data() {

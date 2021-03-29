@@ -30,11 +30,19 @@
          </div>
        </div>
        <Pv-Menu :data="menuData"></Pv-Menu>
-       <m-scrollbar>
-         <div class="m-content">
-           <router-view/>
-         </div>
-       </m-scrollbar>
+       <div class="m-scroll-wrapper  scroll-container">
+        <div class="m-scroll-view scroll-view" @scroll="onScroll">
+          <div class="m-content">
+            <router-view />
+          </div>
+        </div>
+        <div
+          class="m-scroll-bar"
+          v-show="showScrollbar"
+          :style="{ top: scrollTop + 'px', height: scrollLength + 'px' }"
+          @mousedown="onScrollBarMouseDown($event)"
+        ></div>
+      </div>
        <node-select-modal
            :visible="visible"
            v-if="visible"
@@ -62,11 +70,10 @@
 
   export default {
     name: "Node",
-    mixins: [NodeHttp],
+    mixins: [NodeHttp, MScrollbar],
     components: {
       DropdownItem,
       Dropdown,
-      MScrollbar,
       PvMenu,
       MButton,
       NodeSelectModal
@@ -137,6 +144,8 @@
       }
     },
     mounted() {
+      this.scrollElementSelector = '.scroll-view';
+      this.scrollContainerSelector =  '.scroll-container';
       let last = window.localStorage.getItem("lastsel") || '[]';
       this.node = (JSON.parse(last).node && JSON.parse(last).node) || '';
     }

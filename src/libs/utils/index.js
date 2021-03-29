@@ -52,10 +52,10 @@ function debounce(fn, delay) {
     let args = arguments;
     if (timer) {
       clearTimeout(timer);
-      timer = setTimeout(fn.apply(context, args), delay)
-    } else {
-      timer = setTimeout(fn.apply(context, args), delay);
     }
+    timer = setTimeout(function() {
+      fn.apply(context, args)
+    }, delay)
   }
 }
 

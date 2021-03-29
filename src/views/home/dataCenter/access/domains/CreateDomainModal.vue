@@ -8,7 +8,7 @@
     @close="$emit('close')"
   >
     <div slot="content" style="max-height: 500px">
-      <div class="m-form__content">
+      <div class="m-form__content" v-if="modalType !== 'sync'">
         <div class="m-form__section">
 					<dl>
 						<dt></dt>
@@ -336,6 +336,77 @@
 					</dl>
         </div>
       </div>
+      <div class="m-form__content"  v-if="modalType ===  'sync'">
+        <div class="m-form__section">
+          <dt>默认同步选项</dt>
+						<dd>
+							 <m-select
+                prop="scope"
+                label="Scope"
+                labelWidth="100px"
+                @on-change="handleScopeSelect"
+                v-model="scope"
+                placeholder="请选择Scope"
+              >
+                <m-option
+                  v-for="item in scopeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </m-option>
+              </m-select>
+							 <m-select
+                prop="enable-new"
+                label="Enable new users"
+                labelWidth="100px"
+                @on-change="handleEnableNewSelect"
+                v-model="enableNew"
+                placeholder="请选择角色"
+              >
+                <m-option
+                  v-for="item in enableNewOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </m-option>
+              </m-select>
+							 <m-select
+                prop="full"
+                label="Full"
+                labelWidth="100px"
+                @on-change="handleFullSelect"
+                v-model="full"
+                placeholder="请选择角色"
+              >
+                <m-option
+                  v-for="item in fullOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </m-option>
+              </m-select>
+							 <m-select
+                prop="purge"
+                label="清除"
+                labelWidth="100px"
+                @on-change="handlePurgeSelect"
+                v-model="purge"
+                placeholder="请选择角色"
+              >
+                <m-option
+                  v-for="item in fullOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </m-option>
+              </m-select>
+						</dd>
+        </div>
+      </div>
     </div>
   </Dialog>
 </template>
@@ -474,6 +545,7 @@ export default {
   },
   mounted() {
     this.__init__();
+    console.log(this.modalType);
   },
   methods: {
     async __init__() {
@@ -605,6 +677,26 @@ export default {
               .then(() => {})
               .catch(() => {});
           });
+      } else if(this.modalType === 'sync') {
+        let param = {
+           scope: this.scope === '__default__' ? 'users' : this.scope,
+           full: this.full === '__default__' ? 0 : this.full,
+           'enable-new': this.enableNew === '__default__' ? 0 : this.enableNew,
+           purge:  this.purge === '__default__' ? 0 : this.purge,
+           'dry-run': 0
+        }
+        this.syncAccessDomainById(this.realm,param).then((res) => {
+            this.close();
+          })
+          .catch((res) => {
+            this.$confirm
+              .info({
+                msg: res,
+                type: "error",
+              })
+              .then(() => {})
+              .catch(() => {});
+          });
       } else {
 				this.updateDomain(param)
 				.then((res) => {
@@ -618,7 +710,7 @@ export default {
               })
               .then(() => {})
               .catch(() => {});
-          });;
+          });
       }
     },
   },

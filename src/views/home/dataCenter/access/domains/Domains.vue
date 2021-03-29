@@ -39,7 +39,8 @@
 			  <m-button
             type="primary"
             icon="el-icon-plus"
-						@on-click="showModal('create')"
+            :disabled="selectedList.length <= 0 || inTypes()"
+						@on-click="showModal('sync')"
             >同步</m-button>
     </div>
     <div slot="page-content">
@@ -104,7 +105,7 @@ export default {
     //是否展示弹框
     showModal(type) {
 			this.isCreate = type === "create";
-			this.modalType = 'edit'
+			this.modalType = type;
       this.title = `编辑：${this.selectedList[0].type === 'ad' ? '活动目录服务器（AD）' : this.selectedList[0].type === 'pam' ? "Linux PAM" : this.selectedList[0].type === 'pve' ? "Proxmox VE authentication server" : "LDAP服务器"}`;
       this.param = this.selectedList[0];
       this.visible = true;
@@ -118,12 +119,13 @@ export default {
       this.selectedList = row;
     },
     handleDelete() {
-      this.deleteGroupById();
+      this.deleteAccessDomainById();
 		},
 		handleCommand(command) {
 			 this.type = command;
 			 this.isCreate = true;
-			 this.modalType = 'create'
+			 this.modalType = 'create';
+       if(this.isCreate)  this.title = command === 'ad' ? `添加：活动目录服务器（AD）` : `添加：LDAP服务器`;
 			 this.visible = true;
 		},
 		inTypes() {
