@@ -18,7 +18,9 @@
         v-model="user"
         @change="filter('user')"
         placeholder="请输入用户名"
-      />
+      >
+         <i slot="prefix" class="el-icon-search"></i>
+      </m-input>
       <m-checkbox
         label="仅错误"
         v-model="error"

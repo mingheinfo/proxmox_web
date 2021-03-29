@@ -17,7 +17,8 @@ Vue.use(Fragment.Plugin)
 // or
 
 import { Plugin } from 'vue-fragment';
-Vue.use(Plugin)
+Vue.use(Plugin);
+//自定义confirm指令
 Vue.directive('confirm', directives);
 Vue.directive('slldrag', directives);
 // 配置

@@ -77,7 +77,7 @@ import LinePercentChart from '@src/components/chart/line/LineCharts';
 import NodeDiskZfsHttp from "@src/views/home/node/disk/zfs/http";
 import PageTemplate from "@src/components/page/PageTemplate";
 import MButton from "@src/components/button/Button";
-import { percentToFixed, byteToSize, throttle } from '@libs/utils/index';
+import { percentToFixed, byteToSize, debounce } from '@libs/utils/index';
 import CreateZfsModal from './CreateZfsModal';
 export default {
   name: "Lvm",
@@ -104,7 +104,7 @@ export default {
   methods: {
 		percentToFixed,
 		byteToSize,
-    refresh: throttle(function() {this.__init__()}, 500),
+    refresh: debounce(function() {this.__init__()}, 500),
     //初始化查找
     __init__() {
       this.queryDiskZfs();

@@ -93,7 +93,9 @@
         v-model="search"
         @input="throttle(filter('volid'), 1000)"
         placeholder="请输入名称"
-      />
+      >
+        <i slot="prefix" class="el-icon-search"></i>
+      </m-input>
     </div>
     <div slot="page-content">
       <el-table

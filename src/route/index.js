@@ -612,6 +612,9 @@ const router = new VueRoute({
                 path: 'help',
                 component: r => {
                   require.ensure([], () => r(require('@view/help/index.vue')), 'Home')
+                },
+                meta: {
+                  title: 'help'
                 }
               },
               {
@@ -894,6 +897,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  //设置文档标题
   setDocumentTitle(to);
 })
 //路由钩子中进行鉴权或者token验证

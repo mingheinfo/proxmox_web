@@ -340,5 +340,6 @@
   "resource": "资源",
   "disk": "磁盘",
   "apt-update": "更新",
-  "member": "成员"
+  "member": "成员",
+  "help": "帮助"
 }

@@ -3,7 +3,9 @@
     <div class="search-content">
         <span class="search-input">
           <m-input placeholder="搜索"
-                   v-model="searchModel"/>
+                   v-model="searchModel">
+                    <i slot="prefix" class="el-icon-search"></i>
+          </m-input>
         </span>
     </div>
     <el-table :data="chunkData(searchTable, pageSize)[currentPage - 1]"
