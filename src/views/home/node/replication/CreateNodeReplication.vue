@@ -190,6 +190,7 @@ export default {
   methods: {
     percentToFixed,
     byteToSize,
+    //初始化
     async __init__() {
       let _this = this;
       await _this.queryNodeList().then((res) => {
@@ -252,12 +253,15 @@ export default {
       this.dow = value;
     },
     validate() {},
+    //选择目标节点
     handleNodeSelect(value) {
       this.target = value;
     },
+    //定时选择
     handleScheduleSelect(value) {
       this.schedule = value;
     },
+    //关闭弹框
     close() {
       this.$emit("close");
     },

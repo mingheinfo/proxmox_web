@@ -74,6 +74,7 @@
     document.addEventListener('click', this.handleHiddenContext, false)
   },
   methods: {
+    //处理选择节点,进行跳转
     handleSelect(node) {
       let loop = (item) => {
         item.forEach((it) => {
@@ -91,6 +92,7 @@
       this.$forceUpdate();
       this.$emit("reset-select", node);
     },
+    //如果类型时虚拟机时进行对虚拟机的管理操作
     showModal(type) {
       if (!['file'].includes(type)) {
         this.modalType = type;
@@ -103,6 +105,7 @@
         }
       }
     },
+    //模板
     template() {
       this.$confirm
         .confirm({
@@ -136,6 +139,7 @@
           break;
       }
     },
+    //重新选择
     resetSelect(node) {
       let loop = (item) => {
         item.forEach((it) => {
@@ -152,6 +156,7 @@
       loop(this.renderData);
       this.$forceUpdate();
     },
+    //展示tips
     showTip(tree) {
       /**
        * 解决有时出现上一次tips不隐藏的bug
@@ -198,10 +203,12 @@
       this.qemu = this.param.data;
       this.ele = this.$refs[`m$sub$item${tree.data.id}`][0];
     },
+    //隐藏tips
     hiddenTip(tree) {
       let id = document.querySelector(`#${tree.data.id.replace(/\//g, '')}`);
       document.body.removeChild(id);
     },
+    //处理左键触发的contextMenu对应的事件
     handleContextMenu(event) {
       if(event.button === 2) {
         event.preventDefault();
@@ -212,6 +219,7 @@
         this.showContext = true;
       }
     },
+    //contextMenu
     getContextMenu() {
       if(this.param.data.template === 1) {
         this.menuData = [

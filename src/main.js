@@ -15,7 +15,6 @@ import Fragment from 'vue-fragment';
 import showdown from 'showdown'// 引入md文件
 Vue.use(Fragment.Plugin)
 // or
-
 import { Plugin } from 'vue-fragment';
 Vue.use(Plugin);
 //自定义confirm指令

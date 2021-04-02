@@ -22,7 +22,6 @@
     mounted() {
       let _this = this;
       this.__init__();
-      debugger;
       _this.$refs[`ace-editor`].$el.style.height =
         _this.$el.parentElement.clientHeight - 40 + "px";
       window.addEventListener("resize", _this.updateAceEditorHeight, false);
@@ -30,6 +29,7 @@
       this.ele.addEventListener("scroll", _this.updateSysLog, false);
     },
     methods: {
+      //初始化ceph
       __init__() {
         this.queryCephLog({
           _dc: new Date().getTime(),
@@ -42,19 +42,23 @@
             this.start = Math.max(...nList)
           });
       },
+      //更新aceEditor
       updateAceEditorHeight() {
         let _this = this;
         _this.$refs[`ace-editor`].$el.style.height =
           _this.$el.parentElement.clientHeight - 40 + "px";
       },
+      //判断是否是在底部
       isBoottom() {
         let el = document.querySelector(".ace_scrollbar ");
         return el.clientHeight + el.scrollTop - Math.abs(el.scrollHeight) >= 0;
       },
+      //判断是否在头部
       isTop() {
         let el = document.querySelector(".ace_scrollbar ");
         return el.scrollTop === 0;
       },
+      //更新系统日志
       updateSysLog() {
         let _this = this;
         if (this.isBoottom()) {
@@ -72,6 +76,7 @@
         }
       },
     },
+    //页面销毁之前移除监听
     beforeDestroy() {
       this.ele.removeEventListener("scroll", this.updateSysLog, false);
       window.removeEventListener("resize", this.updateAceEditorHeight, false);

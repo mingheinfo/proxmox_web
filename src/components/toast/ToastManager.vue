@@ -34,6 +34,7 @@
 
 
 <script>
+//提示框
   import VueMixins from '@src/mixins/VuexMixins';
   import { stopEvent} from '@libs/utils';
   /* eslint no-unused-vars: ["error", { "varsIgnorePattern": ".*" }] */

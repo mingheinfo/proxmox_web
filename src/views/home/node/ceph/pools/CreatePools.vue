@@ -125,6 +125,7 @@ export default {
     this.__init__();
   },
   methods: {
+    //初始化
     __init__() {
       this.queryRules()
           .then(res => {
@@ -132,6 +133,7 @@ export default {
             this.crush_rule = this.rulesList[0].rule
           })
     },
+    //校验
     validate(prop) {
       let value = String(this[prop]).trim();
       this.rules[prop].message = "";

@@ -466,7 +466,7 @@ export default {
             data: {},
           });
         });
-    },
+    }
   },
   mounted() {
     this.__init__();

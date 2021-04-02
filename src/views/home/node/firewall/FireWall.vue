@@ -124,6 +124,7 @@ export default {
     handleSelect(row) {
       this.selectedList = row;
     },
+    //删除防火墙
     handleDelete(type) {
       this.deleteFireWallRule();
 		},

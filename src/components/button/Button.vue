@@ -9,19 +9,19 @@
 </template>
 
 <script>
+  //按钮组件
   export default {
     name: "Button",
     props: {
       icon: {
         type: String
       },
-      type: {
+      type: {//按钮类型
         type: String,
         default: 'default',
-        validator: function(value) {
+        validator: function(value) {//校验按钮类型
           if(!['default', 'danger',  'info', 'warning', 'primary'].includes(value)) {
-            throw Error(`${value} is not include 'default', 'danger',  'info', 'warning', 'primary'`);
-            return false;
+             throw Error(`${value} is not include 'default', 'danger',  'info', 'warning', 'primary'`);
           }else {
             return true;
           }
@@ -29,7 +29,7 @@
       },
       size: {
         type: String,
-        default: 'middle'
+        default: 'middle'//按钮大小
       },
       disabled: {
         type: Boolean,

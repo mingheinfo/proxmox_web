@@ -24,6 +24,7 @@ import TabPanel from '@src/components/tab/TabPanel';
 import Dialog from "@src/components/dialog/Dialog";
 import Switch from "@src/components/switch/Switch";
 import LineGraph from '@src/components/chart/line/LineGraph';
+//elementui动态导入
 const element = {
   install: (vue) => {
     vue.use(Table);

@@ -285,6 +285,7 @@ export default {
     this.__init__();
   },
   methods: {
+    //格式化日期
     dateFormat,
     __init__() {
       this.queryMonitor("mon").then((res) => {
@@ -294,6 +295,7 @@ export default {
         this.mgr = res;
       });
     },
+    //展示弹框
     showModal(type) {
       this.modalType = type;
       this.title = type === "mon" ? "创建：监视器" : "创建：管理员";

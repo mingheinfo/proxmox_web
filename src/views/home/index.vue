@@ -25,13 +25,13 @@
   import DropdownItem from '@src/components/dropdown/dropdownItem';
   import SplitLine from '@src/components/split/SplitLine';
   //注册全局组件
-  Vue.component(ToastManager);
-  Vue.component('table-info-state', TableInfoState);
-  Vue.component('m-select', MSelect);
-  Vue.component('m-option', Option);
-  Vue.component('m-checkbox', MCheckBox);
-  Vue.component('m-dropdown', Dropdown);
-  Vue.component('m-dropdown-item', DropdownItem)
+  Vue.component(ToastManager);//提示框组件
+  Vue.component('table-info-state', TableInfoState);//表格状态组件
+  Vue.component('m-select', MSelect);//下拉选择框组件
+  Vue.component('m-option', Option);//下拉选择框选项组件
+  Vue.component('m-checkbox', MCheckBox);//多选框组件
+  Vue.component('m-dropdown', Dropdown);//dropdown组件
+  Vue.component('m-dropdown-item', DropdownItem)//dropdown选项组件
   export default {
     name: "HomeIndex",
     components: {

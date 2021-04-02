@@ -342,6 +342,7 @@ export default {
     handleTypeSelect(value) {
       this.type = value;
 		},
+    //下拉选择框，选择目录
 		handleDirectorySelect(value) {
 			this.directory = value;
 			this.queryAcmeTos(value)
@@ -352,6 +353,7 @@ export default {
     close() {
       this.$emit("close");
     },
+    //校验
     validate(prop) {
       let value = String(this[prop]).trim();
       this.rules[prop].error = false;
@@ -362,12 +364,14 @@ export default {
         return;
       }
       if (value && prop === "contact" && this.modalType === 'account') {
+        //正则表达式匹配邮箱
         if (!/^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/.test(value)) {
           this.rules[prop].error = true;
           this.rules[prop].message = "邮箱格式不正确";
           return;
         }
 			}
+      //校验域名格式
 			 if(value && prop ==="domains" && this.modalType === 'domains') {
         if(!/^\w+(?:\.[a-zA-Z0-9]{2,})$/.test(value)) {
           this.rules[prop].error = true;
@@ -376,9 +380,11 @@ export default {
         }
       }
 		},
+    //打开帮助文档
 		openTos() {
 			window.open(this.tos_url)
 		},
+    //整体校验
     validateAll() {
 			let props = [];
 			if(this.modalType === 'domains'){
@@ -393,12 +399,14 @@ export default {
       props.forEach((prop) => this.validate(prop));
       return props.some((prop) => this.rules[prop].error === true);
     },
+    //停止任务
    stopTask1() {
       this.stopTask(
         this.db.addClusterStatusObj.node,
         this.db.addClusterStatusObj.upid
       );
     },
+    //关闭日志
     closeLog() {
       this.showLog = false;
       this.close();

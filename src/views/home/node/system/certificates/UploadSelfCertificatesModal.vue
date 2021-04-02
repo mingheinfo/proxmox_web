@@ -165,6 +165,7 @@ export default {
     async __init__() {
       let _this = this;
 		},
+    //上传文件
 		uplodFile(key) {
 			let file = this.$refs[key].files[0];
        uplodFile(file, (val) => {
@@ -183,6 +184,7 @@ export default {
         this.rules[prop].message = "不能为空";
         return;
       }
+      //校验自定义证书
       if (value && prop === "certificates") {
         if (!/^((\-){5}(BEGIN CERTIFICATE)(\-){5})([\s\S]*)((\-){5}(END CERTIFICATE)(\-){5})$/.test(value)) {
           this.rules[prop].error = true;

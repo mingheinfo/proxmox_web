@@ -90,6 +90,7 @@ export default {
 		handleSelect(row) {
       this.selectedList = row;
 		},
+		//删除复制
 		handleDelete(type) {
       this.delete(type);
 		}

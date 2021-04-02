@@ -184,7 +184,6 @@ export default {
   },
   computed: {
     isIn() {
-      debugger;
       if(this.current && this.current.type === 'osd' && this.current.in === 1) {
         return true; 
       } else {

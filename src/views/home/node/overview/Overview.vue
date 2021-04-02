@@ -404,6 +404,7 @@ export default {
           this.loadingText = res;
         });
     },
+    //折线图数据
     queryRrdData() {
       let [timeframe, cf] = [this.timeframe.replace(/(.*?)\((.*?)\)/g, "$1"), this.timeframe.replace(/(.*?)\((.*?)\)/g, "$2")];
       if(/[\u4e00-\u9fa5]/.test(timeframe) || /[\u4e00-\u9fa5]/.test(cf)) return;
@@ -450,6 +451,7 @@ export default {
         this.rrdLoading = false;
       });
     },
+    //定时请求
     handleIntervalChange(value) {
       if(/[\u4e00-\u9fa5]/.test(value)) return;
       this.timeframe = value;
@@ -469,10 +471,12 @@ export default {
         });
     },
   },
+  //挂载之后请求
   mounted() {
     this.__init__();
     this.interval = setInterval(() => this.__init__(), 60 * 1000);
   },
+  //销毁定时器
   beforeDestroy() {
     if (this.interval) clearInterval(this.interval);
     this.interval = null;

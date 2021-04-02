@@ -46,7 +46,7 @@ function stopEvent(ev) {
  * @param delay隔多少时间触发
  * */
 function debounce(fn, delay) {
-  let timer = null;
+  let timer;
   return function () {
     let context = this;
     let args = arguments;
@@ -709,7 +709,7 @@ function printPropertyString(data, defaultKey) {
   }
   return stringparts.join(',');
 }
-
+//http代理
 function httpProxy(v) {
   return (/^http:\/\/.*$/).test(v);
 }
@@ -825,6 +825,19 @@ function uplodFile(file, callback) {
   };
   reader.readAsText(file);
 }
+/**
+ * 图片上传
+*/
+function uploadImage(file, callback) {
+  let reader = new FileReader();
+  reader.onerror = function(evt) {
+    throw new Error(evt);
+  }
+  reader.onload = function(evt) {
+    callback(evt)
+  }
+  reader.readAsDataURL(file);
+}
 //或得xhr对象
 function getHttpXhr() {
   if (window.XMLHttpRequest) {
@@ -849,7 +862,7 @@ function uploadFile(url, data, callback) {
     xhr.addEventListener("load", (ev) => callback(ev, xhr), false);
     xhr.addEventListener("error", (ev) => callback(ev, xhr), false)
     xhr.upload.addEventListener('progress', (ev) => callback(ev, xhr), false)
-    xhr.withCredentials = true;
+    xhr.withCredentials = true;//设置跨域
     xhr.open("POST", url, true);
     xhr.send(data);
   })
@@ -864,6 +877,7 @@ function getFileUrl(file) {
     return window.createObjectURL(file);
   }
 }
+
 function render_upid(value, metaData, record) {
   var type = record.type;
   var id = record.id;
@@ -899,6 +913,7 @@ const contentTypes = {
   'rootdir': gettext('Container'),
   'snippets': gettext('Snippets')
 }
+//判断是否是Number类型
 function isNumber(value) {
   return typeof value === 'number'
 }
@@ -1557,7 +1572,7 @@ function getUniqueObj(arrays) {
   }
   return newArr;
 }
-
+//判断是否有这个class
 function hasClass(cls) {
   let classes = this.className.split(' ');
   return classes.includes(cls);
@@ -1570,7 +1585,7 @@ function isIE() {
   } 
   return false;
 }
-
+//得到ie浏览器版本
 function ieVersion() {
   let userAgent = window.navigator.userAgent,
       isMSIE = userAgent.indexOf('MSIE') > -1;
@@ -1737,5 +1752,6 @@ export {
   add,
   subtract,
   multiply,
-  divide
+  divide,
+  uploadImage
 }

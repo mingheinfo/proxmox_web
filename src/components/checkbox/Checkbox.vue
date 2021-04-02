@@ -11,6 +11,7 @@
   </div>
 </template>
 <script>
+//多选框组件
 export default {
   name: "Checkbox",
   props: {

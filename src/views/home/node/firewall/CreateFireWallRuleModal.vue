@@ -477,6 +477,7 @@ export default {
       props.forEach((prop) => this.validate(prop));
       return props.some((prop) => this.rules[prop].error === true);
     },
+    //确定添加
     confirm() {
       if (this.validateAll()) return;
       let param = {

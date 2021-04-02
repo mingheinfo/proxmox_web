@@ -227,15 +227,19 @@ export default {
       }
     },
     confirm() {
+      //校验poolid
       this.validate("pool_id");
       if (this.rules["pool_id"].error) return;
+      //删除池
       this.deleteCephPool(this.selectedList[0].pool_name).then((res) => {
-        this.showLog = true;
+        this.showLog = true;//展示日志弹框
         this.interVal = setInterval(() => {
+          //查询状态
           this.queryStatus(
             this.db.addClusterStatusObj.node,
             this.db.addClusterStatusObj.upid
           )
+          //查询日志
           this.queryLog(
             this.db.addClusterStatusObj.node,
             this.db.addClusterStatusObj.upid

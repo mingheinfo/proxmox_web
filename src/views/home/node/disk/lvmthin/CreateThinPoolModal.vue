@@ -176,6 +176,7 @@ export default {
     },
   },
   watch: {
+    //展示弹框
     visible: function (newVal, oldVal) {
       if (newVal !== oldVal) {
         return newVal;

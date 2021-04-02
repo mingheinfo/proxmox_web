@@ -11,6 +11,7 @@ export default {
     this.node = (JSON.parse(last).node && JSON.parse(last).node) || "";
   },
   methods: {
+    //查询diskzfs
     queryDiskZfs(param) {
       this.loading = true;
       return this.$http

@@ -54,6 +54,7 @@
 </template>
 
 <script>
+//步骤条
   export default {
     name: 'ElStep',
 
@@ -73,6 +74,7 @@
     },
 
     beforeCreate() {
+      //将子组件中的状态添加到父组件的steps中
       this.$parent.steps.push(this);
     },
 
@@ -85,29 +87,36 @@
     },
 
     computed: {
+      //计算当前step的状态
       currentStatus() {
         return this.status || this.internalStatus;
       },
+      //上一个状态
       prevStatus() {
         const prevStep = this.$parent.steps[this.index - 1];
         return prevStep ? prevStep.currentStatus : 'wait';
       },
+      //是否居中
       isCenter() {
         return this.$parent.alignCenter;
       },
+      //是否在垂直方向
       isVertical() {
         return this.$parent.direction === 'vertical';
       },
       isSimple() {
         return this.$parent.simple;
       },
+      //是否是最后一步
       isLast() {
         const parent = this.$parent;
         return parent.steps[parent.steps.length - 1] === this;
       },
+      //总步骤数
       stepsCount() {
         return this.$parent.steps.length;
       },
+      //空间
       space() {
         const { isSimple, $parent: { space } } = this;
         return isSimple ? '' : space ;
@@ -144,6 +153,7 @@
     },
 
     methods: {
+      //更新步骤状态
       updateStatus(val) {
         const prevChild = this.$parent.$children[this.index - 1];
 
@@ -157,7 +167,7 @@
 
         if (prevChild) prevChild.calcProgress(this.internalStatus);
       },
-
+      //计算进度
       calcProgress(status) {
         let step = 100;
         const style = {};

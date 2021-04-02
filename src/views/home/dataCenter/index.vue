@@ -55,10 +55,13 @@
       })
     },
     mounted(){
+      //视图
       this.scrollElementSelector = '.scroll-view';
+      //容器
       this.scrollContainerSelector =  '.scroll-container';
     },
     methods: {
+      //重置
       handleReset() {
         let lastSelectView = window.localStorage.getItem("lastsel") || '[]';
         this.node = lastSelectView.text || '';

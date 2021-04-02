@@ -163,6 +163,7 @@
             this.journalStorageList = quickSort(res, 'devpath', '+');
           })
       },
+      //校验创建osd
       validate(prop) {
         let value = String(this[prop]).trim();
         this.rules[prop].error = false;
@@ -182,13 +183,16 @@
       close() {
         this.$emit('close');
       },
+      //确定添加Osd
       confirm() {
          if(this.validateAll()) return;
+         //请求参数
          let param = {
            dev: this.dev,
            db_dev: this.db_dev,
            db_size: this.db_size
          }
+         //如果是高级的话
          if(this.isAdvice) {
            param = Object.assign(param, {encrypted: this.encrypted ? 1 : 0, wal_dev: this.wal_dev, wal_size: this.wal_size})
          }

@@ -104,6 +104,7 @@ export default {
   methods: {
 		percentToFixed,
 		byteToSize,
+    //刷新zfs存储，利用防抖实现避免多次触发
     refresh: debounce(function() {this.__init__()}, 500),
     //初始化查找
     __init__() {
@@ -118,7 +119,7 @@ export default {
 			this.title = type === 'create' ? "创建：Lvm Directory" : "详情";
 			this.type = type;
       this.visible = true;
-      this.param = type === 'detail' ? this.selectedList[0] : {}
+      this.param = type === 'detail' ? this.selectedList[0] : {};//如果是detail时param为当前选中的值，否则为空
     }
   },
 };

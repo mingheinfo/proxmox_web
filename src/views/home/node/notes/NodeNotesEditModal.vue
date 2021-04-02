@@ -57,6 +57,7 @@ export default {
     close() {
       this.$emit("close");
     },
+    //更新ace编辑器
     updateAceEditorHeight() {
 			 let _this = this;
 				_this.$refs[`ace-editor`].$el.style.height = (_this.$refs['content'].parentElement.clientHeight - 30) + 'px';
@@ -76,6 +77,7 @@ export default {
 					});
 		},
   },
+  //销毁时间监听
   beforeDestroy() {
 		window.removeEventListener('resize', this.updateAceEditorHeight, false)
 	}

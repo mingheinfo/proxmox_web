@@ -81,6 +81,7 @@ export default {
 		handleSelect(row) {
       this.selectedList = row;
 		},
+		//删除备注
 		handleDelete(type) {
 			this.$confirm.confirm({
 				msg: `你确定你要删除已选择项吗？`,

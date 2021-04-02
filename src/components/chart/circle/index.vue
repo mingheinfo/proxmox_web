@@ -33,7 +33,9 @@
       }
     },
     mounted() {
-       let _this = this, el = document.querySelector(`.m-chart-instance-${_this._uid}`);
+      //初始化dom
+      let _this = this, el = document.querySelector(`.m-chart-instance-${_this._uid}`);
+      //设置dom的宽高
       el.style.width = el.parentNode.parentNode.clientWidth + 'px';
       el.style.height = el.parentNode.parentNode.clientHeight + 'px';
       this.chartsDom = echarts.init(el);

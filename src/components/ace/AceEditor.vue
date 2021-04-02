@@ -44,17 +44,18 @@ export default {
     event: 'change'
   },
   mounted() {
+    //ace编辑器中的初始化
     this.aceEditor = ace.edit(this.$refs.ace, {
         // mode: `ace/mode/${this.language}`,
         // theme: `ace/theme/${this.theme}`,
         fontSize: 12,
         tabSize: 2,
-        value: this.value,
+        value: this.value,//ace中的值
         selectionStyle: 'text',
         //autoScrollEditorIntoView: true,
         maxLines: this.maxLines,
-        readOnly: this.readOnly,
-        fontFamily: 'Courier New,Courier,Microsoft Yahei',
+        readOnly: this.readOnly,//是否是只读
+        fontFamily: 'Courier New,Courier,Microsoft Yahei',//字体
     })
     this.aceEditor.setOptions({
         enableBasicAutocompletion: true,
@@ -65,6 +66,7 @@ export default {
     })
     this.aceEditor.session.setMode('ace/mode/text')
     this.aceEditor.setShowPrintMargin(false);
+    //监听input事件处理实时变化
     this.aceEditor.addEventListener('input', this.handleChange, false);
   },
   methods: {

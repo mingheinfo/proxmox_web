@@ -334,6 +334,7 @@ export default {
             .then(() => this.close());
         });
 		},
+    //表格展开
 		expandChange(row, expandedRows) {
       var that = this;
       if (expandedRows.length) {
@@ -345,6 +346,7 @@ export default {
         that.expands = [];
       }
     },
+    //设置行号
     setRowKeys(row) {
       return row.name;
     }

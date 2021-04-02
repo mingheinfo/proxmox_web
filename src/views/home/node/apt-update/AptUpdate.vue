@@ -164,9 +164,11 @@ export default {
     handleSelect(row) {
       this.selectedList = row;
     },
+    //切换tab触发事件
     handleTabChange(tab) {
 			this.tab = tab;
 		},
+    //关闭日志页面
     closeLog() {
 			 if (this.interVal) {
          clearInterval(this.interVal);
@@ -175,6 +177,7 @@ export default {
       this.showLog = false;
       this.__init__();
 		},
+    //停止任务
 		stopTask1() {
       this.stopTask(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
     },
@@ -222,6 +225,7 @@ export default {
 					})
 		},
   },
+  //销毁定时任务
   beforeDestroy() {
     if (this.interVal) {
       clearInterval(this.interVal);

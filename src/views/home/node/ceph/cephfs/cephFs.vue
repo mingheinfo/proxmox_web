@@ -188,10 +188,13 @@ export default {
   },
   methods: {
 		dateFormat,
+    //初始化请求
     __init__() {
+      //请求fs
       this.queryFs().then((res) => {
         this.cephFsList = res;
       });
+      //请求mds
       this.queryMds().then((res) => {
         this.mdsList = res;
       });
@@ -239,6 +242,7 @@ export default {
             }, 3000);
           });
 					} else {
+           //删除mds
 					 this.deleteMds(selectedList.name).then((res) => {
             this.showLog = true;
             this.interVal = setInterval(() => {
@@ -255,6 +259,7 @@ export default {
 					}
         });
     },
+    //判断是否在某个状态下
     inState() {
 			 let states = [],
         _this = this;
@@ -266,6 +271,7 @@ export default {
       });
 		},
   },
+  //在实例销毁之前销毁定时器
   beforeDestroy() {
     if (this.interVal) {
       clearInterval(this.interVal);

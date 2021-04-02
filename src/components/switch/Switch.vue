@@ -16,6 +16,7 @@
 </template>
 
 <script>
+//switch开关
 export default {
 	name: 'Switch',
 	model: {

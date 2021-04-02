@@ -110,6 +110,7 @@
       }
     },
     computed: {
+      //计算数据
       searchTable() {
         let _this = this;
         let datas =  _this.data.filter(item => {
@@ -119,6 +120,7 @@
             return item;
           }
         })
+        //快排
         return quickSort(datas, 'type', '+');
       }
     },
@@ -142,12 +144,15 @@
         }
         return status;
       },
+      //单选
       handleRowClick(row, columns, event) {
         this.updateSearchObj(row);
       },
+      //初始化请求资源
       __init__() {
         this.queryResource();
       },
+      //判断是否是模板
       isTemplate(tmpl) {
         if(tmpl && String(tmpl) !== '0') {
           return true;
@@ -168,6 +173,7 @@
       this.intervalId = setInterval(() => this.__init__(), 10000);
     },
     beforeDestroy() {
+      //清除定时器
       clearInterval(this.intervalId);
       this.intervalId = null;
     }

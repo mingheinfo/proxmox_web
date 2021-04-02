@@ -119,6 +119,7 @@
     methods: {
       render_uptime,
       chunkData,
+      //点击行触发的
       handleRowClick(row, columns, event) {
         this.updateSearchObj(row);
       },
@@ -149,6 +150,7 @@
           return false;
         }
       },
+      //查询资源
       queryResource() {
         this.$http.get('/json/cluster/resources').then((res) => {
           if (res.data) {

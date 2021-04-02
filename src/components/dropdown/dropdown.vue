@@ -25,6 +25,7 @@
 </template>
 
 <script>
+//下拉选择框选项组件
 export default {
   name: "dropdown",
   provide() {
@@ -33,6 +34,7 @@ export default {
     };
   },
   computed: {
+    //渲染dropmenu
     renderDropMenu() {
       if (this.isOpen && this.$refs["dropdown-menu"]) {
         const el = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;

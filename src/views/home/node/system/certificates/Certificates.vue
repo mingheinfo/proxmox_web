@@ -346,6 +346,7 @@ export default {
         })
         .catch(() => {});
 		},
+    //删除证书
     handleDelete() {
       this.$confirm
         .confirm({

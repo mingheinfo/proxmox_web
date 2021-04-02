@@ -24,6 +24,7 @@
       }
     },
     beforeDestroy() {
+      //移除事件监听
        window.removeEventListener('resize', this.setShellHeight, false)
     }
   }

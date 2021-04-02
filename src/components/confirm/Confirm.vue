@@ -28,6 +28,7 @@
   </div>
 </template>
 <script>
+  //icon组件
   import BaseIcon from "../icon/BaseIcon";
   import { getDocument } from "@libs/utils";
 

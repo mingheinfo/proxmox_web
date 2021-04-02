@@ -167,6 +167,7 @@
           return;
         }
       },
+      //停止任务
       stopTask1() {
         this.stopTask(this.db.addClusterStatusObj.node, this.db.addClusterStatusObj.upid);
       },

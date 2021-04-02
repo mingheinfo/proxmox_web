@@ -156,6 +156,7 @@ export default {
     this.__init__();
   },
   methods: {
+    //字节转化为M,T,G等
 		byteToSize,
     refresh: debounce(function() {this.__init__()}, 500),
     //初始化查找
