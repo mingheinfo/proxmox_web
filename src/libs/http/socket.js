@@ -48,7 +48,7 @@ export default class Socket {
 			this.reconnet(this.url);
 		}
 	}
-
+  //重连
 	reconnet() {
 		if (this.lockReconnet)
 		return false
@@ -59,7 +59,7 @@ export default class Socket {
 		  this.lockReconnet = false
 	  }, 60 * 1000)
 	}
-
+  //打开socket链接
 	onopen() {
 		if(this.socket)
 		this.socket.onopen = () => {
@@ -70,7 +70,7 @@ export default class Socket {
 			}
 		}
 	}
-
+  //断开socket链接
 	onclose() {
 		if(this.socket)
 		this.socket.onclose =() => {

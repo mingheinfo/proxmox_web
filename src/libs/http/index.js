@@ -18,7 +18,7 @@ const addPending = (config) => {
   ].join('&');
   config.cancelToken = new axios.CancelToken(cancel => {
     if (!pending.has(url)) { // 如果 pending 中不存在当前请求，则添加进去
-      pending.set(url, cancel)
+      pending.set(url, cancel);
     }
   })
 }

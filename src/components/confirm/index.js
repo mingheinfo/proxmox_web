@@ -14,97 +14,95 @@ let defaultOptions = {
 class Confirm {
   constructor(options) {
     this.idList = [];
+    this.vm = new VueComponent().$mount();
   }
 
   info(options) {
-    const vm = new VueComponent().$mount();
-    Object.assign(vm,defaultOptions , options,{
+    Object.assign(this.vm,defaultOptions , options,{
       type:'info'
     });
-    if (isVNode(vm.msg)) {
-      vm.$slots.default = [vm.msg];
-      vm.msg = null;
+    if (isVNode(this.vm.msg)) {
+      this.vm.$slots.default = [this.vm.msg];
+      this.vm.msg = null;
     } else {
-      delete vm.$slots.default;
+      delete this.vm.$slots.default;
     }
-    this.idList.push(vm._uid);
-    document.body.appendChild(vm.$el);
+    this.idList.push(this.vm._uid);
+    document.body.appendChild(this.vm.$el);
     document.body.classList.toggle('hidden');
-    return vm.confirm();
+    return this.vm.confirm();
   }
 
   warning(options) {
-    const vm = new VueComponent().$mount();
-    Object.assign(vm,defaultOptions , options,{
+    Object.assign(this.vm,defaultOptions , options,{
       type:'warning'
     });
-    if (isVNode(vm.msg)) {
-      vm.$slots.default = [vm.msg];
-      vm.msg = null;
+    if (isVNode(this.vm.msg)) {
+      this.vm.$slots.default = [this.vm.msg];
+      this.vm.msg = null;
     } else {
-      delete vm.$slots.default;
+      delete this.vm.$slots.default;
     }
-    this.idList.push(vm._uid);
-    document.body.appendChild(vm.$el);
+    this.idList.push(this.vm._uid);
+    document.body.appendChild(this.vm.$el);
     document.body.classList.toggle('hidden');
-    return vm.confirm();
+    return this.vm.confirm();
   }
 
   confirm(options) {
+    debugger;
     /**
      * 实例化组件
      * **/
-    const vm = new VueComponent().$mount();
+    //const vm = new VueComponent().$mount();
     //合并所有选项
-    Object.assign(vm,defaultOptions , options,{
+    Object.assign(this.vm,defaultOptions , options,{
       type:'confirm'
     });
     //如果是虚拟dom节点的话默认将信息复制给插槽
-    if (isVNode(vm.msg)) {
-      vm.$slots.default = [vm.msg];
-      vm.msg = null;
+    if (isVNode(this.vm.msg)) {
+      this.vm.$slots.default = [this.vm.msg];
+      this.vm.msg = null;
     } else {
-      delete vm.$slots.default;
+      delete this.vm.$slots.default;
     }
-    this.idList.push(vm._uid);
-    document.body.appendChild(vm.$el);
+    this.idList.push(this.vm._uid);
+    document.body.appendChild(this.vm.$el);
     document.body.classList.toggle('hidden');
     //调用confirm方法
-    return vm.confirm();
+    return this.vm.confirm();
   }
 
   error(options) {
-    const vm = new VueComponent().$mount();
-    Object.assign(vm,defaultOptions , options,{
+    Object.assign(this.vm,defaultOptions , options,{
       type:'error'
     });
-    if (isVNode(vm.msg)) {
-      vm.$slots.default = [vm.msg];
-      vm.msg = null;
+    if (isVNode(this.vm.msg)) {
+      this.vm.$slots.default = [this.vm.msg];
+      this.vm.msg = null;
     } else {
-      delete vm.$slots.default;
+      delete this.vm.$slots.default;
     }
-    this.idList.push(vm._uid);
-    document.body.appendChild(vm.$el);
+    this.idList.push(this.vm._uid);
+    document.body.appendChild(this.vm.$el);
     document.body.classList.toggle('hidden');
-    return vm.confirm();
+    return this.vm.confirm();
   }
 
   alert(options) {
-    const vm = new VueComponent().$mount();
-    Object.assign(vm,defaultOptions , options,{
+    Object.assign(this.vm,defaultOptions , options,{
       type:'alert'
     });
-    if (isVNode(vm.msg)) {
-      vm.$slots.default = [vm.msg];
-      vm.msg = null;
+    if (isVNode(this.vm.msg)) {
+      this.vm.$slots.default = [this.vm.msg];
+      this.vm.msg = null;
     } else {
-      delete vm.$slots.default;
+      delete this.vm.$slots.default;
     }
-    this.idList.push(vm._uid);
-    document.body.appendChild(vm.$el);
+    this.idList.push(this.vm._uid);
+    document.body.appendChild(this.vm.$el);
     document.body.classList.toggle('hidden');
-    return vm.confirm();
+    return this.vm.confirm();
   }
 
   close() {

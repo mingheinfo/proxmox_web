@@ -3,6 +3,7 @@ import { http } from '@libs/http/index';
 import { Container, Message } from 'element-ui';
 import { gettext } from '@src/i18n/local_zhCN.js';
 import { kvm_vga_drivers } from '@libs/enum/enum.js';
+import Axios from 'axios';
 
 var IPV4_OCTET = "(?:25[0-5]|(?:[1-9]|1[0-9]|2[0-4])?[0-9])";
 var IPV4_REGEXP = "(?:(?:" + IPV4_OCTET + "\\.){3}" + IPV4_OCTET + ")";
@@ -1670,6 +1671,26 @@ function divide(arg1, arg2) {
   return (r1/r2)*Math.pow(10,t2-t1);   
 };
 
+//大文件分段上传
+function uploadChunks(index = 0, chunkSize = 1024 * 1024, totalSize, finishCb) {
+  let start = index * chunkSize,
+      total = totalSize;
+      if(start >= total) {
+        finishCb();
+      }
+      while(start < total) {
+        let formData = new FormData(),
+            {filename, ext} = file.name.split('.'),
+            blob = file.slice(start, start + chunkSize),
+            blobname = `${filename}.${index}.${ext}`;
+            blobfile = new File([blob], blobname);
+        formData.append(file, blobfile);
+        axios.post('/upload', formData).then(res => {
+          uploadChunks(index + 1);
+        })
+      }
+}
+
 export {
   getEvent,
   stopEvent,
@@ -1753,5 +1774,6 @@ export {
   subtract,
   multiply,
   divide,
-  uploadImage
+  uploadImage,
+  uploadChunks
 }
